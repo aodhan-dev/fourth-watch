@@ -1,0 +1,183 @@
+import type { Inputs, Weather, Monster, Encounter, ModifierRule, MonsterCategory } from './types';
+import { type Rng, pickFrom, pickIndex } from './rng';
+import modifiersData from '../data/encounter-modifiers.json';
+
+interface ModifiersFile {
+  baseEncounterChance: number;
+  rules: ModifierRule[];
+}
+const MODS = modifiersData as ModifiersFile;
+
+const ALL_CATEGORIES: MonsterCategory[] = [
+  'Predator',
+  'Bandit',
+  'Civilised',
+  'Undead',
+  'Fey',
+  'Aberration',
+  'Construct',
+  'Other'
+];
+
+function matches(rule: ModifierRule, inputs: Inputs, weather: Weather): boolean {
+  const w = rule.when;
+  if (w.climate && w.climate !== inputs.climate) return false;
+  if (w.environment && w.environment !== inputs.environment) return false;
+  if (w.season && w.season !== inputs.season) return false;
+  if (w.time && w.time !== inputs.time) return false;
+  if (w.region && w.region !== inputs.region) return false;
+  if (w.mode && w.mode !== inputs.mode) return false;
+  if (w.campfire !== undefined && w.campfire !== inputs.campfire) return false;
+  if (w.noise !== undefined && w.noise !== inputs.noise) return false;
+  if (w.weatherSeverity) {
+    const severe =
+      weather.precip === 'Heavy' ||
+      weather.wind === 'High' ||
+      weather.temp === 'Freezing' ||
+      weather.temp === 'Hot';
+    const flag = severe ? 'Severe' : 'Mild';
+    if (w.weatherSeverity !== flag) return false;
+  }
+  return true;
+}
+
+export interface AppliedModifiers {
+  encounterChance: number;
+  categoryWeights: Record<MonsterCategory, number>;
+  matchingRules: ModifierRule[];
+}
+
+export function applyModifiers(inputs: Inputs, weather: Weather): AppliedModifiers {
+  let chance = MODS.baseEncounterChance;
+  const cat: Record<MonsterCategory, number> = Object.fromEntries(
+    ALL_CATEGORIES.map((c) => [c, 1])
+  ) as Record<MonsterCategory, number>;
+  const matchingRules: ModifierRule[] = [];
+
+  for (const rule of MODS.rules) {
+    if (!matches(rule, inputs, weather)) continue;
+    matchingRules.push(rule);
+    if (rule.encounterChanceMultiplier) chance *= rule.encounterChanceMultiplier;
+    if (rule.categoryMultipliers) {
+      for (const c of ALL_CATEGORIES) {
+        const m = rule.categoryMultipliers[c];
+        if (typeof m === 'number') cat[c] *= m;
+      }
+    }
+  }
+
+  chance = Math.max(0, Math.min(1, chance));
+  return { encounterChance: chance, categoryWeights: cat, matchingRules };
+}
+
+export interface CrWindow {
+  min: number;
+  max: number;
+}
+
+export function crWindow(level: number, size: number, region: string): CrWindow {
+  const min = Math.max(0, (level - 4) / 4);
+  const baseMax = level * 0.85 + (size - 4) * 0.15;
+  const regionBonus: Record<string, number> = {
+    Settled: -1,
+    Frontier: 0,
+    Wilderness: 1,
+    Hostile: 2
+  };
+  const max = Math.max(0.25, baseMax + (regionBonus[region] ?? 0));
+  return { min, max };
+}
+
+function inWindow(cr: number, w: CrWindow): boolean {
+  return cr >= w.min && cr <= w.max;
+}
+
+export interface CheckResult {
+  happens: boolean;
+  chance: number;
+}
+
+export function encounterCheck(inputs: Inputs, weather: Weather, rng: Rng): CheckResult {
+  const { encounterChance } = applyModifiers(inputs, weather);
+  return { happens: rng() < encounterChance, chance: encounterChance };
+}
+
+export interface PickResult {
+  encounter: Encounter | null;
+  message: string | null;
+}
+
+function decideCount(cr: number, level: number, size: number, rng: Rng): number {
+  if (cr >= level) return 1;
+  if (cr >= level / 2) return 1 + Math.floor(rng() * 2);
+  if (cr >= 1) return 2 + Math.floor(rng() * Math.max(1, Math.min(4, size)));
+  return 2 + Math.floor(rng() * Math.max(2, Math.min(6, size + 2)));
+}
+
+function buildNarrative(creature: Monster, count: number, rules: ModifierRule[]): string {
+  const fragments = rules.map((r) => r.narrativeFragment).filter((f): f is string => Boolean(f));
+  const subj =
+    count === 1 ? `A ${creature.name.toLowerCase()}` : `${count} ${creature.name.toLowerCase()}s`;
+  const tail = fragments.length > 0 ? ` ${fragments.join(', ')}.` : '.';
+  return `${subj} appears${tail}`;
+}
+
+export function encounterPick(
+  inputs: Inputs,
+  weather: Weather,
+  monsters: Monster[],
+  rng: Rng
+): PickResult {
+  const { categoryWeights, matchingRules } = applyModifiers(inputs, weather);
+
+  const envPool = monsters.filter((m) => m.environments.includes(inputs.environment));
+  if (envPool.length === 0) {
+    return {
+      encounter: null,
+      message: `No matching creatures for ${inputs.environment}. Try loosening filters.`
+    };
+  }
+
+  const win = crWindow(inputs.partyLevel, inputs.partySize, inputs.region);
+  const wide: CrWindow = { min: Math.max(0, win.min * 0.5), max: win.max * 1.5 };
+
+  let pool = envPool.filter((m) => inWindow(m.cr, win));
+  if (pool.length === 0) pool = envPool.filter((m) => inWindow(m.cr, wide));
+  if (pool.length === 0) {
+    return {
+      encounter: null,
+      message: `No matching creatures for this party level in ${inputs.environment}. Try loosening filters.`
+    };
+  }
+
+  const byCat = new Map<MonsterCategory, Monster[]>();
+  for (const m of pool) {
+    if (!byCat.has(m.category)) byCat.set(m.category, []);
+    byCat.get(m.category)!.push(m);
+  }
+
+  const cats = [...byCat.keys()];
+  const catWeights = cats.map((c) => categoryWeights[c]);
+
+  if (catWeights.every((w) => w <= 0)) {
+    return {
+      encounter: null,
+      message: `Modifiers cancelled out all categories for ${inputs.environment}.`
+    };
+  }
+
+  const chosenCat = cats[pickIndex(rng, catWeights)];
+  const candidates = byCat.get(chosenCat)!;
+  const creature = pickFrom(rng, candidates);
+  const count = decideCount(creature.cr, inputs.partyLevel, inputs.partySize, rng);
+
+  return {
+    encounter: {
+      creature,
+      count,
+      narrative: buildNarrative(creature, count, matchingRules),
+      contributingModifiers: matchingRules.map((r) => r.id)
+    },
+    message: null
+  };
+}
