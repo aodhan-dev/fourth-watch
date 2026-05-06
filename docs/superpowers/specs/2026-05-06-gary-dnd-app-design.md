@@ -13,7 +13,7 @@ Secondary purpose: a learning project for the author during garden leave. Modern
 ### 1.1 What "good" looks like
 
 - Gary opens the tool on his phone or laptop, sets the scene in under 30 seconds, hits Roll, and gets a result he can read out at the table.
-- The result *feels* responsive to the inputs. Arctic tundra rolls blizzards far more often than rainforest. Camping with a fire and noise attracts bandits more than wolves. Night time biases toward predators and undead.
+- The result _feels_ responsive to the inputs. Arctic tundra rolls blizzards far more often than rainforest. Camping with a fire and noise attracts bandits more than wolves. Night time biases toward predators and undead.
 - Adding a new modifier rule (e.g. "in autumn, grasslands have a fog day chance") is a JSON edit, not a code change.
 - Costs zero to host. Works offline once loaded.
 
@@ -78,28 +78,28 @@ The form drives the engine. All values default to sensible starting points (Temp
 
 ### 3.1 Environmental context
 
-| Field | Type | Values |
-|---|---|---|
-| Climate | enum | Tropical, Subtropical, Arid, Temperate, Subarctic, Arctic |
+| Field       | Type | Values                                                                                             |
+| ----------- | ---- | -------------------------------------------------------------------------------------------------- |
+| Climate     | enum | Tropical, Subtropical, Arid, Temperate, Subarctic, Arctic                                          |
 | Environment | enum | Arctic, Coastal, Desert, Forest, Grassland, Hills, Mountains, Swamp, Underground, Urban, Wasteland |
-| Season | enum | Spring, Summer, Autumn, Winter |
-| Time of day | enum | Dawn, Day, Dusk, Night |
-| Region type | enum | Settled, Frontier, Wilderness, Hostile |
+| Season      | enum | Spring, Summer, Autumn, Winter                                                                     |
+| Time of day | enum | Dawn, Day, Dusk, Night                                                                             |
+| Region type | enum | Settled, Frontier, Wilderness, Hostile                                                             |
 
 ### 3.2 Party state
 
-| Field | Type | Range |
-|---|---|---|
-| Average character level | int | 1–20 |
-| Number of characters | int | 1–8 |
+| Field                   | Type | Range |
+| ----------------------- | ---- | ----- |
+| Average character level | int  | 1–20  |
+| Number of characters    | int  | 1–8   |
 
 ### 3.3 Travel / camp state
 
-| Field | Type | Notes |
-|---|---|---|
-| Mode | radio | Travelling \| At camp |
-| Campfire | toggle | Only meaningful at camp; ignored if Travelling |
-| Making noise | toggle | Applies in both modes |
+| Field        | Type   | Notes                                          |
+| ------------ | ------ | ---------------------------------------------- |
+| Mode         | radio  | Travelling \| At camp                          |
+| Campfire     | toggle | Only meaningful at camp; ignored if Travelling |
+| Making noise | toggle | Applies in both modes                          |
 
 ### 3.4 Validation
 
@@ -150,7 +150,7 @@ If the encounter check passes:
 2. **Apply CR window.** Compute `[crMin, crMax]` from party level + size, using the SRD 5.2 encounter-budget formula. Region type widens or narrows the window (Hostile pushes ceiling up, Settled pulls it down).
 3. **Empty-pool fallback.**
    - If the filtered pool is empty, widen the CR window by ±50% and try again.
-   - If still empty, return `{ encounter: null }` with a hint string: *"No matching creatures for this environment + party. Try loosening filters."*
+   - If still empty, return `{ encounter: null }` with a hint string: _"No matching creatures for this environment + party. Try loosening filters."_
    - Never throw.
 4. **Compute category weights.** Each creature carries an internal `category` tag (Predator, Bandit, Undead, Fey, Aberration, Civilised, Construct, Other). Modifier rules from `encounter-modifiers.json` produce per-category multipliers given the inputs. Example:
    - Night + Wilderness + no campfire → Predator ×3, Undead ×2, Civilised ×0.2
@@ -167,13 +167,13 @@ If the encounter check passes:
 
 ### 4.6 Data files
 
-| File | Authored by hand | Generated |
-|---|---|---|
-| `monsters.json` | category tags only | rest from Open5e snapshot script |
-| `climate-weather.json` | yes (six climates × three weather axes) | — |
-| `environment-modifiers.json` | yes (small weather overrides per environment) | — |
-| `season-modifiers.json` | yes (small temp shifts per season per climate) | — |
-| `encounter-modifiers.json` | yes (this is the heart of the maths) | — |
+| File                         | Authored by hand                               | Generated                        |
+| ---------------------------- | ---------------------------------------------- | -------------------------------- |
+| `monsters.json`              | category tags only                             | rest from Open5e snapshot script |
+| `climate-weather.json`       | yes (six climates × three weather axes)        | —                                |
+| `environment-modifiers.json` | yes (small weather overrides per environment)  | —                                |
+| `season-modifiers.json`      | yes (small temp shifts per season per climate) | —                                |
+| `encounter-modifiers.json`   | yes (this is the heart of the maths)           | —                                |
 
 `encounter-modifiers.json` is structured as a list of rules:
 
@@ -200,13 +200,13 @@ A single result card replaces its contents on each roll. Scannable top to bottom
 
 A plain-English narrative line, e.g.:
 
-> *Cool, with light rain and a steady wind from the west.*
+> _Cool, with light rain and a steady wind from the west._
 
 Below, a row of small **mechanics chips** lists effects that matter at the table:
 
-- *Disadvantage on Wisdom (Perception) checks relying on sight or hearing*
-- *Travel pace ½*
-- *Constitution save vs exhaustion every hour without protection*
+- _Disadvantage on Wisdom (Perception) checks relying on sight or hearing_
+- _Travel pace ½_
+- _Constitution save vs exhaustion every hour without protection_
 
 Chips come from a static map of weather-state → effect text. Wording must be either lifted directly from SRD 5.2 (CC-BY, attributed in footer) or paraphrased into our own prose. Before authoring, verify which weather effects are actually in SRD 5.2 vs DMG-only. Any DMG-only mechanic must be paraphrased rather than quoted.
 
@@ -216,23 +216,23 @@ If no effects apply, no chips are shown.
 
 Two states.
 
-*No encounter:*
+_No encounter:_
 
-> *The road is quiet. (Travel continues without incident.)*
+> _The road is quiet. (Travel continues without incident.)_
 
 Or, on empty-pool fallback:
 
-> *No matching creatures for this environment + party. Try loosening filters.*
+> _No matching creatures for this environment + party. Try loosening filters._
 
-*Encounter:*
+_Encounter:_
 
-> *2 **wolves** approach from the treeline.*
+> _2 **wolves** approach from the treeline._
 
 The creature name is an expander. Click to reveal the stat block summary: CR, type, size, AC, HP, speed, abilities. All from the Open5e snapshot.
 
 Below the headline, a **disposition / context line** built from the modifier rules that fired:
 
-> *Drawn by the noise of your camp. Hunting in the dusk.*
+> _Drawn by the noise of your camp. Hunting in the dusk._
 
 Each rule that contributed to the pick can include a `narrativeFragment` which gets concatenated into this line. Keeps the maths legible to the DM.
 
@@ -245,7 +245,7 @@ Each rule that contributed to the pick can include a `narrativeFragment` which g
 
 ### 5.4 Empty state
 
-Before the first roll: *"Set the scene above and roll."* No spinner; engine completes within a frame.
+Before the first roll: _"Set the scene above and roll."_ No spinner; engine completes within a frame.
 
 ### 5.5 Accessibility
 

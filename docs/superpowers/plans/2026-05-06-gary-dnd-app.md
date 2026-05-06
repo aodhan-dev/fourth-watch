@@ -66,6 +66,7 @@ Each engine file owns one responsibility; data files are pure data; components a
 ## Task 1: Scaffold SvelteKit project
 
 **Files:**
+
 - Create: `package.json`, `svelte.config.js`, `vite.config.ts`, `tsconfig.json`, `src/app.html`, `src/app.css`, `src/routes/+layout.svelte`, `src/routes/+page.svelte`, `.gitignore`
 
 - [ ] **Step 1: Run SvelteKit init**
@@ -126,6 +127,7 @@ git commit -m "chore: scaffold SvelteKit static project"
 ## Task 2: Configure dev tooling (lint, format, test paths)
 
 **Files:**
+
 - Create: `.prettierrc`, `eslint.config.js`
 - Modify: `package.json` scripts, `vite.config.ts`
 
@@ -161,7 +163,10 @@ export default [
     files: ['**/*.ts'],
     languageOptions: { parser: tsParser },
     plugins: { '@typescript-eslint': ts },
-    rules: { ...ts.configs.recommended.rules, '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }] }
+    rules: {
+      ...ts.configs.recommended.rules,
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }]
+    }
   },
   ...svelte.configs['flat/recommended'],
   { ignores: ['build/', '.svelte-kit/', 'node_modules/'] }
@@ -225,6 +230,7 @@ git commit -m "chore: add prettier, eslint, vitest, tsx tooling"
 ## Task 3: Engine — seeded RNG and sub-seed derivation
 
 **Files:**
+
 - Create: `src/lib/engine/rng.ts`
 - Test: `tests/engine/rng.test.ts`
 
@@ -290,7 +296,7 @@ export type Rng = () => number;
 export function makeRng(seed: number): Rng {
   let s = seed >>> 0;
   return () => {
-    s = (s + 0x6D2B79F5) >>> 0;
+    s = (s + 0x6d2b79f5) >>> 0;
     let t = s;
     t = Math.imul(t ^ (t >>> 15), t | 1);
     t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
@@ -352,6 +358,7 @@ git commit -m "feat(engine): seeded RNG and sub-seed derivation"
 ## Task 4: Engine — core types
 
 **Files:**
+
 - Create: `src/lib/engine/types.ts`
 
 - [ ] **Step 1: Write `types.ts`**
@@ -395,8 +402,8 @@ export interface Inputs {
   season: Season;
   time: TimeOfDay;
   region: RegionType;
-  partyLevel: number;       // 1..20
-  partySize: number;        // 1..8
+  partyLevel: number; // 1..20
+  partySize: number; // 1..8
   mode: TravelMode;
   campfire: boolean;
   noise: boolean;
@@ -426,7 +433,7 @@ export interface Monster {
   hp: number;
   ac: number;
   speed: string;
-  statblock: string;        // markdown summary, pre-rendered
+  statblock: string; // markdown summary, pre-rendered
   category: MonsterCategory;
 }
 
@@ -441,7 +448,7 @@ export interface RollResult {
   seed: number;
   weather: Weather;
   encounter: Encounter | null;
-  encounterMessage: string | null;   // populated when encounter is null
+  encounterMessage: string | null; // populated when encounter is null
 }
 
 export interface ModifierRule {
@@ -480,6 +487,7 @@ git commit -m "feat(engine): core types"
 ## Task 5: Author weather data files
 
 **Files:**
+
 - Create: `src/lib/data/climate-weather.json`, `src/lib/data/environment-modifiers.json`, `src/lib/data/season-modifiers.json`
 
 - [ ] **Step 1: Write `climate-weather.json`**
@@ -489,34 +497,34 @@ Each climate has base weights for Temperature (6 buckets), Precipitation (3 buck
 ```json
 {
   "Tropical": {
-    "temp":   { "Freezing": 0, "Cold": 0, "Cool": 5, "Temperate": 20, "Warm": 50, "Hot": 25 },
+    "temp": { "Freezing": 0, "Cold": 0, "Cool": 5, "Temperate": 20, "Warm": 50, "Hot": 25 },
     "precip": { "Clear": 30, "Light": 40, "Heavy": 30 },
-    "wind":   { "None": 30, "Low": 50, "High": 20 }
+    "wind": { "None": 30, "Low": 50, "High": 20 }
   },
   "Subtropical": {
-    "temp":   { "Freezing": 0, "Cold": 2, "Cool": 13, "Temperate": 30, "Warm": 40, "Hot": 15 },
+    "temp": { "Freezing": 0, "Cold": 2, "Cool": 13, "Temperate": 30, "Warm": 40, "Hot": 15 },
     "precip": { "Clear": 45, "Light": 35, "Heavy": 20 },
-    "wind":   { "None": 30, "Low": 55, "High": 15 }
+    "wind": { "None": 30, "Low": 55, "High": 15 }
   },
   "Arid": {
-    "temp":   { "Freezing": 1, "Cold": 4, "Cool": 10, "Temperate": 20, "Warm": 35, "Hot": 30 },
+    "temp": { "Freezing": 1, "Cold": 4, "Cool": 10, "Temperate": 20, "Warm": 35, "Hot": 30 },
     "precip": { "Clear": 80, "Light": 15, "Heavy": 5 },
-    "wind":   { "None": 25, "Low": 50, "High": 25 }
+    "wind": { "None": 25, "Low": 50, "High": 25 }
   },
   "Temperate": {
-    "temp":   { "Freezing": 5, "Cold": 15, "Cool": 25, "Temperate": 30, "Warm": 20, "Hot": 5 },
+    "temp": { "Freezing": 5, "Cold": 15, "Cool": 25, "Temperate": 30, "Warm": 20, "Hot": 5 },
     "precip": { "Clear": 50, "Light": 35, "Heavy": 15 },
-    "wind":   { "None": 25, "Low": 55, "High": 20 }
+    "wind": { "None": 25, "Low": 55, "High": 20 }
   },
   "Subarctic": {
-    "temp":   { "Freezing": 25, "Cold": 35, "Cool": 25, "Temperate": 12, "Warm": 3, "Hot": 0 },
+    "temp": { "Freezing": 25, "Cold": 35, "Cool": 25, "Temperate": 12, "Warm": 3, "Hot": 0 },
     "precip": { "Clear": 50, "Light": 30, "Heavy": 20 },
-    "wind":   { "None": 20, "Low": 50, "High": 30 }
+    "wind": { "None": 20, "Low": 50, "High": 30 }
   },
   "Arctic": {
-    "temp":   { "Freezing": 60, "Cold": 30, "Cool": 8, "Temperate": 2, "Warm": 0, "Hot": 0 },
+    "temp": { "Freezing": 60, "Cold": 30, "Cool": 8, "Temperate": 2, "Warm": 0, "Hot": 0 },
     "precip": { "Clear": 50, "Light": 25, "Heavy": 25 },
-    "wind":   { "None": 15, "Low": 45, "High": 40 }
+    "wind": { "None": 15, "Low": 45, "High": 40 }
   }
 }
 ```
@@ -572,17 +580,20 @@ Multiplicative overrides on precipitation/wind per environment.
 
 ```json
 {
-  "Arctic":      { "precip": { "Heavy": 1.3 }, "wind": { "High": 1.5 } },
-  "Coastal":     { "precip": { "Light": 1.2, "Heavy": 1.2 }, "wind": { "Low": 1.2, "High": 1.4 } },
-  "Desert":      { "precip": { "Clear": 1.3, "Heavy": 0.3 }, "wind": { "High": 1.3 } },
-  "Forest":      { "precip": { "Light": 1.1 }, "wind": { "Low": 0.7, "High": 0.5 } },
-  "Grassland":   { "wind": { "Low": 1.2, "High": 1.4 } },
-  "Hills":       { "wind": { "Low": 1.1, "High": 1.2 } },
-  "Mountains":   { "precip": { "Heavy": 1.4 }, "wind": { "High": 1.8 } },
-  "Swamp":       { "precip": { "Light": 1.4, "Heavy": 1.2 }, "wind": { "None": 1.4, "High": 0.5 } },
-  "Underground": { "precip": { "Clear": 5.0, "Light": 0, "Heavy": 0 }, "wind": { "None": 5.0, "Low": 0, "High": 0 } },
-  "Urban":       {},
-  "Wasteland":   { "precip": { "Clear": 1.2 }, "wind": { "High": 1.3 } }
+  "Arctic": { "precip": { "Heavy": 1.3 }, "wind": { "High": 1.5 } },
+  "Coastal": { "precip": { "Light": 1.2, "Heavy": 1.2 }, "wind": { "Low": 1.2, "High": 1.4 } },
+  "Desert": { "precip": { "Clear": 1.3, "Heavy": 0.3 }, "wind": { "High": 1.3 } },
+  "Forest": { "precip": { "Light": 1.1 }, "wind": { "Low": 0.7, "High": 0.5 } },
+  "Grassland": { "wind": { "Low": 1.2, "High": 1.4 } },
+  "Hills": { "wind": { "Low": 1.1, "High": 1.2 } },
+  "Mountains": { "precip": { "Heavy": 1.4 }, "wind": { "High": 1.8 } },
+  "Swamp": { "precip": { "Light": 1.4, "Heavy": 1.2 }, "wind": { "None": 1.4, "High": 0.5 } },
+  "Underground": {
+    "precip": { "Clear": 5.0, "Light": 0, "Heavy": 0 },
+    "wind": { "None": 5.0, "Low": 0, "High": 0 }
+  },
+  "Urban": {},
+  "Wasteland": { "precip": { "Clear": 1.2 }, "wind": { "High": 1.3 } }
 }
 ```
 
@@ -603,6 +614,7 @@ git commit -m "feat(data): authored weather distribution tables"
 ## Task 6: Engine — weather rolling
 
 **Files:**
+
 - Create: `src/lib/engine/weather.ts`
 - Test: `tests/engine/weather.test.ts`
 
@@ -639,9 +651,9 @@ describe('rollWeather', () => {
 
   it('produces a valid weather object', () => {
     const w = rollWeather(baseInputs(), makeRng(1));
-    expect(['Freezing','Cold','Cool','Temperate','Warm','Hot']).toContain(w.temp);
-    expect(['Clear','Light','Heavy']).toContain(w.precip);
-    expect(['None','Low','High']).toContain(w.wind);
+    expect(['Freezing', 'Cold', 'Cool', 'Temperate', 'Warm', 'Hot']).toContain(w.temp);
+    expect(['Clear', 'Light', 'Heavy']).toContain(w.precip);
+    expect(['None', 'Low', 'High']).toContain(w.wind);
     expect(typeof w.narrative).toBe('string');
     expect(w.narrative.length).toBeGreaterThan(0);
   });
@@ -742,9 +754,25 @@ function combinationValid(temp: Temperature, precip: Precipitation): boolean {
 }
 
 export function rollWeather(inputs: Inputs, rng: Rng): Weather {
-  const climate = (climateData as Record<string, { temp: AxisWeights<Temperature>; precip: AxisWeights<Precipitation>; wind: AxisWeights<Wind> }>)[inputs.climate];
-  const seasonMod = (seasonData as Record<string, Record<string, { temp?: Partial<Record<Temperature, number>> }>>)[inputs.climate]?.[inputs.season];
-  const envMod = (envData as Record<string, { precip?: Partial<Record<Precipitation, number>>; wind?: Partial<Record<Wind, number>> }>)[inputs.environment];
+  const climate = (
+    climateData as Record<
+      string,
+      {
+        temp: AxisWeights<Temperature>;
+        precip: AxisWeights<Precipitation>;
+        wind: AxisWeights<Wind>;
+      }
+    >
+  )[inputs.climate];
+  const seasonMod = (
+    seasonData as Record<string, Record<string, { temp?: Partial<Record<Temperature, number>> }>>
+  )[inputs.climate]?.[inputs.season];
+  const envMod = (
+    envData as Record<
+      string,
+      { precip?: Partial<Record<Precipitation, number>>; wind?: Partial<Record<Wind, number>> }
+    >
+  )[inputs.environment];
 
   const tempWeights = applyMultipliers(climate.temp, seasonMod?.temp);
   const precipWeights = applyMultipliers(climate.precip, envMod?.precip);
@@ -860,6 +888,7 @@ git commit -m "feat(engine): rollWeather with climate/season/env modifiers"
 ## Task 7: Open5e fetch + categorise scripts
 
 **Files:**
+
 - Create: `scripts/fetch-monsters.ts`, `scripts/categorise.ts`, `data-overrides/categories.json`, `src/lib/data/monsters.json`
 
 - [ ] **Step 1: Write `scripts/fetch-monsters.ts`**
@@ -919,7 +948,12 @@ interface NormalisedMonster {
 
 function fieldString(v: unknown): string {
   if (typeof v === 'string') return v;
-  if (v && typeof v === 'object' && 'name' in v && typeof (v as { name: string }).name === 'string') {
+  if (
+    v &&
+    typeof v === 'object' &&
+    'name' in v &&
+    typeof (v as { name: string }).name === 'string'
+  ) {
     return (v as { name: string }).name;
   }
   if (v && typeof v === 'object' && 'key' in v && typeof (v as { key: string }).key === 'string') {
@@ -948,7 +982,12 @@ function parseAc(v: unknown): number {
 
 function parseHp(v: unknown): number {
   if (typeof v === 'number') return v;
-  if (v && typeof v === 'object' && 'value' in v && typeof (v as { value: number }).value === 'number') {
+  if (
+    v &&
+    typeof v === 'object' &&
+    'value' in v &&
+    typeof (v as { value: number }).value === 'number'
+  ) {
     return (v as { value: number }).value;
   }
   return 1;
@@ -1151,7 +1190,9 @@ for (const m of monsters) {
 }
 
 writeFileSync(path, JSON.stringify(monsters, null, 2));
-console.log(`Categorised ${monsters.length} monsters: ${overridesApplied} from overrides, ${heuristic} from type heuristics.`);
+console.log(
+  `Categorised ${monsters.length} monsters: ${overridesApplied} from overrides, ${heuristic} from type heuristics.`
+);
 ```
 
 - [ ] **Step 4: Run the snapshot**
@@ -1173,6 +1214,7 @@ git commit -m "feat(data): Open5e SRD monster snapshot + categoriser"
 ## Task 8: Author encounter-modifiers.json
 
 **Files:**
+
 - Create: `src/lib/data/encounter-modifiers.json`
 
 - [ ] **Step 1: Write the file**
@@ -1203,7 +1245,13 @@ git commit -m "feat(data): Open5e SRD monster snapshot + categoriser"
       "id": "region-hostile",
       "when": { "region": "Hostile" },
       "encounterChanceMultiplier": 1.8,
-      "categoryMultipliers": { "Predator": 2.0, "Aberration": 2.0, "Undead": 2.0, "Bandit": 1.5, "Civilised": 0.2 }
+      "categoryMultipliers": {
+        "Predator": 2.0,
+        "Aberration": 2.0,
+        "Undead": 2.0,
+        "Bandit": 1.5,
+        "Civilised": 0.2
+      }
     },
     {
       "id": "time-night",
@@ -1287,6 +1335,7 @@ git commit -m "feat(data): authored encounter modifier rules"
 ## Task 9: Engine — encounter check and pick
 
 **Files:**
+
 - Create: `src/lib/engine/encounter.ts`
 - Test: `tests/engine/encounter.test.ts`
 
@@ -1296,7 +1345,12 @@ Create `tests/engine/encounter.test.ts`:
 
 ```ts
 import { describe, it, expect } from 'vitest';
-import { encounterCheck, encounterPick, crWindow, applyModifiers } from '../../src/lib/engine/encounter';
+import {
+  encounterCheck,
+  encounterPick,
+  crWindow,
+  applyModifiers
+} from '../../src/lib/engine/encounter';
 import { makeRng } from '../../src/lib/engine/rng';
 import type { Inputs, Monster, Weather } from '../../src/lib/engine/types';
 
@@ -1314,15 +1368,87 @@ const baseInputs = (overrides: Partial<Inputs> = {}): Inputs => ({
   ...overrides
 });
 
-const tameWeather: Weather = { temp: 'Temperate', precip: 'Clear', wind: 'Low', narrative: '', effects: [] };
-const wildWeather: Weather = { temp: 'Freezing', precip: 'Heavy', wind: 'High', narrative: '', effects: [] };
+const tameWeather: Weather = {
+  temp: 'Temperate',
+  precip: 'Clear',
+  wind: 'Low',
+  narrative: '',
+  effects: []
+};
+const wildWeather: Weather = {
+  temp: 'Freezing',
+  precip: 'Heavy',
+  wind: 'High',
+  narrative: '',
+  effects: []
+};
 
 const sampleMonsters: Monster[] = [
-  { slug: 'wolf', name: 'Wolf', cr: 0.25, type: 'beast', size: 'Medium', environments: ['Forest','Hills','Grassland'], hp: 11, ac: 13, speed: '40ft', statblock: '', category: 'Predator' },
-  { slug: 'bandit', name: 'Bandit', cr: 0.125, type: 'humanoid', size: 'Medium', environments: ['Forest','Urban','Hills','Grassland'], hp: 11, ac: 12, speed: '30ft', statblock: '', category: 'Bandit' },
-  { slug: 'guard', name: 'Guard', cr: 0.125, type: 'humanoid', size: 'Medium', environments: ['Urban'], hp: 11, ac: 16, speed: '30ft', statblock: '', category: 'Civilised' },
-  { slug: 'zombie', name: 'Zombie', cr: 0.25, type: 'undead', size: 'Medium', environments: ['Swamp','Underground'], hp: 22, ac: 8, speed: '20ft', statblock: '', category: 'Undead' },
-  { slug: 'troll', name: 'Troll', cr: 5, type: 'giant', size: 'Large', environments: ['Forest','Mountains','Swamp'], hp: 84, ac: 15, speed: '30ft', statblock: '', category: 'Predator' }
+  {
+    slug: 'wolf',
+    name: 'Wolf',
+    cr: 0.25,
+    type: 'beast',
+    size: 'Medium',
+    environments: ['Forest', 'Hills', 'Grassland'],
+    hp: 11,
+    ac: 13,
+    speed: '40ft',
+    statblock: '',
+    category: 'Predator'
+  },
+  {
+    slug: 'bandit',
+    name: 'Bandit',
+    cr: 0.125,
+    type: 'humanoid',
+    size: 'Medium',
+    environments: ['Forest', 'Urban', 'Hills', 'Grassland'],
+    hp: 11,
+    ac: 12,
+    speed: '30ft',
+    statblock: '',
+    category: 'Bandit'
+  },
+  {
+    slug: 'guard',
+    name: 'Guard',
+    cr: 0.125,
+    type: 'humanoid',
+    size: 'Medium',
+    environments: ['Urban'],
+    hp: 11,
+    ac: 16,
+    speed: '30ft',
+    statblock: '',
+    category: 'Civilised'
+  },
+  {
+    slug: 'zombie',
+    name: 'Zombie',
+    cr: 0.25,
+    type: 'undead',
+    size: 'Medium',
+    environments: ['Swamp', 'Underground'],
+    hp: 22,
+    ac: 8,
+    speed: '20ft',
+    statblock: '',
+    category: 'Undead'
+  },
+  {
+    slug: 'troll',
+    name: 'Troll',
+    cr: 5,
+    type: 'giant',
+    size: 'Large',
+    environments: ['Forest', 'Mountains', 'Swamp'],
+    hp: 84,
+    ac: 15,
+    speed: '30ft',
+    statblock: '',
+    category: 'Predator'
+  }
 ];
 
 describe('crWindow', () => {
@@ -1346,7 +1472,12 @@ describe('applyModifiers', () => {
   });
 
   it('multiplies category weights from matching rules', () => {
-    const inputs = baseInputs({ time: 'Night', region: 'Wilderness', mode: 'AtCamp', campfire: false });
+    const inputs = baseInputs({
+      time: 'Night',
+      region: 'Wilderness',
+      mode: 'AtCamp',
+      campfire: false
+    });
     const out = applyModifiers(inputs, tameWeather);
     expect(out.categoryWeights.Predator).toBeGreaterThan(out.categoryWeights.Civilised);
   });
@@ -1369,10 +1500,13 @@ describe('encounterCheck', () => {
   });
 
   it('triggers more often in hostile regions than settled', () => {
-    let hostile = 0, settled = 0;
+    let hostile = 0,
+      settled = 0;
     for (let s = 0; s < 1000; s++) {
-      if (encounterCheck(baseInputs({ region: 'Hostile' }), tameWeather, makeRng(s)).happens) hostile++;
-      if (encounterCheck(baseInputs({ region: 'Settled' }), tameWeather, makeRng(s)).happens) settled++;
+      if (encounterCheck(baseInputs({ region: 'Hostile' }), tameWeather, makeRng(s)).happens)
+        hostile++;
+      if (encounterCheck(baseInputs({ region: 'Settled' }), tameWeather, makeRng(s)).happens)
+        settled++;
     }
     expect(hostile).toBeGreaterThan(settled * 2);
   });
@@ -1380,14 +1514,24 @@ describe('encounterCheck', () => {
 
 describe('encounterPick', () => {
   it('returns null with hint when pool is empty even after widening', () => {
-    const result = encounterPick(baseInputs({ environment: 'Wasteland' }), tameWeather, [], makeRng(1));
+    const result = encounterPick(
+      baseInputs({ environment: 'Wasteland' }),
+      tameWeather,
+      [],
+      makeRng(1)
+    );
     expect(result.encounter).toBeNull();
     expect(result.message).toBeTruthy();
   });
 
   it('respects environment filter', () => {
     for (let s = 0; s < 50; s++) {
-      const r = encounterPick(baseInputs({ environment: 'Urban' }), tameWeather, sampleMonsters, makeRng(s));
+      const r = encounterPick(
+        baseInputs({ environment: 'Urban' }),
+        tameWeather,
+        sampleMonsters,
+        makeRng(s)
+      );
       if (r.encounter) {
         expect(r.encounter.creature.environments).toContain('Urban');
       }
@@ -1395,8 +1539,15 @@ describe('encounterPick', () => {
   });
 
   it('biases toward predators at night in wilderness', () => {
-    let predators = 0, civilised = 0;
-    const inputs = baseInputs({ environment: 'Forest', region: 'Wilderness', time: 'Night', mode: 'AtCamp', campfire: false });
+    let predators = 0,
+      civilised = 0;
+    const inputs = baseInputs({
+      environment: 'Forest',
+      region: 'Wilderness',
+      time: 'Night',
+      mode: 'AtCamp',
+      campfire: false
+    });
     for (let s = 0; s < 500; s++) {
       const r = encounterPick(inputs, tameWeather, sampleMonsters, makeRng(s));
       if (!r.encounter) continue;
@@ -1416,14 +1567,7 @@ Expected: Encounter tests fail with "module not found".
 - [ ] **Step 3: Implement `encounter.ts`**
 
 ```ts
-import type {
-  Inputs,
-  Weather,
-  Monster,
-  Encounter,
-  ModifierRule,
-  MonsterCategory
-} from './types';
+import type { Inputs, Weather, Monster, Encounter, ModifierRule, MonsterCategory } from './types';
 import { type Rng, pickFrom, pickIndex } from './rng';
 import modifiersData from '../data/encounter-modifiers.json';
 
@@ -1434,7 +1578,14 @@ interface ModifiersFile {
 const MODS = modifiersData as ModifiersFile;
 
 const ALL_CATEGORIES: MonsterCategory[] = [
-  'Predator', 'Bandit', 'Civilised', 'Undead', 'Fey', 'Aberration', 'Construct', 'Other'
+  'Predator',
+  'Bandit',
+  'Civilised',
+  'Undead',
+  'Fey',
+  'Aberration',
+  'Construct',
+  'Other'
 ];
 
 function matches(rule: ModifierRule, inputs: Inputs, weather: Weather): boolean {
@@ -1448,7 +1599,11 @@ function matches(rule: ModifierRule, inputs: Inputs, weather: Weather): boolean 
   if (w.campfire !== undefined && w.campfire !== inputs.campfire) return false;
   if (w.noise !== undefined && w.noise !== inputs.noise) return false;
   if (w.weatherSeverity) {
-    const severe = weather.precip === 'Heavy' || weather.wind === 'High' || weather.temp === 'Freezing' || weather.temp === 'Hot';
+    const severe =
+      weather.precip === 'Heavy' ||
+      weather.wind === 'High' ||
+      weather.temp === 'Freezing' ||
+      weather.temp === 'Hot';
     const flag = severe ? 'Severe' : 'Mild';
     if (w.weatherSeverity !== flag) return false;
   }
@@ -1463,7 +1618,9 @@ export interface AppliedModifiers {
 
 export function applyModifiers(inputs: Inputs, weather: Weather): AppliedModifiers {
   let chance = MODS.baseEncounterChance;
-  const cat: Record<MonsterCategory, number> = Object.fromEntries(ALL_CATEGORIES.map((c) => [c, 1])) as Record<MonsterCategory, number>;
+  const cat: Record<MonsterCategory, number> = Object.fromEntries(
+    ALL_CATEGORIES.map((c) => [c, 1])
+  ) as Record<MonsterCategory, number>;
   const matchingRules: ModifierRule[] = [];
   for (const rule of MODS.rules) {
     if (!matches(rule, inputs, weather)) continue;
@@ -1480,13 +1637,21 @@ export function applyModifiers(inputs: Inputs, weather: Weather): AppliedModifie
   return { encounterChance: chance, categoryWeights: cat, matchingRules };
 }
 
-export interface CrWindow { min: number; max: number; }
+export interface CrWindow {
+  min: number;
+  max: number;
+}
 
 export function crWindow(level: number, size: number, region: string): CrWindow {
   // Loose, hand-tuned. Floor grows slowly with level; ceiling depends on region.
   const min = Math.max(0, (level - 4) / 4);
   const baseMax = level * 0.85 + (size - 4) * 0.15;
-  const regionBonus: Record<string, number> = { Settled: -1, Frontier: 0, Wilderness: 1, Hostile: 2 };
+  const regionBonus: Record<string, number> = {
+    Settled: -1,
+    Frontier: 0,
+    Wilderness: 1,
+    Hostile: 2
+  };
   const max = Math.max(0.25, baseMax + (regionBonus[region] ?? 0));
   return { min, max };
 }
@@ -1495,7 +1660,10 @@ function inWindow(cr: number, w: CrWindow): boolean {
   return cr >= w.min && cr <= w.max;
 }
 
-export interface CheckResult { happens: boolean; chance: number; }
+export interface CheckResult {
+  happens: boolean;
+  chance: number;
+}
 
 export function encounterCheck(inputs: Inputs, weather: Weather, rng: Rng): CheckResult {
   const { encounterChance } = applyModifiers(inputs, weather);
@@ -1517,7 +1685,8 @@ function decideCount(cr: number, level: number, size: number, rng: Rng): number 
 
 function buildNarrative(creature: Monster, count: number, rules: ModifierRule[]): string {
   const fragments = rules.map((r) => r.narrativeFragment).filter((f): f is string => Boolean(f));
-  const subj = count === 1 ? `A ${creature.name.toLowerCase()}` : `${count} ${creature.name.toLowerCase()}s`;
+  const subj =
+    count === 1 ? `A ${creature.name.toLowerCase()}` : `${count} ${creature.name.toLowerCase()}s`;
   const tail = fragments.length > 0 ? ` ${fragments.join(', ')}.` : '.';
   return `${subj} appears${tail}`;
 }
@@ -1599,6 +1768,7 @@ git commit -m "feat(engine): encounter check, pick, modifier composition"
 ## Task 10: Engine — top-level roll()
 
 **Files:**
+
 - Create: `src/lib/engine/index.ts`
 - Test: append to `tests/engine/encounter.test.ts` (or create `tests/engine/index.test.ts`)
 
@@ -1668,8 +1838,8 @@ import { encounterCheck, encounterPick } from './encounter';
 import monstersData from '../data/monsters.json';
 
 export interface RerollOptions {
-  rerollWeather?: number;     // override weather sub-seed
-  rerollEncounter?: number;   // override encounter sub-seed
+  rerollWeather?: number; // override weather sub-seed
+  rerollEncounter?: number; // override encounter sub-seed
 }
 
 export function roll(inputs: Inputs, seed: number, opts: RerollOptions = {}): RollResult {
@@ -1715,6 +1885,7 @@ git commit -m "feat(engine): top-level roll() with sub-seed derivation"
 ## Task 11: UI — InputForm component
 
 **Files:**
+
 - Create: `src/lib/components/InputForm.svelte`
 
 - [ ] **Step 1: Write the component**
@@ -1725,37 +1896,54 @@ git commit -m "feat(engine): top-level roll() with sub-seed derivation"
 
   let { value = $bindable(), onRoll }: { value: Inputs; onRoll: () => void } = $props();
 
-  const climates = ['Tropical','Subtropical','Arid','Temperate','Subarctic','Arctic'] as const;
-  const environments = ['Arctic','Coastal','Desert','Forest','Grassland','Hills','Mountains','Swamp','Underground','Urban','Wasteland'] as const;
-  const seasons = ['Spring','Summer','Autumn','Winter'] as const;
-  const times = ['Dawn','Day','Dusk','Night'] as const;
-  const regions = ['Settled','Frontier','Wilderness','Hostile'] as const;
+  const climates = ['Tropical', 'Subtropical', 'Arid', 'Temperate', 'Subarctic', 'Arctic'] as const;
+  const environments = [
+    'Arctic',
+    'Coastal',
+    'Desert',
+    'Forest',
+    'Grassland',
+    'Hills',
+    'Mountains',
+    'Swamp',
+    'Underground',
+    'Urban',
+    'Wasteland'
+  ] as const;
+  const seasons = ['Spring', 'Summer', 'Autumn', 'Winter'] as const;
+  const times = ['Dawn', 'Day', 'Dusk', 'Night'] as const;
+  const regions = ['Settled', 'Frontier', 'Wilderness', 'Hostile'] as const;
 </script>
 
 <form on:submit|preventDefault={onRoll} class="form">
   <fieldset>
     <legend>Setting</legend>
-    <label>Climate
+    <label
+      >Climate
       <select bind:value={value.climate}>
         {#each climates as c}<option value={c}>{c}</option>{/each}
       </select>
     </label>
-    <label>Environment
+    <label
+      >Environment
       <select bind:value={value.environment}>
         {#each environments as e}<option value={e}>{e}</option>{/each}
       </select>
     </label>
-    <label>Season
+    <label
+      >Season
       <select bind:value={value.season}>
         {#each seasons as s}<option value={s}>{s}</option>{/each}
       </select>
     </label>
-    <label>Time of day
+    <label
+      >Time of day
       <select bind:value={value.time}>
         {#each times as t}<option value={t}>{t}</option>{/each}
       </select>
     </label>
-    <label>Region type
+    <label
+      >Region type
       <select bind:value={value.region}>
         {#each regions as r}<option value={r}>{r}</option>{/each}
       </select>
@@ -1764,10 +1952,12 @@ git commit -m "feat(engine): top-level roll() with sub-seed derivation"
 
   <fieldset>
     <legend>Party</legend>
-    <label>Average level
+    <label
+      >Average level
       <input type="number" min="1" max="20" bind:value={value.partyLevel} />
     </label>
-    <label>Number of characters
+    <label
+      >Number of characters
       <input type="number" min="1" max="8" bind:value={value.partySize} />
     </label>
   </fieldset>
@@ -1776,7 +1966,10 @@ git commit -m "feat(engine): top-level roll() with sub-seed derivation"
     <legend>State</legend>
     <label><input type="radio" bind:group={value.mode} value="Travelling" /> Travelling</label>
     <label><input type="radio" bind:group={value.mode} value="AtCamp" /> At camp</label>
-    <label><input type="checkbox" bind:checked={value.campfire} disabled={value.mode !== 'AtCamp'} /> Campfire lit</label>
+    <label
+      ><input type="checkbox" bind:checked={value.campfire} disabled={value.mode !== 'AtCamp'} /> Campfire
+      lit</label
+    >
     <label><input type="checkbox" bind:checked={value.noise} /> Making noise</label>
   </fieldset>
 
@@ -1784,15 +1977,45 @@ git commit -m "feat(engine): top-level roll() with sub-seed derivation"
 </form>
 
 <style>
-  .form { display: grid; gap: 1rem; }
-  fieldset { border: 1px solid #ccc; padding: 0.75rem; display: grid; gap: 0.5rem; }
-  legend { padding: 0 0.25rem; font-weight: 600; }
-  label { display: grid; grid-template-columns: 9rem 1fr; align-items: center; gap: 0.5rem; }
-  input[type="checkbox"], input[type="radio"] { justify-self: start; }
-  button.roll { padding: 0.75rem 1.5rem; font-size: 1.1rem; font-weight: 600; cursor: pointer; }
+  .form {
+    display: grid;
+    gap: 1rem;
+  }
+  fieldset {
+    border: 1px solid #ccc;
+    padding: 0.75rem;
+    display: grid;
+    gap: 0.5rem;
+  }
+  legend {
+    padding: 0 0.25rem;
+    font-weight: 600;
+  }
+  label {
+    display: grid;
+    grid-template-columns: 9rem 1fr;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  input[type='checkbox'],
+  input[type='radio'] {
+    justify-self: start;
+  }
+  button.roll {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
   @media (min-width: 640px) {
-    .form { grid-template-columns: 1fr 1fr; }
-    button.roll { grid-column: 1 / -1; justify-self: center; min-width: 12rem; }
+    .form {
+      grid-template-columns: 1fr 1fr;
+    }
+    button.roll {
+      grid-column: 1 / -1;
+      justify-self: center;
+      min-width: 12rem;
+    }
   }
 </style>
 ```
@@ -1814,6 +2037,7 @@ git commit -m "feat(ui): InputForm component"
 ## Task 12: UI — Result components
 
 **Files:**
+
 - Create: `src/lib/components/MechanicsChip.svelte`, `src/lib/components/WeatherBlock.svelte`, `src/lib/components/EncounterBlock.svelte`, `src/lib/components/ResultPanel.svelte`, `src/lib/components/Footer.svelte`
 
 - [ ] **Step 1: `MechanicsChip.svelte`**
@@ -1824,12 +2048,22 @@ git commit -m "feat(ui): InputForm component"
   let { effect }: { effect: WeatherEffect } = $props();
 </script>
 
-<span class="chip" title={effect.source === 'SRD' ? 'From SRD 5.2 (CC-BY 4.0)' : 'Original wording'}>
+<span
+  class="chip"
+  title={effect.source === 'SRD' ? 'From SRD 5.2 (CC-BY 4.0)' : 'Original wording'}
+>
   {effect.text}
 </span>
 
 <style>
-  .chip { display: inline-block; padding: 0.25rem 0.6rem; border-radius: 1rem; background: #eee; font-size: 0.85rem; margin: 0.2rem; }
+  .chip {
+    display: inline-block;
+    padding: 0.25rem 0.6rem;
+    border-radius: 1rem;
+    background: #eee;
+    font-size: 0.85rem;
+    margin: 0.2rem;
+  }
 </style>
 ```
 
@@ -1855,9 +2089,15 @@ git commit -m "feat(ui): InputForm component"
 </section>
 
 <style>
-  .weather { margin-bottom: 1rem; }
-  .narrative { font-size: 1.05rem; }
-  .chips { margin-top: 0.5rem; }
+  .weather {
+    margin-bottom: 1rem;
+  }
+  .narrative {
+    font-size: 1.05rem;
+  }
+  .chips {
+    margin-top: 0.5rem;
+  }
 </style>
 ```
 
@@ -1881,24 +2121,48 @@ git commit -m "feat(ui): InputForm component"
     </button>
     {#if expanded}
       <dl class="stats">
-        <dt>CR</dt><dd>{encounter.creature.cr}</dd>
-        <dt>Type</dt><dd>{encounter.creature.type}</dd>
-        <dt>Size</dt><dd>{encounter.creature.size}</dd>
-        <dt>HP</dt><dd>{encounter.creature.hp}</dd>
-        <dt>AC</dt><dd>{encounter.creature.ac}</dd>
-        <dt>Speed</dt><dd>{encounter.creature.speed}</dd>
+        <dt>CR</dt>
+        <dd>{encounter.creature.cr}</dd>
+        <dt>Type</dt>
+        <dd>{encounter.creature.type}</dd>
+        <dt>Size</dt>
+        <dd>{encounter.creature.size}</dd>
+        <dt>HP</dt>
+        <dd>{encounter.creature.hp}</dd>
+        <dt>AC</dt>
+        <dd>{encounter.creature.ac}</dd>
+        <dt>Speed</dt>
+        <dd>{encounter.creature.speed}</dd>
       </dl>
     {/if}
   {/if}
 </section>
 
 <style>
-  .encounter { margin-bottom: 1rem; }
-  .lead { font-size: 1.05rem; }
-  .expand { margin-top: 0.5rem; padding: 0.25rem 0.6rem; cursor: pointer; }
-  .stats { display: grid; grid-template-columns: max-content 1fr; gap: 0.25rem 1rem; margin-top: 0.5rem; }
-  dt { font-weight: 600; }
-  .quiet { font-style: italic; color: #555; }
+  .encounter {
+    margin-bottom: 1rem;
+  }
+  .lead {
+    font-size: 1.05rem;
+  }
+  .expand {
+    margin-top: 0.5rem;
+    padding: 0.25rem 0.6rem;
+    cursor: pointer;
+  }
+  .stats {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.25rem 1rem;
+    margin-top: 0.5rem;
+  }
+  dt {
+    font-weight: 600;
+  }
+  .quiet {
+    font-style: italic;
+    color: #555;
+  }
 </style>
 ```
 
@@ -1910,11 +2174,17 @@ git commit -m "feat(ui): InputForm component"
   import WeatherBlock from './WeatherBlock.svelte';
   import EncounterBlock from './EncounterBlock.svelte';
 
-  let { result, onRerollAll, onRerollWeather, onRerollEncounter }:
-    { result: RollResult | null;
-      onRerollAll: () => void;
-      onRerollWeather: () => void;
-      onRerollEncounter: () => void } = $props();
+  let {
+    result,
+    onRerollAll,
+    onRerollWeather,
+    onRerollEncounter
+  }: {
+    result: RollResult | null;
+    onRerollAll: () => void;
+    onRerollWeather: () => void;
+    onRerollEncounter: () => void;
+  } = $props();
 
   function copySeed() {
     if (result) navigator.clipboard?.writeText(String(result.seed));
@@ -1938,12 +2208,37 @@ git commit -m "feat(ui): InputForm component"
 {/if}
 
 <style>
-  .panel { border: 1px solid #ccc; padding: 1rem; border-radius: 0.5rem; }
-  .empty { color: #666; font-style: italic; padding: 1rem 0; }
-  .meta { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid #eee; }
-  .seed code { background: #f4f4f4; padding: 0.1rem 0.3rem; border-radius: 0.2rem; }
-  button { padding: 0.4rem 0.7rem; cursor: pointer; }
-  button.primary { font-weight: 600; }
+  .panel {
+    border: 1px solid #ccc;
+    padding: 1rem;
+    border-radius: 0.5rem;
+  }
+  .empty {
+    color: #666;
+    font-style: italic;
+    padding: 1rem 0;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #eee;
+  }
+  .seed code {
+    background: #f4f4f4;
+    padding: 0.1rem 0.3rem;
+    border-radius: 0.2rem;
+  }
+  button {
+    padding: 0.4rem 0.7rem;
+    cursor: pointer;
+  }
+  button.primary {
+    font-weight: 600;
+  }
 </style>
 ```
 
@@ -1952,16 +2247,25 @@ git commit -m "feat(ui): InputForm component"
 ```svelte
 <footer class="site-footer">
   <p>
-    Monster data via <a href="https://open5e.com/" rel="noopener">Open5e</a>.
-    This work includes material from the System Reference Document 5.2 by Wizards of the Coast LLC,
-    used under the
-    <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener">Creative Commons Attribution 4.0 International License</a>.
+    Monster data via <a href="https://open5e.com/" rel="noopener">Open5e</a>. This work includes
+    material from the System Reference Document 5.2 by Wizards of the Coast LLC, used under the
+    <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener"
+      >Creative Commons Attribution 4.0 International License</a
+    >.
   </p>
 </footer>
 
 <style>
-  .site-footer { margin-top: 2rem; padding: 1rem; font-size: 0.8rem; color: #555; border-top: 1px solid #eee; }
-  .site-footer a { color: inherit; }
+  .site-footer {
+    margin-top: 2rem;
+    padding: 1rem;
+    font-size: 0.8rem;
+    color: #555;
+    border-top: 1px solid #eee;
+  }
+  .site-footer a {
+    color: inherit;
+  }
 </style>
 ```
 
@@ -1982,6 +2286,7 @@ git commit -m "feat(ui): result panel components and footer"
 ## Task 13: Wire `+page.svelte` and persist inputs
 
 **Files:**
+
 - Modify: `src/routes/+page.svelte`
 - Modify: `src/app.html` (title), `src/app.css` (basic resets)
 
@@ -2068,18 +2373,40 @@ git commit -m "feat(ui): result panel components and footer"
 </main>
 
 <style>
-  main { max-width: 800px; margin: 0 auto; padding: 1rem; font-family: system-ui, sans-serif; }
-  h1 { font-size: 1.5rem; margin: 0.5rem 0 1rem; }
+  main {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1rem;
+    font-family: system-ui, sans-serif;
+  }
+  h1 {
+    font-size: 1.5rem;
+    margin: 0.5rem 0 1rem;
+  }
 </style>
 ```
 
 - [ ] **Step 2: Add basic CSS reset to `src/app.css`**
 
 ```css
-*, *::before, *::after { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; }
-body { background: #fafafa; color: #222; line-height: 1.4; }
-button { font-family: inherit; }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+body {
+  background: #fafafa;
+  color: #222;
+  line-height: 1.4;
+}
+button {
+  font-family: inherit;
+}
 ```
 
 Import in `src/routes/+layout.svelte` (create if missing):
@@ -2115,6 +2442,7 @@ git commit -m "feat(ui): wire form to engine, persist inputs, layout"
 ## Task 14: Accessibility pass
 
 **Files:**
+
 - Modify: existing components as listed
 
 - [ ] **Step 1: Verify keyboard nav manually**
@@ -2136,7 +2464,10 @@ Modify `src/routes/+page.svelte`, wrap the `<ResultPanel ...>` block:
 Append:
 
 ```css
-:focus-visible { outline: 2px solid #2664eb; outline-offset: 2px; }
+:focus-visible {
+  outline: 2px solid #2664eb;
+  outline-offset: 2px;
+}
 ```
 
 - [ ] **Step 4: Verify contrast**
@@ -2155,6 +2486,7 @@ git commit -m "feat(a11y): aria-live, focus styles, contrast pass"
 ## Task 15: GitHub Actions CI
 
 **Files:**
+
 - Create: `.github/workflows/ci.yml`
 
 - [ ] **Step 1: Write workflow**
@@ -2197,6 +2529,7 @@ After pushing to GitHub the first time, verify the workflow runs and goes green.
 ## Task 16: Cloudflare Pages deployment
 
 **Files:**
+
 - Create: `README.md` with setup steps
 
 - [ ] **Step 1: Create a GitHub repository**
@@ -2206,6 +2539,7 @@ Push the project to a new GitHub repo named `GaryDnDApp` (or similar). Push `mai
 - [ ] **Step 2: Connect Cloudflare Pages**
 
 In Cloudflare dashboard:
+
 - Workers & Pages → Create → Pages → Connect to Git
 - Select the GitHub repo
 - Build settings:
@@ -2277,6 +2611,7 @@ git push
 ## Self-review (post-write)
 
 Spec coverage check:
+
 - §2 Architecture → Tasks 1, 2, 10
 - §3 Inputs → Tasks 4, 11
 - §4 Engine → Tasks 3, 4, 6, 9, 10

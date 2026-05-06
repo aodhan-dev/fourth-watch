@@ -12,7 +12,7 @@ export default {
       strict: true
     }),
     prerender: {
-      handleHttpError: ({ path, referrer, message }) => {
+      handleHttpError: ({ path, referrer: _referrer, message }) => {
         // Ignore missing favicon during prerender; it will be added in a later task
         if (path === '/favicon.png') {
           return;
