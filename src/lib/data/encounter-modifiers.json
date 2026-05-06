@@ -1,0 +1,96 @@
+{
+  "baseEncounterChance": 0.25,
+  "rules": [
+    {
+      "id": "region-settled",
+      "when": { "region": "Settled" },
+      "encounterChanceMultiplier": 0.5,
+      "categoryMultipliers": { "Civilised": 3.0, "Predator": 0.4, "Aberration": 0.1, "Undead": 0.2 }
+    },
+    {
+      "id": "region-frontier",
+      "when": { "region": "Frontier" },
+      "encounterChanceMultiplier": 1.0,
+      "categoryMultipliers": { "Bandit": 1.4, "Civilised": 1.0 }
+    },
+    {
+      "id": "region-wilderness",
+      "when": { "region": "Wilderness" },
+      "encounterChanceMultiplier": 1.4,
+      "categoryMultipliers": { "Predator": 2.0, "Fey": 1.5, "Civilised": 0.4 }
+    },
+    {
+      "id": "region-hostile",
+      "when": { "region": "Hostile" },
+      "encounterChanceMultiplier": 1.8,
+      "categoryMultipliers": {
+        "Predator": 2.0,
+        "Aberration": 2.0,
+        "Undead": 2.0,
+        "Bandit": 1.5,
+        "Civilised": 0.2
+      }
+    },
+    {
+      "id": "time-night",
+      "when": { "time": "Night" },
+      "encounterChanceMultiplier": 1.3,
+      "categoryMultipliers": { "Predator": 1.8, "Undead": 2.5, "Civilised": 0.5 },
+      "narrativeFragment": "in the dark"
+    },
+    {
+      "id": "time-dawn",
+      "when": { "time": "Dawn" },
+      "categoryMultipliers": { "Predator": 1.2 },
+      "narrativeFragment": "in the half-light of dawn"
+    },
+    {
+      "id": "time-dusk",
+      "when": { "time": "Dusk" },
+      "categoryMultipliers": { "Predator": 1.5, "Undead": 1.4 },
+      "narrativeFragment": "as the sun sets"
+    },
+    {
+      "id": "camp-fire",
+      "when": { "mode": "AtCamp", "campfire": true },
+      "encounterChanceMultiplier": 0.8,
+      "categoryMultipliers": { "Predator": 0.5, "Bandit": 1.5 },
+      "narrativeFragment": "drawn by your firelight"
+    },
+    {
+      "id": "camp-no-fire",
+      "when": { "mode": "AtCamp", "campfire": false },
+      "encounterChanceMultiplier": 1.1,
+      "categoryMultipliers": { "Predator": 1.5 }
+    },
+    {
+      "id": "noise",
+      "when": { "noise": true },
+      "encounterChanceMultiplier": 1.6,
+      "categoryMultipliers": { "Predator": 1.2, "Bandit": 1.5 },
+      "narrativeFragment": "drawn by the noise"
+    },
+    {
+      "id": "severe-weather",
+      "when": { "weatherSeverity": "Severe" },
+      "encounterChanceMultiplier": 0.5,
+      "narrativeFragment": "braving the weather"
+    },
+    {
+      "id": "swamp",
+      "when": { "environment": "Swamp" },
+      "categoryMultipliers": { "Aberration": 1.5, "Undead": 1.4 }
+    },
+    {
+      "id": "underground",
+      "when": { "environment": "Underground" },
+      "categoryMultipliers": { "Aberration": 2.0, "Undead": 1.5, "Construct": 1.3, "Fey": 0.3 }
+    },
+    {
+      "id": "urban",
+      "when": { "environment": "Urban" },
+      "encounterChanceMultiplier": 1.2,
+      "categoryMultipliers": { "Civilised": 3.0, "Bandit": 2.0, "Predator": 0.2 }
+    }
+  ]
+}
