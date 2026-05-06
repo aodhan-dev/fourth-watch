@@ -68,12 +68,14 @@
 <main>
   <h1>D&amp;D Encounter & Weather</h1>
   <InputForm bind:value={inputs} onRoll={rollAll} />
-  <ResultPanel
-    {result}
-    onRerollAll={rollAll}
-    onRerollWeather={rerollWeather}
-    onRerollEncounter={rerollEncounter}
-  />
+  <div aria-live="polite" aria-atomic="true">
+    <ResultPanel
+      {result}
+      onRerollAll={rollAll}
+      onRerollWeather={rerollWeather}
+      onRerollEncounter={rerollEncounter}
+    />
+  </div>
   <Footer />
 </main>
 
