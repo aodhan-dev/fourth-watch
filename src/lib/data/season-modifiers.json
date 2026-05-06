@@ -1,0 +1,38 @@
+{
+  "Tropical": {
+    "Spring": { "temp": { "Cool": 1.1, "Warm": 1.0, "Hot": 1.0 } },
+    "Summer": { "temp": { "Warm": 1.1, "Hot": 1.2 } },
+    "Autumn": { "temp": { "Cool": 1.1, "Warm": 1.0 } },
+    "Winter": { "temp": { "Cool": 1.3, "Temperate": 1.1, "Warm": 0.9 } }
+  },
+  "Subtropical": {
+    "Spring": { "temp": { "Temperate": 1.1, "Warm": 1.0 } },
+    "Summer": { "temp": { "Warm": 1.2, "Hot": 1.4 } },
+    "Autumn": { "temp": { "Cool": 1.2, "Temperate": 1.1 } },
+    "Winter": { "temp": { "Cold": 1.5, "Cool": 1.3, "Warm": 0.7, "Hot": 0.4 } }
+  },
+  "Arid": {
+    "Spring": { "temp": { "Temperate": 1.1, "Warm": 1.1 } },
+    "Summer": { "temp": { "Warm": 1.2, "Hot": 1.6 } },
+    "Autumn": { "temp": { "Cool": 1.3, "Temperate": 1.1 } },
+    "Winter": { "temp": { "Cold": 1.6, "Cool": 1.4, "Hot": 0.4 } }
+  },
+  "Temperate": {
+    "Spring": { "temp": { "Cool": 1.2, "Temperate": 1.1, "Warm": 1.0 } },
+    "Summer": { "temp": { "Warm": 1.4, "Hot": 1.6 } },
+    "Autumn": { "temp": { "Cool": 1.3, "Cold": 1.1 } },
+    "Winter": { "temp": { "Freezing": 1.6, "Cold": 1.5, "Warm": 0.4, "Hot": 0.1 } }
+  },
+  "Subarctic": {
+    "Spring": { "temp": { "Cold": 1.1, "Cool": 1.2 } },
+    "Summer": { "temp": { "Cool": 1.3, "Temperate": 1.5, "Warm": 1.4 } },
+    "Autumn": { "temp": { "Cold": 1.3, "Freezing": 1.1 } },
+    "Winter": { "temp": { "Freezing": 1.6, "Cold": 1.3, "Cool": 0.6, "Temperate": 0.2 } }
+  },
+  "Arctic": {
+    "Spring": { "temp": { "Freezing": 1.0, "Cold": 1.1 } },
+    "Summer": { "temp": { "Cold": 1.2, "Cool": 1.4 } },
+    "Autumn": { "temp": { "Freezing": 1.1, "Cold": 1.0 } },
+    "Winter": { "temp": { "Freezing": 1.4, "Cold": 0.9 } }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "Tropical": {
+    "temp": { "Freezing": 0, "Cold": 0, "Cool": 5, "Temperate": 20, "Warm": 50, "Hot": 25 },
+    "precip": { "Clear": 30, "Light": 40, "Heavy": 30 },
+    "wind": { "None": 30, "Low": 50, "High": 20 }
+  },
+  "Subtropical": {
+    "temp": { "Freezing": 0, "Cold": 2, "Cool": 13, "Temperate": 30, "Warm": 40, "Hot": 15 },
+    "precip": { "Clear": 45, "Light": 35, "Heavy": 20 },
+    "wind": { "None": 30, "Low": 55, "High": 15 }
+  },
+  "Arid": {
+    "temp": { "Freezing": 1, "Cold": 4, "Cool": 10, "Temperate": 20, "Warm": 35, "Hot": 30 },
+    "precip": { "Clear": 80, "Light": 15, "Heavy": 5 },
+    "wind": { "None": 25, "Low": 50, "High": 25 }
+  },
+  "Temperate": {
+    "temp": { "Freezing": 5, "Cold": 15, "Cool": 25, "Temperate": 30, "Warm": 20, "Hot": 5 },
+    "precip": { "Clear": 50, "Light": 35, "Heavy": 15 },
+    "wind": { "None": 25, "Low": 55, "High": 20 }
+  },
+  "Subarctic": {
+    "temp": { "Freezing": 25, "Cold": 35, "Cool": 25, "Temperate": 12, "Warm": 3, "Hot": 0 },
+    "precip": { "Clear": 50, "Light": 30, "Heavy": 20 },
+    "wind": { "None": 20, "Low": 50, "High": 30 }
+  },
+  "Arctic": {
+    "temp": { "Freezing": 60, "Cold": 30, "Cool": 8, "Temperate": 2, "Warm": 0, "Hot": 0 },
+    "precip": { "Clear": 50, "Light": 25, "Heavy": 25 },
+    "wind": { "None": 15, "Low": 45, "High": 40 }
+  }
+}
