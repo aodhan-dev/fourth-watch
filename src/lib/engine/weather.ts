@@ -93,7 +93,7 @@ function narrate(temp: Temperature, precip: Precipitation, wind: Wind, env: stri
     High: 'strong winds'
   };
   if (env === 'Underground') {
-    return `Cool, still air. The cavern temperature holds steady.`;
+    return `${tempPhrase[temp]}, in the close, still air of the caverns.`;
   }
   return `${tempPhrase[temp]}, with ${precipPhrase[precip]} and ${windPhrase[wind]}.`;
 }
