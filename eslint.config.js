@@ -32,6 +32,7 @@ export default [
   {
     files: ['**/*.svelte'],
     languageOptions: {
+      globals: { ...globals.browser },
       parserOptions: {
         parser: tsParser
       }
