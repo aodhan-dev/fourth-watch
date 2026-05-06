@@ -29,5 +29,13 @@ export default [
     }
   },
   ...svelte.configs['flat/recommended'],
+  {
+    files: ['**/*.svelte'],
+    languageOptions: {
+      parserOptions: {
+        parser: tsParser
+      }
+    }
+  },
   { ignores: ['build/', '.svelte-kit/', 'node_modules/'] }
 ];
