@@ -7,6 +7,7 @@
     RegionType,
     TravelMode
   } from '$lib/engine/types';
+  import Stepper from './Stepper.svelte';
 
   // Mirrors the page-level FormState — enum fields can be '' (unset) until picked.
   type FormValue = {
@@ -108,14 +109,14 @@
 >
   <fieldset class="party">
     <legend>Party</legend>
-    <label class="stat"
-      ><span class="stat-name">Number of characters</span>
-      <input type="number" min="1" max="8" bind:value={value.partySize} />
-    </label>
-    <label class="stat"
-      ><span class="stat-name">Average level</span>
-      <input type="number" min="1" max="20" bind:value={value.partyLevel} />
-    </label>
+    <div class="stat">
+      <span class="stat-name">Number of characters</span>
+      <Stepper bind:value={value.partySize} min={1} max={8} label="Number of characters" />
+    </div>
+    <div class="stat">
+      <span class="stat-name">Average level</span>
+      <Stepper bind:value={value.partyLevel} min={1} max={20} label="Average level" />
+    </div>
   </fieldset>
 
   <fieldset class="setting">
