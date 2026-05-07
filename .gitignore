@@ -8,3 +8,4 @@ dist/
 vite.config.ts.timestamp-*
 *.local
 .playwright-mcp/
+.wrangler/
