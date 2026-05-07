@@ -84,6 +84,9 @@ export interface Monster {
   acDetail?: string;
   speed: string;
   category: MonsterCategory;
+  // Source edition. Slug is bare across editions so categoriser overrides match either source;
+  // edition is tracked separately so rename detection and edition-aware dedupe are possible.
+  edition?: '5.1' | '5.2';
 
   // Rich stat-block fields. All optional so older snapshots and test fixtures still work.
   alignment?: string;

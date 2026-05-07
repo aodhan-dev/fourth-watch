@@ -195,9 +195,17 @@ function parseCrString(v: string): number {
 
 function normaliseSlug(key: string | undefined, name: string): string {
   // SRD keys: 'srd_wolf' (5.1) or 'srd2024_wolf' / 'srd-2024_wolf' (5.2).
-  // Strip whichever prefix so categoriser overrides match either source.
+  // Strip whichever prefix so categoriser overrides at data-overrides/categories.json
+  // match either edition with a single bare slug. Edition is tracked on the Monster
+  // record separately so dedupe and rename detection don't rely on this collapse.
   const stripped = (key ?? '').replace(/^srd[-_]?\d*_?/, '');
   return stripped || name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+}
+
+function editionOf(documentKey: string | undefined): '5.1' | '5.2' | undefined {
+  if (documentKey === 'srd-2024') return '5.2';
+  if (documentKey && documentKey.startsWith('srd')) return '5.1';
+  return undefined;
 }
 
 function normaliseCreature(c: Open5eV2Creature, envs: Environment[]): MonsterRaw {
@@ -227,6 +235,7 @@ function normaliseCreature(c: Open5eV2Creature, envs: Environment[]): MonsterRaw
 
   return {
     slug: normaliseSlug(c.key, c.name),
+    edition: editionOf(c.document?.key),
     name: c.name,
     cr,
     type: nameOf(c.type),
@@ -255,12 +264,19 @@ function normaliseCreature(c: Open5eV2Creature, envs: Environment[]): MonsterRaw
   };
 }
 
+interface DedupeDropEntry {
+  slug: string;
+  keptEdition: '5.1' | '5.2' | 'unknown';
+  droppedEdition: '5.1' | '5.2' | 'unknown';
+  keptName: string;
+  droppedName: string;
+}
+
 async function main() {
-  // Two passes:
-  //   1. Pull all SRD creatures (5.1 and 5.2) into a flat list.
-  //   2. Build a name→environments map from any source that has env tags (5.1 today).
-  //   3. Dedupe by name, keeping the SRD 5.2 version when available, and inheriting
-  //      environments from the 5.1 entry when 5.2 lacks them.
+  // Pull every SRD creature (5.1 and 5.2), dedupe by bare slug preferring 5.2,
+  // and inherit environments from sibling editions when the kept entry lacks them.
+  // Slug is used for dedupe instead of name so a 5.1 to 5.2 rename does not produce
+  // two entries for the same creature; renames are logged so semantic drift can be reviewed.
   const allCreatures: Open5eV2Creature[] = [];
   let url: string | null = 'https://api.open5e.com/v2/creatures/?limit=200';
   let page = 0;
@@ -280,32 +296,48 @@ async function main() {
     url = json.next;
   }
 
-  // Index environments by lowercased name across all SRD docs.
-  const envByName = new Map<string, Environment[]>();
+  // Index environments by bare slug across all SRD docs (5.1 currently carries env tags;
+  // 5.2 frequently lacks them).
+  const envBySlug = new Map<string, Environment[]>();
   for (const c of allCreatures) {
     const own = mapEnvironments(c.environments);
     if (own.length === 0) continue;
-    const key = c.name.toLowerCase();
-    const existing = envByName.get(key) ?? [];
-    envByName.set(key, [...new Set([...existing, ...own])]);
+    const slug = normaliseSlug(c.key, c.name);
+    const existing = envBySlug.get(slug) ?? [];
+    envBySlug.set(slug, [...new Set([...existing, ...own])]);
   }
 
-  // Pick the best version of each named creature: prefer SRD 5.2 over SRD 5.1.
-  // This drops the 5.1 entry whenever 5.2 has the same creature.
-  const bestByName = new Map<string, Open5eV2Creature>();
+  // Slug-keyed dedupe, prefer SRD 5.2. Log every drop.
+  const bestBySlug = new Map<string, Open5eV2Creature>();
+  const drops: DedupeDropEntry[] = [];
   for (const c of allCreatures) {
-    const name = c.name.toLowerCase();
-    const existing = bestByName.get(name);
-    const isV2 = c.document?.key === 'srd-2024';
-    const existingIsV2 = existing?.document?.key === 'srd-2024';
-    if (!existing || (isV2 && !existingIsV2)) bestByName.set(name, c);
+    const slug = normaliseSlug(c.key, c.name);
+    const ed = editionOf(c.document?.key) ?? 'unknown';
+    const prior = bestBySlug.get(slug);
+    if (!prior) {
+      bestBySlug.set(slug, c);
+      continue;
+    }
+    const priorEd = editionOf(prior.document?.key) ?? 'unknown';
+    const newWins = ed === '5.2' && priorEd !== '5.2';
+    const winner = newWins ? c : prior;
+    const loser = newWins ? prior : c;
+    bestBySlug.set(slug, winner);
+    drops.push({
+      slug,
+      keptEdition: editionOf(winner.document?.key) ?? 'unknown',
+      droppedEdition: editionOf(loser.document?.key) ?? 'unknown',
+      keptName: winner.name,
+      droppedName: loser.name
+    });
   }
 
   const out: MonsterRaw[] = [];
   const stats = { fromV2: 0, fromV1: 0, withOwnEnv: 0, withInheritedEnv: 0, dropped: 0 };
-  for (const c of bestByName.values()) {
+  for (const c of bestBySlug.values()) {
     const own = mapEnvironments(c.environments);
-    const inherited = envByName.get(c.name.toLowerCase()) ?? [];
+    const slug = normaliseSlug(c.key, c.name);
+    const inherited = envBySlug.get(slug) ?? [];
     const envs = own.length > 0 ? own : inherited;
     if (envs.length === 0) {
       stats.dropped++;
@@ -326,12 +358,21 @@ async function main() {
   writeFileSync(path, JSON.stringify({ schemaVersion: 1, monsters: out }, null, 2));
   console.log(`\nWrote ${out.length} monsters (from ${raw} raw v2 results) to ${path}`);
   console.log(
-    `  ${stats.fromV2} from SRD 5.2, ${stats.fromV1} from SRD 5.1 (5.1 entries dropped where 5.2 has same name)`
+    `  ${stats.fromV2} from SRD 5.2, ${stats.fromV1} from SRD 5.1 (${drops.length} duplicates dropped during slug dedupe)`
   );
   console.log(
-    `  ${stats.withOwnEnv} with own environments, ${stats.withInheritedEnv} backfilled by name match`
+    `  ${stats.withOwnEnv} with own environments, ${stats.withInheritedEnv} backfilled from sibling edition`
   );
-  console.log(`  ${stats.dropped} dropped (no environments in either edition)`);
+  console.log(`  ${stats.dropped} dropped (no environments in any edition)`);
+  const renames = drops.filter((d) => d.keptName !== d.droppedName);
+  if (renames.length > 0) {
+    console.log(`\n${renames.length} renamed across editions (review for semantic drift):`);
+    for (const r of renames) {
+      console.log(
+        `  ${r.slug}: kept "${r.keptName}" (${r.keptEdition}), dropped "${r.droppedName}" (${r.droppedEdition})`
+      );
+    }
+  }
 }
 
 main().catch((e) => {
