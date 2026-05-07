@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { roll } from '../../src/lib/engine';
+import { roll, EngineRangeError } from '../../src/lib/engine';
 import type { Inputs, Monster } from '../../src/lib/engine/types';
 
 const inputs: Inputs = {
@@ -55,6 +55,17 @@ describe('roll', () => {
     const a = roll(inputs, 100);
     const b = roll(inputs, 100, { rerollEncounter: 300 });
     expect(b.weather).toEqual(a.weather);
+  });
+
+  it('throws EngineRangeError on out-of-range partyLevel', () => {
+    expect(() => roll({ ...inputs, partyLevel: 0 }, 1)).toThrow(EngineRangeError);
+    expect(() => roll({ ...inputs, partyLevel: 21 }, 1)).toThrow(EngineRangeError);
+    expect(() => roll({ ...inputs, partyLevel: 3.5 }, 1)).toThrow(EngineRangeError);
+  });
+
+  it('throws EngineRangeError on out-of-range partySize', () => {
+    expect(() => roll({ ...inputs, partySize: 0 }, 1)).toThrow(EngineRangeError);
+    expect(() => roll({ ...inputs, partySize: 9 }, 1)).toThrow(EngineRangeError);
   });
 
   it('uses an injected monster catalog when one is provided', () => {

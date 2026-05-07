@@ -21,7 +21,10 @@ function applyMultipliers<K extends string>(
   const out = { ...base } as AxisWeights<K>;
   for (const k of Object.keys(multipliers) as K[]) {
     const m = multipliers[k];
-    if (typeof m === 'number') out[k] = (out[k] ?? 0) * m;
+    // Number.isFinite filters NaN and Infinity in addition to undefined; without
+    // it, a poisoned multiplier would propagate into pickFrom weights and
+    // produce a nonsense distribution.
+    if (Number.isFinite(m)) out[k] = (out[k] ?? 0) * (m as number);
   }
   return out;
 }

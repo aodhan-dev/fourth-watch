@@ -1,4 +1,12 @@
-import type { Inputs, Weather, Monster, Encounter, ModifierRule, MonsterCategory } from './types';
+import type {
+  Inputs,
+  Weather,
+  Monster,
+  Encounter,
+  ModifierRule,
+  MonsterCategory,
+  RegionType
+} from './types';
 import { type Rng, pickFrom, pickIndex } from './rng';
 import modifiersData from '../data/encounter-modifiers.json';
 import { parseModifiersFile } from './validate';
@@ -47,11 +55,14 @@ export function applyModifiers(inputs: Inputs, weather: Weather): AppliedModifie
   for (const rule of MODS.rules) {
     if (!matches(rule, inputs, weather)) continue;
     matchingRules.push(rule);
-    if (rule.encounterChanceMultiplier) chance *= rule.encounterChanceMultiplier;
+    // Number.isFinite guards against NaN and Infinity slipping through any future
+    // path that bypasses parseModifiersFile (test fixtures, hand-edited data).
+    if (Number.isFinite(rule.encounterChanceMultiplier))
+      chance *= rule.encounterChanceMultiplier as number;
     if (rule.categoryMultipliers) {
       for (const c of ALL_CATEGORIES) {
         const m = rule.categoryMultipliers[c];
-        if (typeof m === 'number') cat[c] *= m;
+        if (Number.isFinite(m)) cat[c] *= m as number;
       }
     }
   }
@@ -65,16 +76,20 @@ export interface CrWindow {
   max: number;
 }
 
-export function crWindow(level: number, size: number, region: string): CrWindow {
+const REGION_BONUS: Record<RegionType, number> = {
+  Settled: -1,
+  Frontier: 0,
+  Wilderness: 1,
+  Hostile: 2
+};
+
+export function crWindow(level: number, size: number, region: RegionType): CrWindow {
   const min = Math.max(0, (level - 4) / 4);
   const baseMax = level * 0.85 + (size - 4) * 0.15;
-  const regionBonus: Record<string, number> = {
-    Settled: -1,
-    Frontier: 0,
-    Wilderness: 1,
-    Hostile: 2
-  };
-  const max = Math.max(0.25, baseMax + (regionBonus[region] ?? 0));
+  // max enforces both the 0.25 floor and the min <= max invariant; without the
+  // outer Math.max(min, ...), a Settled low-level/low-size combination could
+  // produce baseMax + bonus < min before hitting the 0.25 floor.
+  const max = Math.max(min, Math.max(0.25, baseMax + REGION_BONUS[region]));
   return { min, max };
 }
 

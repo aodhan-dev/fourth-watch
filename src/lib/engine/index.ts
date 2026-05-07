@@ -7,6 +7,20 @@ import { parseMonsterCatalog } from './validate';
 
 const defaultMonsters = parseMonsterCatalog(monstersData);
 
+export class EngineRangeError extends Error {
+  constructor(field: string, value: number, range: string) {
+    super(`${field} must be in range ${range}, got ${value}`);
+    this.name = 'EngineRangeError';
+  }
+}
+
+function checkInputs(inputs: Inputs): void {
+  if (!Number.isInteger(inputs.partyLevel) || inputs.partyLevel < 1 || inputs.partyLevel > 20)
+    throw new EngineRangeError('partyLevel', inputs.partyLevel, '[1, 20]');
+  if (!Number.isInteger(inputs.partySize) || inputs.partySize < 1 || inputs.partySize > 8)
+    throw new EngineRangeError('partySize', inputs.partySize, '[1, 8]');
+}
+
 export interface RerollOptions {
   // A fresh seed for the weather stream only. Goes through deriveSeed(value, 'weather')
   // so callers don't have to know the engine's internal namespacing.
@@ -21,6 +35,7 @@ export function roll(
   opts: RerollOptions = {},
   monsters: Monster[] = defaultMonsters
 ): RollResult {
+  checkInputs(inputs);
   // Both the default and override paths run through deriveSeed with the same
   // namespace, so a caller-supplied rerollWeather behaves identically to the
   // primary seed under the engine's substream contract.

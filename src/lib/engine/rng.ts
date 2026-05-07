@@ -27,8 +27,20 @@ export function deriveSeed(parent: number, label: string): number {
 }
 
 // Convenience helpers built on top of an Rng.
+//
+// Contract: weights must be non-negative finite numbers. A negative weight is
+// always a caller bug (it can poison the cumulative sum and bias the result),
+// so pickIndex throws rather than silently producing garbage. An empty weights
+// array or all-zero weights returns 0; encounterPick checks the all-zero case
+// upstream so it can produce a useful "modifiers cancelled all categories"
+// message instead of a silent zero pick.
 export function pickIndex(rng: Rng, weights: number[]): number {
-  const total = weights.reduce((a, b) => a + b, 0);
+  let total = 0;
+  for (const w of weights) {
+    if (!Number.isFinite(w) || w < 0)
+      throw new Error(`pickIndex: weight must be non-negative finite, got ${w}`);
+    total += w;
+  }
   if (total <= 0) return 0;
   let r = rng() * total;
   for (let i = 0; i < weights.length; i++) {

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { makeRng, deriveSeed } from '../../src/lib/engine/rng';
+import { makeRng, deriveSeed, pickIndex } from '../../src/lib/engine/rng';
 
 describe('makeRng', () => {
   it('produces deterministic output for the same seed', () => {
@@ -37,5 +37,27 @@ describe('deriveSeed', () => {
 
   it('produces different sub-seeds for different parents', () => {
     expect(deriveSeed(1, 'weather')).not.toEqual(deriveSeed(2, 'weather'));
+  });
+});
+
+describe('pickIndex', () => {
+  it('throws on a negative weight (caller bug, not a silent zero pick)', () => {
+    expect(() => pickIndex(makeRng(1), [1, -1, 2])).toThrow(/non-negative/);
+  });
+
+  it('throws on a NaN weight', () => {
+    expect(() => pickIndex(makeRng(1), [1, NaN])).toThrow(/non-negative finite/);
+  });
+
+  it('throws on an Infinity weight', () => {
+    expect(() => pickIndex(makeRng(1), [1, Infinity])).toThrow(/non-negative finite/);
+  });
+
+  it('returns 0 on all-zero weights (engine boundary handles this case explicitly)', () => {
+    expect(pickIndex(makeRng(1), [0, 0, 0])).toBe(0);
+  });
+
+  it('returns 0 on empty weights', () => {
+    expect(pickIndex(makeRng(1), [])).toBe(0);
   });
 });
