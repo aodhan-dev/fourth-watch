@@ -1,0 +1,19 @@
+PROJECT: Fourth Watch Review Panel Implementation
+PRD_VERSION: 1.0
+PRD_FILE: docs/superpowers/plans/review-panel-prd/PRD_Fourth_Watch_Review_Panel_Implementation_v1.md
+TOTAL_STORIES: 10
+CREATED_AT: 2026-05-07T22:35:02Z
+UPDATED_AT: 2026-05-07T22:35:02Z
+
+[ ] Story 1: fix/state-and-storage-validation
+[ ] Story 2: feat/test-coverage-uplift
+[ ] Story 3: fix/a11y-focus-and-motion
+[ ] Story 4: fix/a11y-semantics-and-aria
+[ ] Story 5: perf/code-split-monsters-and-fonts
+[ ] Story 6: feat/form-ux-feedback
+[ ] Story 7: style/visual-polish
+[ ] Story 8: feat/service-worker-killswitch
+[ ] Story 9: feat/observability
+[ ] Story 10: chore/security-defense-in-depth
+
+COMPLETION_PROMISE: all stories must be marked [x] before prd.json's completion_promise_hit flips to true and the loop terminates

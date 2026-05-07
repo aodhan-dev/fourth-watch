@@ -1,0 +1,212 @@
+{
+  "product": "Fourth Watch Review Panel Implementation",
+  "version": "1.0",
+  "prd_file": "docs/superpowers/plans/review-panel-prd/PRD_Fourth_Watch_Review_Panel_Implementation_v1.md",
+  "created_at": "2026-05-07T22:35:02Z",
+  "completed_at": null,
+  "sections": {
+    "executive_summary": "A 10-reviewer review panel ran against `main` @ b7a44b8 and produced 100+ findings clustered into 12 implementation branches across 4 stages. Two Stage 1 foundation branches (`fix/data-schema-and-validation` and `fix/engine-di-seams`) are already built and verified. This PRD covers the 10 remaining branches; each user story corresponds to one branch with verifiable acceptance criteria for autonomous execution.",
+    "problem_statement": "Recent feature work shipped a richer stat block and 5.2 SRD data refresh; a multi-perspective review surfaced systemic issues across accessibility, build pipeline correctness, engine testability, and operational hygiene. Many findings are individually small but cluster into coherent themes. Without a planned, sequenced effort the work either stalls or risks shipping partial fixes that interact poorly. The two completed Stage 1 branches established schema-version contracts and engine DI seams that the remaining branches build on.",
+    "goals_and_success_metrics": "Primary goals: close every HIGH-severity finding; establish a UI test layer; cut initial bundle weight by code-splitting the monster catalog; pass an automated accessibility audit on key flows. Success metrics: 100% of HIGH findings closed; initial JS bundle under 50 KB gzip pre-roll; prefers-reduced-motion honoured; 70+ tests including component and e2e; validate:data step in CI on every push; service-worker kill switch versioned and tested.",
+    "scope_in_and_out": "In scope: every branch listed in the roadmap's Stages 1 (remaining), 2, 3, and 4; new tests required by changed code; drive-by lint or formatting fixes that block CI; updates to validate:data and ci.yml when needed. Out of scope: visual identity refresh beyond style/visual-polish; new product features; framework or hosting migration; re-fetching monsters.json from Open5e; future-roadmap +data and +l10n opt-in panels; remote pushes or merges to main.",
+    "user_stories": "See `user_stories` array.",
+    "risks_and_mitigations": "A11y semantics may break the segmented control's visual styling (mitigation: land a11y-semantics before visual-polish, screenshot smoke after each). Code-split chunk may not serve correctly via Cloudflare static assets (mitigation: npm run build + preview locally before merging, add a smoke test). SW kill-switch cache shape change may evict legitimate state on first visit (mitigation: LRU and version tests, fresh-profile manual smoke). CSP may block legitimate resources (mitigation: try Content-Security-Policy-Report-Only first, review browser console). Loop may mark a story passed without ACs being met (mitigation: ACs written for autonomous verification; skill must not mark passed without evidence).",
+    "open_questions": "Q1. Should observability logs be enabled by default in prod or gated behind ?debug=1? Default: gated. Q2. Can the segmented control revert to native radios with native focus rings? Default: yes. Q3. Replace vendor emoji with custom SVG icons or simply remove them? Default: remove with a placeholder note. Q4. SW kill switch: block this visit or unregister on next? Default: serve from cache this visit, unregister next. Q5. CSP header location: static/_headers or SvelteKit handle hook? Default: static/_headers."
+  },
+  "user_stories": [
+    {
+      "id": 1,
+      "name": "fix/state-and-storage-validation",
+      "user_role": "developer",
+      "capability": "localStorage payloads validated before merge, the campfire $effect moved to the state owner, isComplete derived rather than re-called, and a mockable newSeed seam",
+      "outcome": "state corruption can't bypass the form's all-complete guard and tests can deterministically pin the seed stream",
+      "acceptance_criteria": [
+        "A new validator (or reuse of parseInputs-style helper) rejects localStorage payloads that don't match the input schema; failed validation drops the payload silently and leaves in-memory state untouched.",
+        "The v1 storage key (fourth-watch-inputs-v1, if present) is cleared on first run after the migration; only v2 is read going forward.",
+        "The campfire auto-clear $effect lives in +page.svelte (state owner), not InputForm.svelte; InputForm.svelte no longer writes back through $bindable.",
+        "isComplete(inputs) is consumed via $derived(...), not called inline in the template.",
+        "A new module wraps Math.random() so tests can supply a deterministic generator; +page.svelte uses the wrapper.",
+        "New tests cover: tampered storage payload is rejected; valid storage payload is loaded; the seed wrapper is injectable.",
+        "Smoke test: open dev server, load with valid stored input, refresh, see the previous selections; corrupt localStorage manually, refresh, see no crash and a fresh form.",
+        "Pipeline gates pass: npm run check, npm run lint, npm run validate:data, npm test all green."
+      ],
+      "status": "pending",
+      "completed_at": null
+    },
+    {
+      "id": 2,
+      "name": "feat/test-coverage-uplift",
+      "user_role": "developer",
+      "capability": "boundary tests for the engine, schema-shape contract tests for the bundled data files, and a component / e2e test layer",
+      "outcome": "UI regressions are caught and engine edge cases are pinned to behaviour",
+      "acceptance_criteria": [
+        "Engine boundary tests added: partyLevel=1, partyLevel=20, partySize=1, partySize=8; the all-zero category-weights path; the encounter-happens-pool-empty branch; the weather forced-Light fallback.",
+        "Direct tests for pickIndex, pickFrom, rollD100 against empty / all-zero / single-element inputs.",
+        "Schema-shape contract tests run monsters.json, encounter-modifiers.json, climate-weather.json through the runtime parser or hand-written shape checks.",
+        "The 'never Hot+Heavy' weather invariant test re-rigged with climate=Tropical season=Summer so the guard actually fires.",
+        "Vitest configured to run a subset of tests in jsdom (e.g. tests/components/**); component smoke tests exist for Stepper, InputForm, ResultPanel, EncounterBlock.",
+        "One Playwright e2e covers the happy path: pick five settings, roll, see a result, click Copy, verify seed is in clipboard.",
+        "npm test runs all the above in under 30s on a developer laptop; CI runs them too.",
+        "Pipeline gates pass: npm run check, npm run lint, npm run validate:data, npm test all green."
+      ],
+      "status": "pending",
+      "completed_at": null
+    },
+    {
+      "id": 3,
+      "name": "fix/a11y-focus-and-motion",
+      "user_role": "keyboard or switch user, or a user with motion-sensitivity",
+      "capability": "visible focus indicators on every interactive control and animations that respect my reduced-motion preference",
+      "outcome": "I can use the app without losing track of focus or being made dizzy",
+      "acceptance_criteria": [
+        ":focus-visible styles applied to .seg and .pad so the wrapper shows a focus ring when the inner hidden input is focused.",
+        "Global @media (prefers-reduced-motion: reduce) block in app.css disables transforms, the radial body gradient, and hover translations on .seg, .pad, button.roll, .expand, ghost buttons.",
+        ".seg and .pad min-height bumped to ~44pt; the stack gap loosened.",
+        "Visually-hidden <input> pattern replaced with clip-path: inset(50%) sr-only.",
+        "Manual smoke: tab through the form, every control shows a visible ring; reduce motion in OS settings, reload, animations are disabled.",
+        "Pipeline gates pass: npm run check, npm run lint, npm run validate:data, npm test all green."
+      ],
+      "status": "pending",
+      "completed_at": null
+    },
+    {
+      "id": 4,
+      "name": "fix/a11y-semantics-and-aria",
+      "user_role": "screen-reader or assistive-tech user",
+      "capability": "the segmented control, stat-block disclosure, stepper, and live region announced correctly",
+      "outcome": "the app is intelligible without sight",
+      "acceptance_criteria": [
+        "Segmented Travelling/At camp control rebuilt with native <input type='radio'> + <label> (no pointer-events: none) or with a roving-tabindex + arrow-key handler; choice documented.",
+        "role='table' removed from EncounterBlock.svelte:93; replaced with a real <table> or <dl>.",
+        "Stat-block disclosure has an id on the article and aria-controls on the toggle.",
+        "Stepper exposes role='spinbutton' with aria-valuenow/min/max; the redundant aria-live on the value span is removed.",
+        "+page.svelte aria-live region wraps a short status string, not the entire ResultPanel.",
+        "Rotate glyphs on reroll buttons are aria-hidden.",
+        "Emoji removed from <select> <option> text (or option aria-label set without it).",
+        "MechanicsChip carries an icon or text prefix per severity, not background color alone.",
+        "Disabled campfire pad has aria-disabled='true' on the visible target.",
+        "Em-dash in <title> replaced with colon or pipe.",
+        "Seed <code> tied to its label via aria-describedby.",
+        "New tests verify: stepper announces its value; segmented control responds to arrow keys (or whichever path was taken); live region only re-announces the status string.",
+        "Pipeline gates pass: npm run check, npm run lint, npm run validate:data, npm test all green."
+      ],
+      "status": "pending",
+      "completed_at": null
+    },
+    {
+      "id": 5,
+      "name": "perf/code-split-monsters-and-fonts",
+      "user_role": "tabletop user opening the app on mobile",
+      "capability": "the page paints quickly without waiting on a 545 KB monster catalog",
+      "outcome": "the first roll is fast",
+      "acceptance_criteria": [
+        "roll() no longer eagerly imports monstersData; the catalog is loaded via dynamic await import() from +layout.ts load or behind the splash on +page.svelte mount.",
+        "Cinzel and Inter self-hosted (woff2 subsets) or preloaded via <link rel='preconnect'> + <link rel='preload'>; render-blocking @import in app.css gone.",
+        "formatNumberMap(c.savingThrows) and formatNumberMap(c.skills) in EncounterBlock.svelte hoisted via $derived.",
+        "npm run build succeeds; the initial JS chunk no longer contains monster names (verifiable by grep).",
+        "Smoke test: refresh dev server, splash renders before the catalog loads (or simulate slow 3G and verify form is interactive before catalog finishes).",
+        "Existing tests still pass; roll() defaults to the bundled catalog when called synchronously.",
+        "Pipeline gates pass: npm run check, npm run lint, npm run validate:data, npm test all green."
+      ],
+      "status": "pending",
+      "completed_at": null
+    },
+    {
+      "id": 6,
+      "name": "feat/form-ux-feedback",
+      "user_role": "user filling in the form",
+      "capability": "persistent labels, an explanation when Roll is disabled, copy-button feedback, primary-action consistency, a disclosure chevron, a campfire hint, and a faster Stepper",
+      "outcome": "the path from open-app to see-result is obvious and forgiving",
+      "acceptance_criteria": [
+        "Setting select labels visible above each control; the placeholder option is no longer the only label carrier.",
+        "Inline hint near the disabled Roll button names the missing fields.",
+        "Copy button switches its label to 'Copied' briefly with an aria-live status announcement; clipboard rejection shows a transient error.",
+        "Primary-action layout consistent: Roll-again either matches the chunky Roll button styling or the original button transforms into Roll-again. Choice documented.",
+        "Show-stat-block toggle has a chevron that rotates on aria-expanded.",
+        "Disabled campfire pad shows an '(unlocks at camp)' caption.",
+        "Stepper has both an editable number input and +/- buttons with hold-to-repeat (interval on pointerdown, cleared on pointerup/pointerleave).",
+        "New component tests: copy-button feedback, stepper editable-input parity, hint-while-disabled, chevron rotation.",
+        "Smoke test: walking the happy path feels faster than before.",
+        "Pipeline gates pass: npm run check, npm run lint, npm run validate:data, npm test all green."
+      ],
+      "status": "pending",
+      "completed_at": null
+    },
+    {
+      "id": 7,
+      "name": "style/visual-polish",
+      "user_role": "user looking at the app",
+      "capability": "polished visual hierarchy with one primary action, themed icons in place of vendor emoji, and consistent typography",
+      "outcome": "the table presence matches the engine quality",
+      "acceptance_criteria": [
+        "Affirmative state text or weight added to noise/campfire pads.",
+        "Reroll bar restructured: primary Roll-again gets chunky styling; per-stream rerolls become secondary ghost buttons.",
+        "H1 cap reduced or breathing room added so legends don't compete.",
+        "Mobile Roll button has min-width and justify-self below 640px viewport.",
+        "Vendor emoji in selects replaced with themed inline SVG icons or stripped to plain text.",
+        "Dead grid-template-columns: 9.5rem 1fr rule removed.",
+        "Stat-block lead-ins use one emphasis (italic or bold), not both.",
+        "Chip border alpha bumped or warn/danger backgrounds tinted higher so chip edge is visible.",
+        "Label tier count reduced to two per fieldset.",
+        "Stepper +/- glyph weight matches the value digit weight.",
+        "Result panel hairline border decision: bumped alpha or removed.",
+        "Cinzel use restricted to >=0.85rem; legends below that size use Inter smallcaps.",
+        "static/favicon.svg carries a gold accent glint or other brand element.",
+        "Smoke test: side-by-side the app vs. pre-polish screenshots, the visual hierarchy reads cleaner.",
+        "Pipeline gates pass: npm run check, npm run lint, npm run validate:data, npm test all green."
+      ],
+      "status": "pending",
+      "completed_at": null
+    },
+    {
+      "id": 8,
+      "name": "feat/service-worker-killswitch",
+      "user_role": "operator",
+      "capability": "a service-worker kill switch and a bounded runtime cache",
+      "outcome": "a bad deploy can't ship a broken cached shell that survives the next visit",
+      "acceptance_criteria": [
+        "A versioned kill-switch constant in source; when bumped, activate calls self.registration.unregister() and clears all caches.",
+        "Runtime cache bounded: max N entries with LRU eviction, max-age on cached responses.",
+        "cache.put rejection inside respondWith caught and swallowed with a debug log.",
+        "New tests run the SW with a mock Cache interface and verify: kill-switch bump triggers unregister; LRU evicts oldest; cache.put rejection doesn't crash the handler.",
+        "Manual smoke: install the SW in dev, bump the kill-switch version, reload, verify the SW is unregistered and the app is served fresh.",
+        "Pipeline gates pass: npm run check, npm run lint, npm run validate:data, npm test all green."
+      ],
+      "status": "pending",
+      "completed_at": null
+    },
+    {
+      "id": 9,
+      "name": "feat/observability",
+      "user_role": "operator triaging a user-reported bug",
+      "capability": "a way to reproduce a roll from the seed",
+      "outcome": "I can inspect the exact result the user saw",
+      "acceptance_criteria": [
+        "Every roll() invocation logs seed, top-level inputs, and a result digest to console.info; gated by an env or build-time flag so production console can stay quiet by default.",
+        "An optional Cloudflare-Pages-side error-reporter hook is documented but not wired in by default.",
+        "New component test asserts the log line shape; smoke test confirms the seed is recoverable from the console log on a real roll.",
+        "Decision documented in docs/superpowers/plans/: are we shipping this to prod by default, or only enabled via a query string for support?",
+        "Pipeline gates pass: npm run check, npm run lint, npm run validate:data, npm test all green."
+      ],
+      "status": "pending",
+      "completed_at": null
+    },
+    {
+      "id": 10,
+      "name": "chore/security-defense-in-depth",
+      "user_role": "security-conscious operator",
+      "capability": "a Content-Security-Policy header and a dependency-audit step in CI",
+      "outcome": "an XSS pivot has no script-eval surface and a known-CVE bump doesn't ship silently",
+      "acceptance_criteria": [
+        "A _headers file at the static root with at minimum: Content-Security-Policy: default-src 'self'; script-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; Referrer-Policy: strict-origin-when-cross-origin; a Permissions-Policy baseline.",
+        "CSP doesn't break self-hosted fonts (from story 5) and doesn't break Cloudflare's analytics if any are wired up.",
+        ".github/workflows/ci.yml gains either an npm audit --omit=dev --audit-level=high step or a dependency-review-action step; choice documented.",
+        "Smoke test: dev server still works with the CSP applied; build still works; CI still passes; deliberately introducing a known-vulnerable dep makes CI fail with a clear message.",
+        "Pipeline gates pass: npm run check, npm run lint, npm run validate:data, npm test all green."
+      ],
+      "status": "pending",
+      "completed_at": null
+    }
+  ],
+  "completion_promise_hit": false
+}
