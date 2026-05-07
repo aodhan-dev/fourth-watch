@@ -6,7 +6,7 @@
   import { roll } from '$lib/engine';
   import type { Inputs, RollResult } from '$lib/engine/types';
 
-  const STORAGE_KEY = 'gary-dnd-inputs-v1';
+  const STORAGE_KEY = 'fourth-watch-inputs-v1';
 
   const defaultInputs: Inputs = {
     climate: 'Temperate',
@@ -62,11 +62,14 @@
 </script>
 
 <svelte:head>
-  <title>Gary's D&amp;D Encounter & Weather Tool</title>
+  <title>Fourth Watch — D&amp;D weather & encounters</title>
 </svelte:head>
 
 <main>
-  <h1>D&amp;D Encounter & Weather</h1>
+  <header class="title">
+    <h1>Fourth Watch</h1>
+    <p class="tagline">D&amp;D weather & wandering encounters</p>
+  </header>
   <InputForm bind:value={inputs} onRoll={rollAll} />
   <div aria-live="polite" aria-atomic="true">
     <ResultPanel
@@ -86,8 +89,17 @@
     padding: 1rem;
     font-family: system-ui, sans-serif;
   }
+  .title {
+    margin: 0.5rem 0 1.25rem;
+  }
   h1 {
-    font-size: 1.5rem;
-    margin: 0.5rem 0 1rem;
+    font-size: 1.75rem;
+    margin: 0;
+    letter-spacing: 0.01em;
+  }
+  .tagline {
+    margin: 0.15rem 0 0;
+    font-size: 0.95rem;
+    color: #666;
   }
 </style>

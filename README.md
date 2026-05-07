@@ -1,6 +1,8 @@
-# Gary's D&D Encounter & Weather Tool
+# Fourth Watch
 
-Static SvelteKit web app that rolls weighted weather and random encounters for D&D 5e.
+A small web app that rolls weighted weather and wandering encounters for D&D 5e. Built for use at the table: punch in the climate, environment, season, time of day, party, and travel state, hit Roll, and read the result out loud.
+
+Static SvelteKit. No backend. Free to host. SRD-only monster data.
 
 ## Local development
 
