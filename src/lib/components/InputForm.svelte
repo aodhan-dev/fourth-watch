@@ -282,7 +282,7 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    padding: 0.95rem 0.75rem;
+    padding: 1.9rem 0.75rem;
     cursor: pointer;
     color: var(--text-dim);
     font-size: 0.95rem;
