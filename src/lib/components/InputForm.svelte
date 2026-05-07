@@ -106,6 +106,18 @@
   }}
   class="form"
 >
+  <fieldset class="party">
+    <legend>Party</legend>
+    <label class="stat"
+      ><span class="stat-name">Average level</span>
+      <input type="number" min="1" max="20" bind:value={value.partyLevel} />
+    </label>
+    <label class="stat"
+      ><span class="stat-name">Number of characters</span>
+      <input type="number" min="1" max="8" bind:value={value.partySize} />
+    </label>
+  </fieldset>
+
   <fieldset class="setting">
     <legend>Setting</legend>
     <select
@@ -144,18 +156,6 @@
       <option value="" disabled>{FIELD.region.glyph} {FIELD.region.label}…</option>
       {#each regions as r (r)}<option value={r}>{g(r)} {r}</option>{/each}
     </select>
-  </fieldset>
-
-  <fieldset>
-    <legend>Party</legend>
-    <label
-      >Average level
-      <input type="number" min="1" max="20" bind:value={value.partyLevel} />
-    </label>
-    <label
-      >Number of characters
-      <input type="number" min="1" max="8" bind:value={value.partySize} />
-    </label>
   </fieldset>
 
   <fieldset>
@@ -227,6 +227,34 @@
   }
   fieldset.setting option {
     text-align: left;
+  }
+  fieldset.party {
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  fieldset.party legend {
+    grid-column: 1 / -1;
+  }
+  label.stat {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.4rem;
+    text-align: center;
+  }
+  .stat-name {
+    font-family: var(--font-display);
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  label.stat input[type='number'] {
+    text-align: center;
+    font-size: 1.15rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    padding: 0.7rem 0.5rem;
   }
   label:has(input[type='radio']),
   label:has(input[type='checkbox']) {
