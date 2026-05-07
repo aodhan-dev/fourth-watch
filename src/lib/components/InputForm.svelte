@@ -159,7 +159,7 @@
   </fieldset>
 
   <fieldset class="state">
-    <legend>Posture</legend>
+    <legend>Activity</legend>
     <div class="segmented" role="radiogroup" aria-label="Travel mode">
       <label class="seg" class:active={value.mode === 'Travelling'}>
         <input type="radio" bind:group={value.mode} value="Travelling" />
