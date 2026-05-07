@@ -57,6 +57,20 @@ export interface WeatherEffect {
   source: 'SRD' | 'Original';
 }
 
+export interface AbilityScores {
+  str: number;
+  dex: number;
+  con: number;
+  int: number;
+  wis: number;
+  cha: number;
+}
+
+export interface NamedDesc {
+  name: string;
+  desc: string;
+}
+
 export interface Monster {
   slug: string;
   name: string;
@@ -65,10 +79,32 @@ export interface Monster {
   size: string;
   environments: Environment[];
   hp: number;
+  hitDice?: string;
   ac: number;
+  acDetail?: string;
   speed: string;
-  statblock: string; // markdown summary, pre-rendered
   category: MonsterCategory;
+
+  // Rich stat-block fields. All optional so older snapshots and test fixtures still work.
+  alignment?: string;
+  proficiencyBonus?: number;
+  xp?: number;
+  abilityScores?: AbilityScores;
+  savingThrows?: Partial<Record<keyof AbilityScores, number>>;
+  skills?: Record<string, number>;
+  damageResistances?: string;
+  damageImmunities?: string;
+  damageVulnerabilities?: string;
+  conditionImmunities?: string;
+  senses?: string;
+  passivePerception?: number;
+  languages?: string;
+  traits?: NamedDesc[];
+  actions?: NamedDesc[];
+  bonusActions?: NamedDesc[];
+  reactions?: NamedDesc[];
+  legendaryActions?: NamedDesc[];
+  legendaryDesc?: string;
 }
 
 export interface Encounter {

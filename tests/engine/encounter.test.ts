@@ -48,7 +48,6 @@ const sampleMonsters: Monster[] = [
     hp: 11,
     ac: 13,
     speed: '40ft',
-    statblock: '',
     category: 'Predator'
   },
   {
@@ -61,7 +60,6 @@ const sampleMonsters: Monster[] = [
     hp: 11,
     ac: 12,
     speed: '30ft',
-    statblock: '',
     category: 'Bandit'
   },
   {
@@ -74,7 +72,6 @@ const sampleMonsters: Monster[] = [
     hp: 11,
     ac: 16,
     speed: '30ft',
-    statblock: '',
     category: 'Civilised'
   },
   {
@@ -87,7 +84,6 @@ const sampleMonsters: Monster[] = [
     hp: 22,
     ac: 8,
     speed: '20ft',
-    statblock: '',
     category: 'Undead'
   },
   {
@@ -100,7 +96,6 @@ const sampleMonsters: Monster[] = [
     hp: 84,
     ac: 15,
     speed: '30ft',
-    statblock: '',
     category: 'Predator'
   }
 ];
