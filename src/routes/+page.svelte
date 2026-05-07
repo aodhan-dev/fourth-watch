@@ -4,16 +4,40 @@
   import ResultPanel from '$lib/components/ResultPanel.svelte';
   import Footer from '$lib/components/Footer.svelte';
   import { roll } from '$lib/engine';
-  import type { Inputs, RollResult } from '$lib/engine/types';
+  import type {
+    Inputs,
+    RollResult,
+    Climate,
+    Environment,
+    Season,
+    TimeOfDay,
+    RegionType
+  } from '$lib/engine/types';
 
-  const STORAGE_KEY = 'fourth-watch-inputs-v1';
+  const STORAGE_KEY = 'fourth-watch-inputs-v2';
 
-  const defaultInputs: Inputs = {
-    climate: 'Temperate',
-    environment: 'Forest',
-    season: 'Spring',
-    time: 'Day',
-    region: 'Frontier',
+  // Form state allows enum fields to start unset ('' sentinel) so each dropdown
+  // shows its field name as placeholder on first visit. Once chosen, persisted
+  // in localStorage. Numeric/boolean fields keep their sensible defaults.
+  type FormState = {
+    climate: Climate | '';
+    environment: Environment | '';
+    season: Season | '';
+    time: TimeOfDay | '';
+    region: RegionType | '';
+    partyLevel: number;
+    partySize: number;
+    mode: Inputs['mode'];
+    campfire: boolean;
+    noise: boolean;
+  };
+
+  const defaultForm: FormState = {
+    climate: '',
+    environment: '',
+    season: '',
+    time: '',
+    region: '',
     partyLevel: 3,
     partySize: 4,
     mode: 'Travelling',
@@ -21,8 +45,18 @@
     noise: false
   };
 
-  let inputs = $state<Inputs>({ ...defaultInputs });
+  let inputs = $state<FormState>({ ...defaultForm });
   let result = $state<RollResult | null>(null);
+
+  function isComplete(f: FormState): f is FormState & Inputs {
+    return (
+      f.climate !== '' &&
+      f.environment !== '' &&
+      f.season !== '' &&
+      f.time !== '' &&
+      f.region !== ''
+    );
+  }
 
   onMount(() => {
     try {
@@ -45,19 +79,31 @@
     return Math.floor(Math.random() * 0xffffffff) >>> 0;
   }
 
+  function snapshot(): Inputs | null {
+    const snap = $state.snapshot(inputs) as FormState;
+    if (!isComplete(snap)) return null;
+    return snap;
+  }
+
   function rollAll() {
+    const snap = snapshot();
+    if (!snap) return;
     persist();
-    result = roll($state.snapshot(inputs) as Inputs, newSeed());
+    result = roll(snap, newSeed());
   }
 
   function rerollWeather() {
     if (!result) return rollAll();
-    result = roll($state.snapshot(inputs) as Inputs, result.seed, { rerollWeather: newSeed() });
+    const snap = snapshot();
+    if (!snap) return;
+    result = roll(snap, result.seed, { rerollWeather: newSeed() });
   }
 
   function rerollEncounter() {
     if (!result) return rollAll();
-    result = roll($state.snapshot(inputs) as Inputs, result.seed, { rerollEncounter: newSeed() });
+    const snap = snapshot();
+    if (!snap) return;
+    result = roll(snap, result.seed, { rerollEncounter: newSeed() });
   }
 </script>
 
@@ -70,7 +116,7 @@
     <h1>Fourth Watch</h1>
     <p class="tagline">D&amp;D weather and wandering encounters, rolled at the table.</p>
   </header>
-  <InputForm bind:value={inputs} onRoll={rollAll} />
+  <InputForm bind:value={inputs} onRoll={rollAll} canRoll={isComplete(inputs)} />
   <div aria-live="polite" aria-atomic="true">
     <ResultPanel
       {result}
