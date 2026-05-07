@@ -13,10 +13,14 @@
     "risks_and_mitigations": "A11y semantics may break the segmented control's visual styling (mitigation: land a11y-semantics before visual-polish, screenshot smoke after each). Code-split chunk may not serve correctly via Cloudflare static assets (mitigation: npm run build + preview locally before merging, add a smoke test). SW kill-switch cache shape change may evict legitimate state on first visit (mitigation: LRU and version tests, fresh-profile manual smoke). CSP may block legitimate resources (mitigation: try Content-Security-Policy-Report-Only first, review browser console). Loop may mark a story passed without ACs being met (mitigation: ACs written for autonomous verification; skill must not mark passed without evidence).",
     "open_questions": "Q1. Should observability logs be enabled by default in prod or gated behind ?debug=1? Default: gated. Q2. Can the segmented control revert to native radios with native focus rings? Default: yes. Q3. Replace vendor emoji with custom SVG icons or simply remove them? Default: remove with a placeholder note. Q4. SW kill switch: block this visit or unregister on next? Default: serve from cache this visit, unregister next. Q5. CSP header location: static/_headers or SvelteKit handle hook? Default: static/_headers."
   },
-  "user_stories": [
+  "completion_promise_hit": false,
+  "stories": [
     {
-      "id": 1,
-      "name": "fix/state-and-storage-validation",
+      "id": "01.1",
+      "title": "fix/state-and-storage-validation",
+      "passes": false,
+      "priority": 1,
+      "branchName": "fix/state-and-storage-validation",
       "user_role": "developer",
       "capability": "localStorage payloads validated before merge, the campfire $effect moved to the state owner, isComplete derived rather than re-called, and a mockable newSeed seam",
       "outcome": "state corruption can't bypass the form's all-complete guard and tests can deterministically pin the seed stream",
@@ -34,8 +38,11 @@
       "completed_at": null
     },
     {
-      "id": 2,
-      "name": "feat/test-coverage-uplift",
+      "id": "02.1",
+      "title": "feat/test-coverage-uplift",
+      "passes": false,
+      "priority": 2,
+      "branchName": "feat/test-coverage-uplift",
       "user_role": "developer",
       "capability": "boundary tests for the engine, schema-shape contract tests for the bundled data files, and a component / e2e test layer",
       "outcome": "UI regressions are caught and engine edge cases are pinned to behaviour",
@@ -53,8 +60,11 @@
       "completed_at": null
     },
     {
-      "id": 3,
-      "name": "fix/a11y-focus-and-motion",
+      "id": "03.1",
+      "title": "fix/a11y-focus-and-motion",
+      "passes": false,
+      "priority": 3,
+      "branchName": "fix/a11y-focus-and-motion",
       "user_role": "keyboard or switch user, or a user with motion-sensitivity",
       "capability": "visible focus indicators on every interactive control and animations that respect my reduced-motion preference",
       "outcome": "I can use the app without losing track of focus or being made dizzy",
@@ -70,8 +80,11 @@
       "completed_at": null
     },
     {
-      "id": 4,
-      "name": "fix/a11y-semantics-and-aria",
+      "id": "04.1",
+      "title": "fix/a11y-semantics-and-aria",
+      "passes": false,
+      "priority": 4,
+      "branchName": "fix/a11y-semantics-and-aria",
       "user_role": "screen-reader or assistive-tech user",
       "capability": "the segmented control, stat-block disclosure, stepper, and live region announced correctly",
       "outcome": "the app is intelligible without sight",
@@ -94,8 +107,11 @@
       "completed_at": null
     },
     {
-      "id": 5,
-      "name": "perf/code-split-monsters-and-fonts",
+      "id": "05.1",
+      "title": "perf/code-split-monsters-and-fonts",
+      "passes": false,
+      "priority": 5,
+      "branchName": "perf/code-split-monsters-and-fonts",
       "user_role": "tabletop user opening the app on mobile",
       "capability": "the page paints quickly without waiting on a 545 KB monster catalog",
       "outcome": "the first roll is fast",
@@ -112,8 +128,11 @@
       "completed_at": null
     },
     {
-      "id": 6,
-      "name": "feat/form-ux-feedback",
+      "id": "06.1",
+      "title": "feat/form-ux-feedback",
+      "passes": false,
+      "priority": 6,
+      "branchName": "feat/form-ux-feedback",
       "user_role": "user filling in the form",
       "capability": "persistent labels, an explanation when Roll is disabled, copy-button feedback, primary-action consistency, a disclosure chevron, a campfire hint, and a faster Stepper",
       "outcome": "the path from open-app to see-result is obvious and forgiving",
@@ -133,8 +152,11 @@
       "completed_at": null
     },
     {
-      "id": 7,
-      "name": "style/visual-polish",
+      "id": "07.1",
+      "title": "style/visual-polish",
+      "passes": false,
+      "priority": 7,
+      "branchName": "style/visual-polish",
       "user_role": "user looking at the app",
       "capability": "polished visual hierarchy with one primary action, themed icons in place of vendor emoji, and consistent typography",
       "outcome": "the table presence matches the engine quality",
@@ -159,8 +181,11 @@
       "completed_at": null
     },
     {
-      "id": 8,
-      "name": "feat/service-worker-killswitch",
+      "id": "08.1",
+      "title": "feat/service-worker-killswitch",
+      "passes": false,
+      "priority": 8,
+      "branchName": "feat/service-worker-killswitch",
       "user_role": "operator",
       "capability": "a service-worker kill switch and a bounded runtime cache",
       "outcome": "a bad deploy can't ship a broken cached shell that survives the next visit",
@@ -176,8 +201,11 @@
       "completed_at": null
     },
     {
-      "id": 9,
-      "name": "feat/observability",
+      "id": "09.1",
+      "title": "feat/observability",
+      "passes": false,
+      "priority": 9,
+      "branchName": "feat/observability",
       "user_role": "operator triaging a user-reported bug",
       "capability": "a way to reproduce a roll from the seed",
       "outcome": "I can inspect the exact result the user saw",
@@ -192,8 +220,11 @@
       "completed_at": null
     },
     {
-      "id": 10,
-      "name": "chore/security-defense-in-depth",
+      "id": "10.1",
+      "title": "chore/security-defense-in-depth",
+      "passes": false,
+      "priority": 10,
+      "branchName": "chore/security-defense-in-depth",
       "user_role": "security-conscious operator",
       "capability": "a Content-Security-Policy header and a dependency-audit step in CI",
       "outcome": "an XSS pivot has no script-eval surface and a known-CVE bump doesn't ship silently",
@@ -207,6 +238,5 @@
       "status": "pending",
       "completed_at": null
     }
-  ],
-  "completion_promise_hit": false
+  ]
 }

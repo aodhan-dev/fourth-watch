@@ -10,3 +10,8 @@ vite.config.ts.timestamp-*
 .playwright-mcp/
 .wrangler/
 .review-panel/
+.ralph-logs/
+.ralph-build-logs/
+.meta-loop/
+.ralph-prompt-*.txt
+

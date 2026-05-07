@@ -1,0 +1,25 @@
+{
+  "name": "Fourth Watch ralph-loop",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "workspaceFolder": "/workspace",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+  "remoteUser": "vscode",
+  "containerUser": "vscode",
+  "mounts": [
+    "source=fourth-watch-ralph-claude-auth,target=/home/vscode/.claude,type=volume",
+    "source=fourth-watch-ralph-claude-config,target=/home/vscode/.config/claude,type=volume",
+    "source=fourth-watch-ralph-npm-cache,target=/home/vscode/.npm,type=volume",
+    "source=fourth-watch-ralph-node-modules,target=/workspace/node_modules,type=volume"
+  ],
+  "postCreateCommand": "bash .devcontainer/postCreate.sh",
+  "remoteEnv": {
+    "TERM": "xterm-256color"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": []
+    }
+  }
+}

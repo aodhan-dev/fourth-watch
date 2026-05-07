@@ -5,15 +5,15 @@ TOTAL_STORIES: 10
 CREATED_AT: 2026-05-07T22:35:02Z
 UPDATED_AT: 2026-05-07T22:35:02Z
 
-[ ] Story 1: fix/state-and-storage-validation
-[ ] Story 2: feat/test-coverage-uplift
-[ ] Story 3: fix/a11y-focus-and-motion
-[ ] Story 4: fix/a11y-semantics-and-aria
-[ ] Story 5: perf/code-split-monsters-and-fonts
-[ ] Story 6: feat/form-ux-feedback
-[ ] Story 7: style/visual-polish
-[ ] Story 8: feat/service-worker-killswitch
-[ ] Story 9: feat/observability
-[ ] Story 10: chore/security-defense-in-depth
+[ ] Story 01.1: fix/state-and-storage-validation
+[ ] Story 02.1: feat/test-coverage-uplift
+[ ] Story 03.1: fix/a11y-focus-and-motion
+[ ] Story 04.1: fix/a11y-semantics-and-aria
+[ ] Story 05.1: perf/code-split-monsters-and-fonts
+[ ] Story 06.1: feat/form-ux-feedback
+[ ] Story 07.1: style/visual-polish
+[ ] Story 08.1: feat/service-worker-killswitch
+[ ] Story 09.1: feat/observability
+[ ] Story 10.1: chore/security-defense-in-depth
 
 COMPLETION_PROMISE: all stories must be marked [x] before prd.json's completion_promise_hit flips to true and the loop terminates
