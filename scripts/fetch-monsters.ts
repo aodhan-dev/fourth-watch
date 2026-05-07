@@ -369,8 +369,12 @@ async function main() {
   const path = join(process.cwd(), 'src/lib/data/monsters.json');
   writeFileSync(path, JSON.stringify(out, null, 2));
   console.log(`\nWrote ${out.length} monsters (from ${raw} raw v2 results) to ${path}`);
-  console.log(`  ${stats.fromV2} from SRD 5.2, ${stats.fromV1} from SRD 5.1 (5.1 entries dropped where 5.2 has same name)`);
-  console.log(`  ${stats.withOwnEnv} with own environments, ${stats.withInheritedEnv} backfilled by name match`);
+  console.log(
+    `  ${stats.fromV2} from SRD 5.2, ${stats.fromV1} from SRD 5.1 (5.1 entries dropped where 5.2 has same name)`
+  );
+  console.log(
+    `  ${stats.withOwnEnv} with own environments, ${stats.withInheritedEnv} backfilled by name match`
+  );
   console.log(`  ${stats.dropped} dropped (no environments in either edition)`);
 }
 
