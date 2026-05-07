@@ -164,13 +164,13 @@
     <div class="segmented" role="radiogroup" aria-label="Travel mode">
       <label class="seg" class:active={value.mode === 'Travelling'}>
         <input type="radio" bind:group={value.mode} value="Travelling" />
-        <span class="seg-glyph" aria-hidden="true">🥾</span>
-        <span class="seg-label">Travelling</span>
+        <span class="seg-glyph seg-glyph-base" aria-hidden="true">🥾</span>
+        <span class="seg-label seg-label-base">Travelling</span>
       </label>
       <label class="seg" class:active={value.mode === 'AtCamp'}>
         <input type="radio" bind:group={value.mode} value="AtCamp" />
-        <span class="seg-glyph" aria-hidden="true">⛺</span>
-        <span class="seg-label">At camp</span>
+        <span class="seg-glyph seg-glyph-base" aria-hidden="true">⛺</span>
+        <span class="seg-label seg-label-base">At camp</span>
       </label>
     </div>
     <div class="state-extras">
@@ -242,7 +242,7 @@
   fieldset.party legend {
     grid-column: 1 / -1;
   }
-  label.stat {
+  .stat {
     display: grid;
     grid-template-columns: 1fr;
     gap: 0.4rem;
@@ -255,13 +255,6 @@
     letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--text-dim);
-  }
-  label.stat input[type='number'] {
-    text-align: center;
-    font-size: 1.15rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    padding: 0.7rem 0.5rem;
   }
   fieldset.state {
     gap: 0;
@@ -282,15 +275,22 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
-    padding: 1.9rem 0.75rem;
+    gap: 0.65rem;
+    padding: 1.35rem 0.75rem;
     cursor: pointer;
     color: var(--text-dim);
-    font-size: 0.95rem;
+    font-size: 1rem;
     transition:
       background 140ms ease,
       color 140ms ease;
     user-select: none;
+  }
+  .seg-glyph {
+    font-size: 1.25rem;
+  }
+  .seg-label {
+    font-size: 0.85rem;
+    letter-spacing: 0.2em;
   }
   .seg + .seg {
     border-left: 1px solid var(--border-strong);
@@ -302,15 +302,12 @@
     opacity: 0;
     pointer-events: none;
   }
-  .seg-glyph {
-    font-size: 1.05rem;
+  .seg-glyph-base {
     line-height: 1;
   }
-  .seg-label {
+  .seg-label-base {
     font-family: var(--font-display);
-    font-size: 0.78rem;
     font-weight: 600;
-    letter-spacing: 0.18em;
     text-transform: uppercase;
   }
   .seg:hover {
@@ -363,8 +360,7 @@
     cursor: not-allowed;
     color: var(--text-muted);
   }
-  select,
-  input[type='number'] {
+  select {
     width: 100%;
     padding: 0.55rem 0.7rem;
     font: inherit;
@@ -388,12 +384,10 @@
     background-repeat: no-repeat;
     padding-right: 2rem;
   }
-  select:hover,
-  input[type='number']:hover {
+  select:hover {
     border-color: var(--accent-soft);
   }
-  select:focus,
-  input[type='number']:focus {
+  select:focus {
     border-color: var(--accent);
     outline: none;
   }
