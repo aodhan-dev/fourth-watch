@@ -20,6 +20,49 @@
   const seasons = ['Spring', 'Summer', 'Autumn', 'Winter'] as const;
   const times = ['Dawn', 'Day', 'Dusk', 'Night'] as const;
   const regions = ['Settled', 'Frontier', 'Wilderness', 'Hostile'] as const;
+
+  const GLYPH = {
+    Tropical: '🌴',
+    Subtropical: '🌿',
+    Arid: '🏜️',
+    Temperate: '🌾',
+    Subarctic: '🌲',
+    'Arctic-c': '🧊',
+    'Arctic-e': '❄️',
+    Coastal: '🌊',
+    Desert: '🏜️',
+    Forest: '🌲',
+    Grassland: '🌾',
+    Hills: '⛰️',
+    Mountains: '🏔️',
+    Swamp: '🪷',
+    Underground: '🕯️',
+    Urban: '🏛️',
+    Wasteland: '☠️',
+    Spring: '🌱',
+    Summer: '☀️',
+    Autumn: '🍂',
+    Winter: '❄️',
+    Dawn: '🌅',
+    Day: '🔆',
+    Dusk: '🌆',
+    Night: '🌙',
+    Settled: '🏘️',
+    Frontier: '🛤️',
+    Wilderness: '🌲',
+    Hostile: '⚔️'
+  } as const;
+
+  // Climate "Arctic" and Environment "Arctic" share a value; pick visually distinct glyphs.
+  function climateGlyph(c: string): string {
+    return c === 'Arctic' ? GLYPH['Arctic-c'] : (GLYPH as Record<string, string>)[c];
+  }
+  function envGlyph(e: string): string {
+    return e === 'Arctic' ? GLYPH['Arctic-e'] : (GLYPH as Record<string, string>)[e];
+  }
+  function g(k: string): string {
+    return (GLYPH as Record<string, string>)[k] ?? '';
+  }
 </script>
 
 <form
@@ -34,31 +77,31 @@
     <label
       >Climate
       <select bind:value={value.climate}>
-        {#each climates as c (c)}<option value={c}>{c}</option>{/each}
+        {#each climates as c (c)}<option value={c}>{climateGlyph(c)} {c}</option>{/each}
       </select>
     </label>
     <label
       >Environment
       <select bind:value={value.environment}>
-        {#each environments as e (e)}<option value={e}>{e}</option>{/each}
+        {#each environments as e (e)}<option value={e}>{envGlyph(e)} {e}</option>{/each}
       </select>
     </label>
     <label
       >Season
       <select bind:value={value.season}>
-        {#each seasons as s (s)}<option value={s}>{s}</option>{/each}
+        {#each seasons as s (s)}<option value={s}>{g(s)} {s}</option>{/each}
       </select>
     </label>
     <label
       >Time of day
       <select bind:value={value.time}>
-        {#each times as t (t)}<option value={t}>{t}</option>{/each}
+        {#each times as t (t)}<option value={t}>{g(t)} {t}</option>{/each}
       </select>
     </label>
     <label
       >Region type
       <select bind:value={value.region}>
-        {#each regions as r (r)}<option value={r}>{r}</option>{/each}
+        {#each regions as r (r)}<option value={r}>{g(r)} {r}</option>{/each}
       </select>
     </label>
   </fieldset>
@@ -77,13 +120,22 @@
 
   <fieldset>
     <legend>State</legend>
-    <label><input type="radio" bind:group={value.mode} value="Travelling" /> Travelling</label>
-    <label><input type="radio" bind:group={value.mode} value="AtCamp" /> At camp</label>
     <label
-      ><input type="checkbox" bind:checked={value.campfire} disabled={value.mode !== 'AtCamp'} /> Campfire
-      lit</label
+      ><input type="radio" bind:group={value.mode} value="Travelling" />
+      <span class="state-glyph" aria-hidden="true">🥾</span> Travelling</label
     >
-    <label><input type="checkbox" bind:checked={value.noise} /> Making noise</label>
+    <label
+      ><input type="radio" bind:group={value.mode} value="AtCamp" />
+      <span class="state-glyph" aria-hidden="true">⛺</span> At camp</label
+    >
+    <label
+      ><input type="checkbox" bind:checked={value.campfire} disabled={value.mode !== 'AtCamp'} />
+      <span class="state-glyph" aria-hidden="true">🔥</span> Campfire lit</label
+    >
+    <label
+      ><input type="checkbox" bind:checked={value.noise} />
+      <span class="state-glyph" aria-hidden="true">📢</span> Making noise</label
+    >
   </fieldset>
 
   <button type="submit" class="roll">Roll</button>

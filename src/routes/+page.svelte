@@ -67,7 +67,6 @@
 
 <main>
   <header class="title">
-    <p class="eyebrow">The Fourth Watch</p>
     <h1>Fourth Watch</h1>
     <p class="tagline">D&amp;D weather and wandering encounters, rolled at the table.</p>
   </header>
@@ -92,15 +91,6 @@
   .title {
     margin: 0.5rem 0 2rem;
     text-align: center;
-  }
-  .eyebrow {
-    margin: 0 0 0.35rem;
-    font-family: var(--font-display);
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.32em;
-    text-transform: uppercase;
-    color: var(--accent);
   }
   h1 {
     font-family: var(--font-display);

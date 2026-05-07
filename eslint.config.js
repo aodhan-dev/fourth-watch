@@ -28,6 +28,13 @@ export default [
       globals: { ...globals.node }
     }
   },
+  {
+    files: ['src/service-worker.ts'],
+    languageOptions: {
+      parser: tsParser,
+      globals: { ...globals.serviceworker }
+    }
+  },
   ...svelte.configs['flat/recommended'],
   {
     files: ['**/*.svelte'],
