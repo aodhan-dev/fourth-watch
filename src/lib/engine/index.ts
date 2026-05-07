@@ -8,7 +8,10 @@ import { parseMonsterCatalog } from './validate';
 const defaultMonsters = parseMonsterCatalog(monstersData);
 
 export interface RerollOptions {
+  // A fresh seed for the weather stream only. Goes through deriveSeed(value, 'weather')
+  // so callers don't have to know the engine's internal namespacing.
   rerollWeather?: number;
+  // A fresh seed for the encounter stream only. Same contract as rerollWeather.
   rerollEncounter?: number;
 }
 
@@ -18,8 +21,11 @@ export function roll(
   opts: RerollOptions = {},
   monsters: Monster[] = defaultMonsters
 ): RollResult {
-  const weatherSeed = opts.rerollWeather ?? deriveSeed(seed, 'weather');
-  const encounterSeed = opts.rerollEncounter ?? deriveSeed(seed, 'encounter');
+  // Both the default and override paths run through deriveSeed with the same
+  // namespace, so a caller-supplied rerollWeather behaves identically to the
+  // primary seed under the engine's substream contract.
+  const weatherSeed = deriveSeed(opts.rerollWeather ?? seed, 'weather');
+  const encounterSeed = deriveSeed(opts.rerollEncounter ?? seed, 'encounter');
 
   const weather = rollWeather(inputs, makeRng(weatherSeed));
   const checkRng = makeRng(deriveSeed(encounterSeed, 'check'));
