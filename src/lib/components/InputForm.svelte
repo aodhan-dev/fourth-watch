@@ -174,13 +174,15 @@
       </label>
     </div>
     <div class="state-extras">
-      <label class="extra">
+      <label class="pad noise" class:on={value.noise}>
         <input type="checkbox" bind:checked={value.noise} />
-        <span class="state-glyph" aria-hidden="true">📢</span> Making noise
+        <span class="pad-glyph" aria-hidden="true">📢</span>
+        <span class="pad-label">Making noise</span>
       </label>
-      <label class="extra">
+      <label class="pad fire" class:on={value.campfire} class:disabled={value.mode !== 'AtCamp'}>
         <input type="checkbox" bind:checked={value.campfire} disabled={value.mode !== 'AtCamp'} />
-        <span class="state-glyph" aria-hidden="true">🔥</span> Campfire lit
+        <span class="pad-glyph" aria-hidden="true">🔥</span>
+        <span class="pad-label">Campfire lit</span>
       </label>
     </div>
   </fieldset>
@@ -328,27 +330,68 @@
   .state-extras {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 0;
-    margin-top: 0.4rem;
+    gap: 0.55rem;
+    margin-top: 0.55rem;
   }
-  .state-extras .extra {
+  .pad {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.4rem;
-    padding: 0.6rem 0.4rem;
+    gap: 0.55rem;
+    padding: 0.85rem 0.75rem;
+    min-height: 2.3rem;
+    background: var(--surface-2);
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
     cursor: pointer;
     color: var(--text-dim);
-    font-size: 0.88rem;
+    user-select: none;
     white-space: nowrap;
+    transition:
+      background 140ms ease,
+      border-color 140ms ease,
+      color 140ms ease,
+      box-shadow 140ms ease;
   }
-  .state-extras .extra:has(input:disabled) {
+  .pad input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .pad-glyph {
+    font-size: 1.05rem;
+    line-height: 1;
+  }
+  .pad-label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+  .pad:hover:not(.disabled) {
+    border-color: rgba(255, 255, 255, 0.25);
+    color: var(--text);
+  }
+  .pad.noise.on {
+    background: rgba(196, 75, 107, 0.16);
+    border-color: rgba(196, 75, 107, 0.65);
+    color: #f3b6c0;
+    box-shadow:
+      inset 0 0 0 1px rgba(196, 75, 107, 0.35),
+      0 0 16px -4px rgba(196, 75, 107, 0.45);
+  }
+  .pad.fire.on {
+    background: rgba(224, 123, 58, 0.16);
+    border-color: rgba(224, 123, 58, 0.7);
+    color: #f3c89a;
+    box-shadow:
+      inset 0 0 0 1px rgba(224, 123, 58, 0.4),
+      0 0 16px -4px rgba(224, 123, 58, 0.55);
+  }
+  .pad.disabled {
     cursor: not-allowed;
-    color: var(--text-muted);
-    opacity: 0.6;
-  }
-  .state-extras .extra input[type='checkbox'] {
-    accent-color: var(--accent);
+    opacity: 0.35;
   }
   label:has(input[type='radio']),
   label:has(input[type='checkbox']) {
