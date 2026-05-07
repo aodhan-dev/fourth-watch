@@ -237,8 +237,75 @@ function parseCrString(v: string): number {
   return Number(v) || 0;
 }
 
+function normaliseSlug(key: string | undefined, name: string): string {
+  // SRD keys: 'srd_wolf' (5.1) or 'srd2024_wolf' / 'srd-2024_wolf' (5.2).
+  // Strip whichever prefix so categoriser overrides match either source.
+  const stripped = (key ?? '').replace(/^srd[-_]?\d*_?/, '');
+  return stripped || name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+}
+
+function normaliseCreature(c: Open5eV2Creature, envs: string[]): NormalisedMonster {
+  const cr =
+    typeof c.challenge_rating === 'number'
+      ? c.challenge_rating
+      : typeof c.challenge_rating === 'string'
+        ? parseCrString(c.challenge_rating)
+        : 0;
+
+  const a = c.ability_scores ?? {};
+  const abilityScores =
+    typeof a.strength === 'number'
+      ? {
+          str: a.strength,
+          dex: a.dexterity ?? 10,
+          con: a.constitution ?? 10,
+          int: a.intelligence ?? 10,
+          wis: a.wisdom ?? 10,
+          cha: a.charisma ?? 10
+        }
+      : undefined;
+
+  const { senses, passive } = formatSenses(c as unknown as Record<string, unknown>);
+  const resist = pickResistances(c.resistances_and_immunities);
+  const grouped = classifyActions(c.actions);
+
+  return {
+    slug: normaliseSlug(c.key, c.name),
+    name: c.name,
+    cr,
+    type: nameOf(c.type),
+    size: nameOf(c.size),
+    environments: envs,
+    hp: typeof c.hit_points === 'number' ? c.hit_points : 1,
+    hitDice: c.hit_dice,
+    ac: typeof c.armor_class === 'number' ? c.armor_class : 10,
+    acDetail: c.armor_detail,
+    speed: formatSpeed(c.speed),
+    alignment: nameOf(c.alignment) || undefined,
+    proficiencyBonus: c.proficiency_bonus,
+    xp: c.experience_points,
+    abilityScores,
+    savingThrows: pickNumberRecord(c.saving_throws),
+    skills: pickNumberRecord(c.skill_bonuses),
+    ...resist,
+    senses: senses || undefined,
+    passivePerception: passive,
+    languages: formatLanguages(c.languages) || undefined,
+    traits: mapNamedDescs(c.traits),
+    actions: grouped.actions,
+    bonusActions: grouped.bonusActions,
+    reactions: grouped.reactions,
+    legendaryActions: grouped.legendaryActions
+  };
+}
+
 async function main() {
-  const out: NormalisedMonster[] = [];
+  // Two passes:
+  //   1. Pull all SRD creatures (5.1 and 5.2) into a flat list.
+  //   2. Build a name→environments map from any source that has env tags (5.1 today).
+  //   3. Dedupe by name, keeping the SRD 5.2 version when available, and inheriting
+  //      environments from the 5.1 entry when 5.2 lacks them.
+  const allCreatures: Open5eV2Creature[] = [];
   let url: string | null = 'https://api.open5e.com/v2/creatures/?limit=200';
   let page = 0;
   let raw = 0;
@@ -250,69 +317,49 @@ async function main() {
     const json = (await res.json()) as { results: Open5eV2Creature[]; next: string | null };
     raw += json.results.length;
     process.stdout.write(`${json.results.length} creatures\n`);
-
     for (const c of json.results) {
-      const docKey = c.document?.key ?? '';
-      if (!docKey.startsWith('srd')) continue;
-      const envs = mapEnvironments(c.environments);
-      if (envs.length === 0) continue;
-
-      const slug =
-        (c.key ?? '').replace(/^srd[-_]/, '') || c.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-      const cr =
-        typeof c.challenge_rating === 'number'
-          ? c.challenge_rating
-          : typeof c.challenge_rating === 'string'
-            ? parseCrString(c.challenge_rating)
-            : 0;
-
-      const a = c.ability_scores ?? {};
-      const abilityScores =
-        typeof a.strength === 'number'
-          ? {
-              str: a.strength,
-              dex: a.dexterity ?? 10,
-              con: a.constitution ?? 10,
-              int: a.intelligence ?? 10,
-              wis: a.wisdom ?? 10,
-              cha: a.charisma ?? 10
-            }
-          : undefined;
-
-      const { senses, passive } = formatSenses(c as unknown as Record<string, unknown>);
-      const resist = pickResistances(c.resistances_and_immunities);
-      const grouped = classifyActions(c.actions);
-
-      out.push({
-        slug,
-        name: c.name,
-        cr,
-        type: nameOf(c.type),
-        size: nameOf(c.size),
-        environments: envs,
-        hp: typeof c.hit_points === 'number' ? c.hit_points : 1,
-        hitDice: c.hit_dice,
-        ac: typeof c.armor_class === 'number' ? c.armor_class : 10,
-        acDetail: c.armor_detail,
-        speed: formatSpeed(c.speed),
-        alignment: nameOf(c.alignment) || undefined,
-        proficiencyBonus: c.proficiency_bonus,
-        xp: c.experience_points,
-        abilityScores,
-        savingThrows: pickNumberRecord(c.saving_throws),
-        skills: pickNumberRecord(c.skill_bonuses),
-        ...resist,
-        senses: senses || undefined,
-        passivePerception: passive,
-        languages: formatLanguages(c.languages) || undefined,
-        traits: mapNamedDescs(c.traits),
-        actions: grouped.actions,
-        bonusActions: grouped.bonusActions,
-        reactions: grouped.reactions,
-        legendaryActions: grouped.legendaryActions
-      });
+      if (!(c.document?.key ?? '').startsWith('srd')) continue;
+      allCreatures.push(c);
     }
     url = json.next;
+  }
+
+  // Index environments by lowercased name across all SRD docs.
+  const envByName = new Map<string, string[]>();
+  for (const c of allCreatures) {
+    const own = mapEnvironments(c.environments);
+    if (own.length === 0) continue;
+    const key = c.name.toLowerCase();
+    const existing = envByName.get(key) ?? [];
+    envByName.set(key, [...new Set([...existing, ...own])]);
+  }
+
+  // Pick the best version of each named creature: prefer SRD 5.2 over SRD 5.1.
+  // This drops the 5.1 entry whenever 5.2 has the same creature.
+  const bestByName = new Map<string, Open5eV2Creature>();
+  for (const c of allCreatures) {
+    const name = c.name.toLowerCase();
+    const existing = bestByName.get(name);
+    const isV2 = c.document?.key === 'srd-2024';
+    const existingIsV2 = existing?.document?.key === 'srd-2024';
+    if (!existing || (isV2 && !existingIsV2)) bestByName.set(name, c);
+  }
+
+  const out: NormalisedMonster[] = [];
+  const stats = { fromV2: 0, fromV1: 0, withOwnEnv: 0, withInheritedEnv: 0, dropped: 0 };
+  for (const c of bestByName.values()) {
+    const own = mapEnvironments(c.environments);
+    const inherited = envByName.get(c.name.toLowerCase()) ?? [];
+    const envs = own.length > 0 ? own : inherited;
+    if (envs.length === 0) {
+      stats.dropped++;
+      continue;
+    }
+    if (own.length > 0) stats.withOwnEnv++;
+    else stats.withInheritedEnv++;
+    if (c.document?.key === 'srd-2024') stats.fromV2++;
+    else stats.fromV1++;
+    out.push(normaliseCreature(c, envs));
   }
 
   if (out.length < 50) {
@@ -321,7 +368,10 @@ async function main() {
 
   const path = join(process.cwd(), 'src/lib/data/monsters.json');
   writeFileSync(path, JSON.stringify(out, null, 2));
-  console.log(`Wrote ${out.length} monsters (from ${raw} raw v2 results) to ${path}`);
+  console.log(`\nWrote ${out.length} monsters (from ${raw} raw v2 results) to ${path}`);
+  console.log(`  ${stats.fromV2} from SRD 5.2, ${stats.fromV1} from SRD 5.1 (5.1 entries dropped where 5.2 has same name)`);
+  console.log(`  ${stats.withOwnEnv} with own environments, ${stats.withInheritedEnv} backfilled by name match`);
+  console.log(`  ${stats.dropped} dropped (no environments in either edition)`);
 }
 
 main().catch((e) => {
