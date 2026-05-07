@@ -94,8 +94,13 @@ export interface CheckResult {
   chance: number;
 }
 
-export function encounterCheck(inputs: Inputs, weather: Weather, rng: Rng): CheckResult {
-  const { encounterChance } = applyModifiers(inputs, weather);
+export function encounterCheck(
+  inputs: Inputs,
+  weather: Weather,
+  rng: Rng,
+  mods?: AppliedModifiers
+): CheckResult {
+  const { encounterChance } = mods ?? applyModifiers(inputs, weather);
   return { happens: rng() < encounterChance, chance: encounterChance };
 }
 
@@ -147,9 +152,10 @@ export function encounterPick(
   inputs: Inputs,
   weather: Weather,
   monsters: Monster[],
-  rng: Rng
+  rng: Rng,
+  mods?: AppliedModifiers
 ): PickResult {
-  const { categoryWeights, matchingRules } = applyModifiers(inputs, weather);
+  const { categoryWeights, matchingRules } = mods ?? applyModifiers(inputs, weather);
 
   const envPool = monsters.filter((m) => m.environments.includes(inputs.environment));
   if (envPool.length === 0) {

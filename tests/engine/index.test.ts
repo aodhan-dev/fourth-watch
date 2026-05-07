@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { roll } from '../../src/lib/engine';
-import type { Inputs } from '../../src/lib/engine/types';
+import type { Inputs, Monster } from '../../src/lib/engine/types';
 
 const inputs: Inputs = {
   climate: 'Temperate',
@@ -14,6 +14,21 @@ const inputs: Inputs = {
   campfire: false,
   noise: false
 };
+
+const fixtureMonsters: Monster[] = [
+  {
+    slug: 'fixture-wolf',
+    name: 'Fixture Wolf',
+    cr: 0.25,
+    type: 'beast',
+    size: 'Medium',
+    environments: ['Forest'],
+    hp: 11,
+    ac: 13,
+    speed: '40ft',
+    category: 'Predator'
+  }
+];
 
 describe('roll', () => {
   it('produces deterministic full result for same seed', () => {
@@ -37,5 +52,22 @@ describe('roll', () => {
     const a = roll(inputs, 100);
     const b = roll(inputs, 100, { rerollEncounter: 300 });
     expect(b.weather).toEqual(a.weather);
+  });
+
+  it('uses an injected monster catalog when one is provided', () => {
+    // Force an encounter-likely scenario, then verify the chosen creature comes
+    // from the injected fixture catalog rather than the bundled SRD snapshot.
+    const hot = { ...inputs, region: 'Hostile' as const, noise: true };
+    let rolled = 0;
+    let seenFixture = false;
+    for (let s = 0; s < 50 && !seenFixture; s++) {
+      const r = roll(hot, s, {}, fixtureMonsters);
+      if (r.encounter) {
+        rolled++;
+        if (r.encounter.creature.slug === 'fixture-wolf') seenFixture = true;
+      }
+    }
+    expect(rolled).toBeGreaterThan(0);
+    expect(seenFixture).toBe(true);
   });
 });

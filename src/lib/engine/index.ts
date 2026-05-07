@@ -1,18 +1,23 @@
-import type { Inputs, RollResult } from './types';
+import type { Inputs, Monster, RollResult } from './types';
 import { makeRng, deriveSeed } from './rng';
 import { rollWeather } from './weather';
-import { encounterCheck, encounterPick } from './encounter';
+import { applyModifiers, encounterCheck, encounterPick } from './encounter';
 import monstersData from '../data/monsters.json';
 import { parseMonsterCatalog } from './validate';
 
-const monsters = parseMonsterCatalog(monstersData);
+const defaultMonsters = parseMonsterCatalog(monstersData);
 
 export interface RerollOptions {
   rerollWeather?: number;
   rerollEncounter?: number;
 }
 
-export function roll(inputs: Inputs, seed: number, opts: RerollOptions = {}): RollResult {
+export function roll(
+  inputs: Inputs,
+  seed: number,
+  opts: RerollOptions = {},
+  monsters: Monster[] = defaultMonsters
+): RollResult {
   const weatherSeed = opts.rerollWeather ?? deriveSeed(seed, 'weather');
   const encounterSeed = opts.rerollEncounter ?? deriveSeed(seed, 'encounter');
 
@@ -20,12 +25,16 @@ export function roll(inputs: Inputs, seed: number, opts: RerollOptions = {}): Ro
   const checkRng = makeRng(deriveSeed(encounterSeed, 'check'));
   const pickRng = makeRng(deriveSeed(encounterSeed, 'pick'));
 
-  const check = encounterCheck(inputs, weather, checkRng);
+  // Compute modifiers once per roll: encounterCheck and encounterPick share the result
+  // instead of recomputing the rule scan twice.
+  const mods = applyModifiers(inputs, weather);
+
+  const check = encounterCheck(inputs, weather, checkRng, mods);
   if (!check.happens) {
     return { seed, weather, encounter: null, encounterMessage: 'The road is quiet.' };
   }
 
-  const pick = encounterPick(inputs, weather, monsters, pickRng);
+  const pick = encounterPick(inputs, weather, monsters, pickRng, mods);
   return {
     seed,
     weather,
