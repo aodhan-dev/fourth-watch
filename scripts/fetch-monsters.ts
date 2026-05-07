@@ -2,9 +2,26 @@
  * Snapshot Open5e v2 SRD creatures with rich stat-block data.
  * Run with: npm run fetch:monsters
  */
-import { writeFileSync } from 'node:fs';
+import { renameSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Environment, MonsterRaw, NamedDesc } from '../src/lib/engine/types';
+
+const OPEN5E_HOST = 'https://api.open5e.com/';
+
+// Length caps for strings we bake into the client bundle. A compromised or
+// malformed Open5e response cannot blow up the bundle or sneak attacker-controlled
+// prose past these. Svelte's mustache escaping handles HTML/JS injection separately;
+// safeString only enforces shape and size.
+const MAX_NAME = 80;
+const MAX_DETAIL = 200;
+const MAX_DESC = 4000;
+
+function safeString(s: unknown, maxLen: number): string | undefined {
+  if (typeof s !== 'string' || s.length === 0) return undefined;
+  // Reject obvious script/iframe payloads outright; truncate the rest.
+  if (/<script|<iframe|javascript:/i.test(s)) return undefined;
+  return s.length > maxLen ? s.slice(0, maxLen) : s;
+}
 
 function nameOf(v: unknown): string {
   if (typeof v === 'string') return v;
@@ -61,7 +78,9 @@ function mapNamedDescs(arr: unknown): NamedDesc[] {
   return arr
     .map((a) => {
       const o = a as { name?: string; desc?: string };
-      return o.name && o.desc ? { name: o.name, desc: o.desc } : null;
+      const name = safeString(o.name, MAX_NAME);
+      const desc = safeString(o.desc, MAX_DESC);
+      return name && desc ? { name, desc } : null;
     })
     .filter((x): x is NamedDesc => x !== null);
 }
@@ -81,8 +100,10 @@ function classifyActions(arr: unknown): {
   if (!Array.isArray(arr)) return out;
   for (const a of arr) {
     const o = a as { name?: string; desc?: string; action_type?: string };
-    if (!o.name || !o.desc) continue;
-    const item: NamedDesc = { name: o.name, desc: o.desc };
+    const name = safeString(o.name, MAX_NAME);
+    const desc = safeString(o.desc, MAX_DESC);
+    if (!name || !desc) continue;
+    const item: NamedDesc = { name, desc };
     switch (o.action_type) {
       case 'BONUS':
         out.bonusActions.push(item);
@@ -128,7 +149,7 @@ function formatSenses(c: Record<string, unknown>): { senses: string; passive?: n
 function formatLanguages(langs: unknown): string {
   if (!langs || typeof langs !== 'object') return '';
   const o = langs as { as_string?: string };
-  return typeof o.as_string === 'string' ? o.as_string : '';
+  return safeString(o.as_string, MAX_DETAIL) ?? '';
 }
 
 function pickResistances(r: unknown): {
@@ -139,7 +160,7 @@ function pickResistances(r: unknown): {
 } {
   if (!r || typeof r !== 'object') return {};
   const o = r as Record<string, unknown>;
-  const pull = (k: string) => (typeof o[k] === 'string' && o[k] ? (o[k] as string) : undefined);
+  const pull = (k: string) => safeString(o[k], MAX_DETAIL);
   return {
     damageResistances: pull('damage_resistances_display'),
     damageImmunities: pull('damage_immunities_display'),
@@ -236,26 +257,26 @@ function normaliseCreature(c: Open5eV2Creature, envs: Environment[]): MonsterRaw
   return {
     slug: normaliseSlug(c.key, c.name),
     edition: editionOf(c.document?.key),
-    name: c.name,
+    name: safeString(c.name, MAX_NAME) ?? c.name.slice(0, MAX_NAME),
     cr,
-    type: nameOf(c.type),
-    size: nameOf(c.size),
+    type: nameOf(c.type).slice(0, MAX_NAME),
+    size: nameOf(c.size).slice(0, MAX_NAME),
     environments: envs,
     hp: typeof c.hit_points === 'number' ? c.hit_points : 1,
-    hitDice: c.hit_dice,
+    hitDice: safeString(c.hit_dice, MAX_DETAIL),
     ac: typeof c.armor_class === 'number' ? c.armor_class : 10,
-    acDetail: c.armor_detail,
-    speed: formatSpeed(c.speed),
-    alignment: nameOf(c.alignment) || undefined,
-    proficiencyBonus: c.proficiency_bonus,
+    acDetail: safeString(c.armor_detail, MAX_DETAIL),
+    speed: formatSpeed(c.speed).slice(0, MAX_DETAIL),
+    alignment: safeString(nameOf(c.alignment), MAX_NAME),
+    proficiencyBonus: typeof c.proficiency_bonus === 'number' ? c.proficiency_bonus : undefined,
     xp: c.experience_points,
     abilityScores,
     savingThrows: pickNumberRecord(c.saving_throws),
     skills: pickNumberRecord(c.skill_bonuses),
     ...resist,
-    senses: senses || undefined,
+    senses: senses ? safeString(senses, MAX_DETAIL) : undefined,
     passivePerception: passive,
-    languages: formatLanguages(c.languages) || undefined,
+    languages: safeString(formatLanguages(c.languages), MAX_DETAIL),
     traits: mapNamedDescs(c.traits),
     actions: grouped.actions,
     bonusActions: grouped.bonusActions,
@@ -272,28 +293,54 @@ interface DedupeDropEntry {
   droppedName: string;
 }
 
+async function fetchWithRetry(url: string, attempts = 3): Promise<Response> {
+  let lastErr: unknown;
+  for (let i = 0; i < attempts; i++) {
+    try {
+      const res = await fetch(url);
+      if (res.ok) return res;
+      lastErr = new Error(`HTTP ${res.status} for ${url}`);
+    } catch (e) {
+      lastErr = e;
+    }
+    if (i < attempts - 1) {
+      const delay = 1000 * 2 ** i;
+      await new Promise((r) => setTimeout(r, delay));
+    }
+  }
+  throw lastErr instanceof Error ? lastErr : new Error(`fetch failed: ${String(lastErr)}`);
+}
+
+function safeNextUrl(next: unknown): string | null {
+  if (typeof next !== 'string' || next.length === 0) return null;
+  if (!next.startsWith(OPEN5E_HOST)) {
+    console.warn(`Refusing to follow off-host pagination URL: ${next}`);
+    return null;
+  }
+  return next;
+}
+
 async function main() {
   // Pull every SRD creature (5.1 and 5.2), dedupe by bare slug preferring 5.2,
   // and inherit environments from sibling editions when the kept entry lacks them.
   // Slug is used for dedupe instead of name so a 5.1 to 5.2 rename does not produce
   // two entries for the same creature; renames are logged so semantic drift can be reviewed.
   const allCreatures: Open5eV2Creature[] = [];
-  let url: string | null = 'https://api.open5e.com/v2/creatures/?limit=200';
+  let url: string | null = `${OPEN5E_HOST}v2/creatures/?limit=200`;
   let page = 0;
   let raw = 0;
   while (url) {
     page++;
     process.stdout.write(`Fetching page ${page}... `);
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
-    const json = (await res.json()) as { results: Open5eV2Creature[]; next: string | null };
+    const res = await fetchWithRetry(url);
+    const json = (await res.json()) as { results: Open5eV2Creature[]; next: unknown };
     raw += json.results.length;
     process.stdout.write(`${json.results.length} creatures\n`);
     for (const c of json.results) {
       if (!(c.document?.key ?? '').startsWith('srd')) continue;
       allCreatures.push(c);
     }
-    url = json.next;
+    url = safeNextUrl(json.next);
   }
 
   // Index environments by bare slug across all SRD docs (5.1 currently carries env tags;
@@ -354,8 +401,12 @@ async function main() {
     throw new Error(`Suspiciously few SRD monsters with environments: ${out.length}. Aborting.`);
   }
 
+  // Atomic write: serialise to .tmp first, then rename, so an interrupt mid-write
+  // can never leave monsters.json in a partial state.
   const path = join(process.cwd(), 'src/lib/data/monsters.json');
-  writeFileSync(path, JSON.stringify({ schemaVersion: 1, monsters: out }, null, 2));
+  const tmp = `${path}.tmp`;
+  writeFileSync(tmp, JSON.stringify({ schemaVersion: 1, monsters: out }, null, 2));
+  renameSync(tmp, path);
   console.log(`\nWrote ${out.length} monsters (from ${raw} raw v2 results) to ${path}`);
   console.log(
     `  ${stats.fromV2} from SRD 5.2, ${stats.fromV1} from SRD 5.1 (${drops.length} duplicates dropped during slug dedupe)`
