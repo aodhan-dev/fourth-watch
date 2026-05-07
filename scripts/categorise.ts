@@ -7,10 +7,22 @@ import type { MonsterCategory, MonsterRaw } from '../src/lib/engine/types';
 
 type Categorisable = MonsterRaw & { category?: MonsterCategory };
 
+interface MonsterCatalog {
+  schemaVersion: number;
+  monsters: Categorisable[];
+}
+
+const SCHEMA_VERSION = 1;
 const path = join(process.cwd(), 'src/lib/data/monsters.json');
 const overridesPath = join(process.cwd(), 'data-overrides/categories.json');
 
-const monsters: Categorisable[] = JSON.parse(readFileSync(path, 'utf8'));
+const catalog: MonsterCatalog = JSON.parse(readFileSync(path, 'utf8'));
+if (catalog.schemaVersion !== SCHEMA_VERSION) {
+  throw new Error(
+    `monsters.json schemaVersion ${catalog.schemaVersion} is not compatible with this script (expected ${SCHEMA_VERSION}). Re-run fetch-monsters.`
+  );
+}
+const monsters = catalog.monsters;
 const overrides: Record<string, MonsterCategory> = JSON.parse(
   readFileSync(overridesPath, 'utf8')
 );
@@ -43,7 +55,10 @@ for (const m of monsters) {
   }
 }
 
-writeFileSync(path, JSON.stringify(monsters, null, 2));
+writeFileSync(
+  path,
+  JSON.stringify({ schemaVersion: SCHEMA_VERSION, monsters }, null, 2)
+);
 console.log(
   `Categorised ${monsters.length} monsters: ${overridesApplied} from overrides, ${heuristic} from type heuristics.`
 );

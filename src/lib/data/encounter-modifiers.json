@@ -1,4 +1,5 @@
 {
+  "schemaVersion": 1,
   "baseEncounterChance": 0.25,
   "rules": [
     {

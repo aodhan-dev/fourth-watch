@@ -1,8 +1,11 @@
-import type { Inputs, RollResult, Monster } from './types';
+import type { Inputs, RollResult } from './types';
 import { makeRng, deriveSeed } from './rng';
 import { rollWeather } from './weather';
 import { encounterCheck, encounterPick } from './encounter';
 import monstersData from '../data/monsters.json';
+import { parseMonsterCatalog } from './validate';
+
+const monsters = parseMonsterCatalog(monstersData);
 
 export interface RerollOptions {
   rerollWeather?: number;
@@ -22,7 +25,7 @@ export function roll(inputs: Inputs, seed: number, opts: RerollOptions = {}): Ro
     return { seed, weather, encounter: null, encounterMessage: 'The road is quiet.' };
   }
 
-  const pick = encounterPick(inputs, weather, monstersData as unknown as Monster[], pickRng);
+  const pick = encounterPick(inputs, weather, monsters, pickRng);
   return {
     seed,
     weather,

@@ -323,7 +323,7 @@ async function main() {
   }
 
   const path = join(process.cwd(), 'src/lib/data/monsters.json');
-  writeFileSync(path, JSON.stringify(out, null, 2));
+  writeFileSync(path, JSON.stringify({ schemaVersion: 1, monsters: out }, null, 2));
   console.log(`\nWrote ${out.length} monsters (from ${raw} raw v2 results) to ${path}`);
   console.log(
     `  ${stats.fromV2} from SRD 5.2, ${stats.fromV1} from SRD 5.1 (5.1 entries dropped where 5.2 has same name)`

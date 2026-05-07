@@ -1,12 +1,9 @@
 import type { Inputs, Weather, Monster, Encounter, ModifierRule, MonsterCategory } from './types';
 import { type Rng, pickFrom, pickIndex } from './rng';
 import modifiersData from '../data/encounter-modifiers.json';
+import { parseModifiersFile } from './validate';
 
-interface ModifiersFile {
-  baseEncounterChance: number;
-  rules: ModifierRule[];
-}
-const MODS = modifiersData as ModifiersFile;
+const MODS = parseModifiersFile(modifiersData);
 
 const ALL_CATEGORIES: MonsterCategory[] = [
   'Predator',
