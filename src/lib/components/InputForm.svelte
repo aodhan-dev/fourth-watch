@@ -109,12 +109,12 @@
   <fieldset class="party">
     <legend>Party</legend>
     <label class="stat"
-      ><span class="stat-name">Average level</span>
-      <input type="number" min="1" max="20" bind:value={value.partyLevel} />
-    </label>
-    <label class="stat"
       ><span class="stat-name">Number of characters</span>
       <input type="number" min="1" max="8" bind:value={value.partySize} />
+    </label>
+    <label class="stat"
+      ><span class="stat-name">Average level</span>
+      <input type="number" min="1" max="20" bind:value={value.partyLevel} />
     </label>
   </fieldset>
 
@@ -158,24 +158,30 @@
     </select>
   </fieldset>
 
-  <fieldset>
-    <legend>State</legend>
-    <label
-      ><input type="radio" bind:group={value.mode} value="Travelling" />
-      <span class="state-glyph" aria-hidden="true">🥾</span> Travelling</label
-    >
-    <label
-      ><input type="radio" bind:group={value.mode} value="AtCamp" />
-      <span class="state-glyph" aria-hidden="true">⛺</span> At camp</label
-    >
-    <label
-      ><input type="checkbox" bind:checked={value.campfire} disabled={value.mode !== 'AtCamp'} />
-      <span class="state-glyph" aria-hidden="true">🔥</span> Campfire lit</label
-    >
-    <label
-      ><input type="checkbox" bind:checked={value.noise} />
-      <span class="state-glyph" aria-hidden="true">📢</span> Making noise</label
-    >
+  <fieldset class="state">
+    <legend>Posture</legend>
+    <div class="segmented" role="radiogroup" aria-label="Travel mode">
+      <label class="seg" class:active={value.mode === 'Travelling'}>
+        <input type="radio" bind:group={value.mode} value="Travelling" />
+        <span class="seg-glyph" aria-hidden="true">🥾</span>
+        <span class="seg-label">Travelling</span>
+      </label>
+      <label class="seg" class:active={value.mode === 'AtCamp'}>
+        <input type="radio" bind:group={value.mode} value="AtCamp" />
+        <span class="seg-glyph" aria-hidden="true">⛺</span>
+        <span class="seg-label">At camp</span>
+      </label>
+    </div>
+    <div class="state-extras">
+      <label class="extra">
+        <input type="checkbox" bind:checked={value.noise} />
+        <span class="state-glyph" aria-hidden="true">📢</span> Making noise
+      </label>
+      <label class="extra">
+        <input type="checkbox" bind:checked={value.campfire} disabled={value.mode !== 'AtCamp'} />
+        <span class="state-glyph" aria-hidden="true">🔥</span> Campfire lit
+      </label>
+    </div>
   </fieldset>
 
   <button type="submit" class="roll" disabled={!canRoll}>Roll</button>
@@ -255,6 +261,94 @@
     font-weight: 600;
     letter-spacing: 0.05em;
     padding: 0.7rem 0.5rem;
+  }
+  fieldset.state {
+    gap: 0;
+  }
+  fieldset.state legend {
+    margin-bottom: 0.65rem;
+  }
+  .segmented {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--border-strong);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--surface-2);
+  }
+  .seg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.95rem 0.75rem;
+    cursor: pointer;
+    color: var(--text-dim);
+    font-size: 0.95rem;
+    transition:
+      background 140ms ease,
+      color 140ms ease;
+    user-select: none;
+  }
+  .seg + .seg {
+    border-left: 1px solid var(--border-strong);
+  }
+  .seg input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .seg-glyph {
+    font-size: 1.05rem;
+    line-height: 1;
+  }
+  .seg-label {
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .seg:hover {
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.03);
+  }
+  .seg.active {
+    background: var(--accent);
+    color: #1a1407;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset;
+  }
+  .seg.active + .seg,
+  .seg:not(.active) + .seg.active {
+    border-left-color: rgba(0, 0, 0, 0.35);
+  }
+  .state-extras {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    margin-top: 0.4rem;
+  }
+  .state-extras .extra {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.6rem 0.4rem;
+    cursor: pointer;
+    color: var(--text-dim);
+    font-size: 0.88rem;
+    white-space: nowrap;
+  }
+  .state-extras .extra:has(input:disabled) {
+    cursor: not-allowed;
+    color: var(--text-muted);
+    opacity: 0.6;
+  }
+  .state-extras .extra input[type='checkbox'] {
+    accent-color: var(--accent);
   }
   label:has(input[type='radio']),
   label:has(input[type='checkbox']) {
@@ -354,14 +448,9 @@
   }
   @media (min-width: 640px) {
     .form {
-      grid-template-columns: 1fr 1fr;
       gap: 1.25rem;
     }
-    fieldset:first-of-type {
-      grid-column: 1 / -1;
-    }
     button.roll {
-      grid-column: 1 / -1;
       justify-self: center;
       min-width: 14rem;
     }
