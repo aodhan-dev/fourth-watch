@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Encounter, Monster, NamedDesc, AbilityScores } from '$lib/engine/types';
+  import type { Encounter, Monster, AbilityScores } from '$lib/engine/types';
 
   let { encounter, message }: { encounter: Encounter | null; message: string | null } = $props();
   let expanded = $state(false);

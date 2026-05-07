@@ -38,16 +38,12 @@ describe('parseMonsterCatalog', () => {
   });
 
   it('rejects a non-array .monsters', () => {
-    expect(() => parseMonsterCatalog({ schemaVersion: 1, monsters: 'oops' })).toThrow(
-      /\.monsters/
-    );
+    expect(() => parseMonsterCatalog({ schemaVersion: 1, monsters: 'oops' })).toThrow(/\.monsters/);
   });
 
   it('rejects an unknown environment', () => {
     const bad = { ...validMonster, environments: ['Marsh'] };
-    expect(() => parseMonsterCatalog({ schemaVersion: 1, monsters: [bad] })).toThrow(
-      /Environment/
-    );
+    expect(() => parseMonsterCatalog({ schemaVersion: 1, monsters: [bad] })).toThrow(/Environment/);
   });
 
   it('rejects an unknown category', () => {

@@ -23,9 +23,7 @@ if (catalog.schemaVersion !== SCHEMA_VERSION) {
   );
 }
 const monsters = catalog.monsters;
-const overrides: Record<string, MonsterCategory> = JSON.parse(
-  readFileSync(overridesPath, 'utf8')
-);
+const overrides: Record<string, MonsterCategory> = JSON.parse(readFileSync(overridesPath, 'utf8'));
 
 function categoriseByType(type: string): MonsterCategory {
   const t = type.toLowerCase();
@@ -55,10 +53,7 @@ for (const m of monsters) {
   }
 }
 
-writeFileSync(
-  path,
-  JSON.stringify({ schemaVersion: SCHEMA_VERSION, monsters }, null, 2)
-);
+writeFileSync(path, JSON.stringify({ schemaVersion: SCHEMA_VERSION, monsters }, null, 2));
 console.log(
   `Categorised ${monsters.length} monsters: ${overridesApplied} from overrides, ${heuristic} from type heuristics.`
 );

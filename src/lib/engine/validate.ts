@@ -69,17 +69,27 @@ function parseMonster(raw: unknown, file: string, idx: number): Monster {
   for (let i = 0; i < raw.environments.length; i++) {
     const e = raw.environments[i];
     if (typeof e !== 'string' || !ENVIRONMENTS.has(e as Environment))
-      throw new DataShapeError(file, `${path}.environments[${i}]`, `is not a known Environment: ${String(e)}`);
+      throw new DataShapeError(
+        file,
+        `${path}.environments[${i}]`,
+        `is not a known Environment: ${String(e)}`
+      );
   }
 
-  if (!isFiniteNumber(raw.hp)) throw new DataShapeError(file, `${path}.hp`, 'is not a finite number');
-  if (!isFiniteNumber(raw.ac)) throw new DataShapeError(file, `${path}.ac`, 'is not a finite number');
+  if (!isFiniteNumber(raw.hp))
+    throw new DataShapeError(file, `${path}.hp`, 'is not a finite number');
+  if (!isFiniteNumber(raw.ac))
+    throw new DataShapeError(file, `${path}.ac`, 'is not a finite number');
 
   if (typeof raw.speed !== 'string')
     throw new DataShapeError(file, `${path}.speed`, 'is not a string');
 
   if (typeof raw.category !== 'string' || !CATEGORIES.has(raw.category as MonsterCategory))
-    throw new DataShapeError(file, `${path}.category`, `is not a known MonsterCategory: ${String(raw.category)}`);
+    throw new DataShapeError(
+      file,
+      `${path}.category`,
+      `is not a known MonsterCategory: ${String(raw.category)}`
+    );
 
   // Optional fields are passed through without per-field validation; the engine reads them
   // defensively (formatNumberMap ignores non-numeric values, etc.). Tightening these is a
@@ -96,8 +106,7 @@ export function parseMonsterCatalog(raw: unknown): Monster[] {
       '.schemaVersion',
       `expected ${MONSTERS_SCHEMA_VERSION}, got ${String(raw.schemaVersion)}`
     );
-  if (!Array.isArray(raw.monsters))
-    throw new DataShapeError(file, '.monsters', 'is not an array');
+  if (!Array.isArray(raw.monsters)) throw new DataShapeError(file, '.monsters', 'is not an array');
   return raw.monsters.map((m, i) => parseMonster(m, file, i));
 }
 
@@ -106,8 +115,7 @@ function parseModifierRule(raw: unknown, file: string, idx: number): ModifierRul
   if (!isObject(raw)) throw new DataShapeError(file, path, 'is not an object');
   if (typeof raw.id !== 'string' || raw.id.length === 0)
     throw new DataShapeError(file, `${path}.id`, 'is not a non-empty string');
-  if (!isObject(raw.when))
-    throw new DataShapeError(file, `${path}.when`, 'is not an object');
+  if (!isObject(raw.when)) throw new DataShapeError(file, `${path}.when`, 'is not an object');
   if (raw.encounterChanceMultiplier !== undefined && !isFiniteNumber(raw.encounterChanceMultiplier))
     throw new DataShapeError(file, `${path}.encounterChanceMultiplier`, 'is not a finite number');
   if (raw.categoryMultipliers !== undefined) {
@@ -115,9 +123,17 @@ function parseModifierRule(raw: unknown, file: string, idx: number): ModifierRul
       throw new DataShapeError(file, `${path}.categoryMultipliers`, 'is not an object');
     for (const [k, v] of Object.entries(raw.categoryMultipliers)) {
       if (!CATEGORIES.has(k as MonsterCategory))
-        throw new DataShapeError(file, `${path}.categoryMultipliers.${k}`, 'is not a known MonsterCategory');
+        throw new DataShapeError(
+          file,
+          `${path}.categoryMultipliers.${k}`,
+          'is not a known MonsterCategory'
+        );
       if (!isFiniteNumber(v))
-        throw new DataShapeError(file, `${path}.categoryMultipliers.${k}`, 'is not a finite number');
+        throw new DataShapeError(
+          file,
+          `${path}.categoryMultipliers.${k}`,
+          'is not a finite number'
+        );
     }
   }
   return raw as unknown as ModifierRule;
@@ -138,10 +154,13 @@ export function parseModifiersFile(raw: unknown): ModifiersFile {
       '.schemaVersion',
       `expected ${MODIFIERS_SCHEMA_VERSION}, got ${String(raw.schemaVersion)}`
     );
-  if (!isFiniteNumber(raw.baseEncounterChance) || raw.baseEncounterChance < 0 || raw.baseEncounterChance > 1)
+  if (
+    !isFiniteNumber(raw.baseEncounterChance) ||
+    raw.baseEncounterChance < 0 ||
+    raw.baseEncounterChance > 1
+  )
     throw new DataShapeError(file, '.baseEncounterChance', 'is not a finite number in [0, 1]');
-  if (!Array.isArray(raw.rules))
-    throw new DataShapeError(file, '.rules', 'is not an array');
+  if (!Array.isArray(raw.rules)) throw new DataShapeError(file, '.rules', 'is not an array');
   const rules = raw.rules.map((r, i) => parseModifierRule(r, file, i));
   return {
     schemaVersion: MONSTERS_SCHEMA_VERSION,
