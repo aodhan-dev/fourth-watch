@@ -3,32 +3,19 @@
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
+import type { MonsterCategory, MonsterRaw } from '../src/lib/engine/types';
 
-type Category =
-  | 'Predator'
-  | 'Bandit'
-  | 'Civilised'
-  | 'Undead'
-  | 'Fey'
-  | 'Aberration'
-  | 'Construct'
-  | 'Other';
-
-interface Monster {
-  slug: string;
-  name: string;
-  type: string;
-  category?: Category;
-  [k: string]: unknown;
-}
+type Categorisable = MonsterRaw & { category?: MonsterCategory };
 
 const path = join(process.cwd(), 'src/lib/data/monsters.json');
 const overridesPath = join(process.cwd(), 'data-overrides/categories.json');
 
-const monsters: Monster[] = JSON.parse(readFileSync(path, 'utf8'));
-const overrides: Record<string, Category> = JSON.parse(readFileSync(overridesPath, 'utf8'));
+const monsters: Categorisable[] = JSON.parse(readFileSync(path, 'utf8'));
+const overrides: Record<string, MonsterCategory> = JSON.parse(
+  readFileSync(overridesPath, 'utf8')
+);
 
-function categoriseByType(type: string): Category {
+function categoriseByType(type: string): MonsterCategory {
   const t = type.toLowerCase();
   if (t.includes('undead')) return 'Undead';
   if (t.includes('fey')) return 'Fey';

@@ -4,51 +4,7 @@
  */
 import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-
-interface NamedDesc {
-  name: string;
-  desc: string;
-}
-
-interface NormalisedMonster {
-  slug: string;
-  name: string;
-  cr: number;
-  type: string;
-  size: string;
-  environments: string[];
-  hp: number;
-  hitDice?: string;
-  ac: number;
-  acDetail?: string;
-  speed: string;
-  alignment?: string;
-  proficiencyBonus?: number;
-  xp?: number;
-  abilityScores?: {
-    str: number;
-    dex: number;
-    con: number;
-    int: number;
-    wis: number;
-    cha: number;
-  };
-  savingThrows?: Record<string, number>;
-  skills?: Record<string, number>;
-  damageResistances?: string;
-  damageImmunities?: string;
-  damageVulnerabilities?: string;
-  conditionImmunities?: string;
-  senses?: string;
-  passivePerception?: number;
-  languages?: string;
-  traits?: NamedDesc[];
-  actions?: NamedDesc[];
-  bonusActions?: NamedDesc[];
-  reactions?: NamedDesc[];
-  legendaryActions?: NamedDesc[];
-  legendaryDesc?: string;
-}
+import type { Environment, MonsterRaw, NamedDesc } from '../src/lib/engine/types';
 
 function nameOf(v: unknown): string {
   if (typeof v === 'string') return v;
@@ -63,7 +19,7 @@ function nameOf(v: unknown): string {
   return '';
 }
 
-function mapEnvironment(label: string): string | null {
+function mapEnvironment(label: string): Environment | null {
   const n = label.toLowerCase();
   if (/arctic|tundra|polar|ice/.test(n)) return 'Arctic';
   if (/coast|shore|beach|sea|ocean/.test(n)) return 'Coastal';
@@ -79,9 +35,9 @@ function mapEnvironment(label: string): string | null {
   return null;
 }
 
-function mapEnvironments(arr: unknown): string[] {
+function mapEnvironments(arr: unknown): Environment[] {
   if (!Array.isArray(arr)) return [];
-  const out = new Set<string>();
+  const out = new Set<Environment>();
   for (const e of arr) {
     const tag = mapEnvironment(nameOf(e));
     if (tag) out.add(tag);
@@ -244,7 +200,7 @@ function normaliseSlug(key: string | undefined, name: string): string {
   return stripped || name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 }
 
-function normaliseCreature(c: Open5eV2Creature, envs: string[]): NormalisedMonster {
+function normaliseCreature(c: Open5eV2Creature, envs: Environment[]): MonsterRaw {
   const cr =
     typeof c.challenge_rating === 'number'
       ? c.challenge_rating
@@ -325,7 +281,7 @@ async function main() {
   }
 
   // Index environments by lowercased name across all SRD docs.
-  const envByName = new Map<string, string[]>();
+  const envByName = new Map<string, Environment[]>();
   for (const c of allCreatures) {
     const own = mapEnvironments(c.environments);
     if (own.length === 0) continue;
@@ -345,7 +301,7 @@ async function main() {
     if (!existing || (isV2 && !existingIsV2)) bestByName.set(name, c);
   }
 
-  const out: NormalisedMonster[] = [];
+  const out: MonsterRaw[] = [];
   const stats = { fromV2: 0, fromV1: 0, withOwnEnv: 0, withInheritedEnv: 0, dropped: 0 };
   for (const c of bestByName.values()) {
     const own = mapEnvironments(c.environments);

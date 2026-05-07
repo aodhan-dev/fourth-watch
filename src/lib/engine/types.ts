@@ -90,7 +90,7 @@ export interface Monster {
   proficiencyBonus?: number;
   xp?: number;
   abilityScores?: AbilityScores;
-  savingThrows?: Partial<Record<keyof AbilityScores, number>>;
+  savingThrows?: Record<string, number>;
   skills?: Record<string, number>;
   damageResistances?: string;
   damageImmunities?: string;
@@ -106,6 +106,11 @@ export interface Monster {
   legendaryActions?: NamedDesc[];
   legendaryDesc?: string;
 }
+
+// Intermediate shape produced by fetch-monsters before categorise runs.
+// On-disk monsters.json is always post-categorise (see npm script chain),
+// so the engine only ever loads Monster, never MonsterRaw.
+export type MonsterRaw = Omit<Monster, 'category'>;
 
 export interface Encounter {
   creature: Monster;
