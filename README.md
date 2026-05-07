@@ -41,7 +41,7 @@ To connect:
 3. Build settings:
    - Framework preset: SvelteKit
    - Build command: `npm run build`
-   - Build output directory: `build`
+   - Build output directory: leave default (`@sveltejs/adapter-cloudflare` writes to `.svelte-kit/cloudflare/` and Cloudflare picks it up automatically)
    - Environment variable: `NODE_VERSION=20`
 
 ## Attribution
