@@ -272,11 +272,13 @@
     background: var(--surface-2);
   }
   .seg {
+    /* Target: ~2/3 of Roll button height. Roll renders ~3.4rem; 2/3 ≈ 2.3rem. */
+    min-height: 2.3rem;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.65rem;
-    padding: 1.35rem 0.75rem;
+    padding: 0.4rem 0.75rem;
     cursor: pointer;
     color: var(--text-dim);
     font-size: 1rem;
@@ -286,10 +288,10 @@
     user-select: none;
   }
   .seg-glyph {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
   }
   .seg-label {
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     letter-spacing: 0.2em;
   }
   .seg + .seg {
