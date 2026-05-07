@@ -340,11 +340,14 @@ STORY ID CONVENTION:
   Story ids are <slot-number>.<sequence>, e.g. '01.1', '02.1'. Read the id field
   from prd.json verbatim and write it back verbatim to progress.txt.
 
-BRANCH POLICY -- BRANCH PER STORY, STACKED:
-  Each story lands on its own git branch named EXACTLY by the story's branchName
-  field. Branches stack linearly: story N+1 branches off story N's tip, NOT off
-  main. The user reviews and merges them in order after the loop finishes.
-  NEVER push. NEVER merge to main. NEVER touch main directly.
+BRANCH POLICY -- ONE BRANCH FOR THE WHOLE RUN, COMMIT PER STORY:
+  Stay on the branch the user started you on for the entire run. DO NOT create
+  per-story branches. DO NOT switch to main. DO NOT switch branches at all.
+  Every commit lands on the active branch in chronological order. The branchName
+  field in prd.json is a COMMIT-MESSAGE TAG, not a real branch -- it shows up
+  in the conventional commit subject (e.g. 'feat: [01.1] fix/state-and-storage-validation'),
+  but you do not run any 'git checkout -b' or 'git branch' commands.
+  NEVER push. NEVER merge. NEVER fast-forward main.
 
 Per-story workflow (read this whole block before doing anything):
   1. Read prd.json. Top-level array 'stories'; each entry has fields: id, title,
@@ -352,55 +355,58 @@ Per-story workflow (read this whole block before doing anything):
      capability, outcome, acceptance_criteria (array), status, completed_at.
   2. Pick the highest-priority story where passes == false. If every story is
      passes == true, jump to the Completion block below.
-  3. From whichever branch you're currently on (the previous story's tip on
-     iterations 2..N; whatever the user started you on for iteration 1), create
-     a new branch named EXACTLY the value of the story's branchName field:
-        git checkout -b <branchName>
-     Do NOT switch back to main. Do NOT push. The new branch inherits the
-     previous story's commits, building a linear stack of N branches.
-  4. Implement the story so every item in acceptance_criteria is demonstrably
-     met. Run the four pipeline gates and verify they pass before marking the
-     story passed:
+  3. Implement the story so every item in acceptance_criteria is demonstrably
+     met. While implementing, you may make as many uncommitted edits as you
+     need; do NOT commit until the gates are green.
+  4. Run the four pipeline gates and verify they pass before marking the story
+     passed:
         npm run check
         npm run lint
         npm run validate:data
         npm test
      If any gate fails, FIX THE FAILURE. Do NOT mark the story passed with a
-     red gate. Commit implementation work with conventional messages like
-     'feat: [<id>] <title>' or 'fix: [<id>] <title>' (use the exact id from
-     prd.json, e.g. 'feat: [01.1] ...'). For UI-touching stories, run
-     `npm run dev` in a sibling tmux window or one-shot exercise the feature in
-     headless Playwright if a Playwright test exists.
-  5. TIMESTAMP RULE (read twice). Every completed_at, every progress.txt
-     completion comment, every audit line MUST come from a FRESH
+     red gate. For UI-touching stories, also exercise the feature with
+     `npm run dev` in a sibling tmux window or run the headless Playwright
+     test if one exists.
+  5. ONE IMPLEMENTATION COMMIT per story. When gates are green, stage every
+     code/test/config change for THIS story and commit once with a conventional
+     message:
+        feat: [<id>] <branchName>
+     or
+        fix: [<id>] <branchName>
+     where <id> is the exact id from prd.json (e.g. '01.1') and <branchName>
+     is the exact value of the story's branchName field. Choose feat or fix
+     based on the story's intent (a11y, perf, security: 'fix'; new tests,
+     features, polish: 'feat'). Body of the commit message is free-form but
+     should reference the acceptance criteria that were satisfied.
+  6. TIMESTAMP RULE (read twice). Every completed_at value and every
+     progress.txt completion comment MUST come from a FRESH
      `date -u +%Y-%m-%dT%H:%M:%SZ` call made IMMEDIATELY before that write.
      Do NOT call `date -u` once at the start and reuse it. Do NOT use the same
-     timestamp for two stories. A whole batch sharing one timestamp is the
-     canonical "I batched the updates" fingerprint and the host poll flags it
-     as suspicious.
-  6. PROGRESSIVE-COMMITMENT RULE. When acceptance criteria are met and gates
-     are green for THIS ONE story, update BOTH sidecars IMMEDIATELY -- before
-     reading the next story's acceptance criteria, before doing anything else:
+     timestamp for two stories. The host poll flags batches sharing one
+     timestamp as the canonical "I batched the updates" fingerprint.
+  7. PROGRESSIVE-COMMITMENT RULE. After the implementation commit lands and
+     gates are green, update BOTH sidecars IMMEDIATELY -- before reading the
+     next story's acceptance criteria, before doing anything else:
        a. Run `date -u +%Y-%m-%dT%H:%M:%SZ`; capture as TS.
-       b. In progress.txt: change '[ ] Story <id>: <title>' to
-          '[x] Story <id>: <title>    # completed: <TS>'. Refresh the
+       b. In progress.txt: change '[ ] Story <id>: <branchName>' to
+          '[x] Story <id>: <branchName>    # completed: <TS>'. Refresh the
           UPDATED_AT header line to TS.
        c. In prd.json: set the story's passes=true, status="passed",
           completed_at=<TS>. Preserve every other field.
-       d. Commit the sidecar update on the story's branch with message
+       d. Commit the sidecar update with message
           'chore: [<id>] mark story passed'.
      Do NOT batch sidecar updates across multiple stories. Per-story progressive
      marking is what fires per-story phone notifications.
-  7. After step 6, you remain on the story's branch. Loop back to step 1 to
-     pick the next pending story; step 3 will branch off this story's tip.
+  8. After step 7, loop back to step 2 to pick the next pending story.
 
 Completion (only when every story has passes == true AND every gate verified):
   1. Run `date -u +%Y-%m-%dT%H:%M:%SZ`; capture as TS.
   2. In prd.json, set top-level completion_promise_hit=true and completed_at=TS.
-  3. Commit on the final story's branch with message 'chore: meta complete'.
+  3. Commit with message 'chore: meta complete -- all stories passed'.
   4. Emit this exact sentinel string on its own line as your final output:
      COMPLETION_PROMISE_MET: all user stories passed, terminating loop
-  5. Stop. Do not start new work. Do not push. Do not merge to main.
+  5. Stop. Do not start new work. Do not push. Do not merge.
 
 Constraints:
   - $scopeNote
@@ -410,7 +416,11 @@ Constraints:
   - Preserve progress.txt's header block and COMPLETION_PROMISE footer verbatim.
   - Never emit the sentinel while any story has passes=false.
   - Never flip completion_promise_hit=true if any pipeline gate is red.
-  - Do NOT modify branches outside this stack. Do NOT touch main directly.
+  - Two commits per completed story: one implementation (feat/fix), one sidecar
+    (chore). No more, no fewer. If you discover the implementation needed two
+    logical commits, that's allowed -- but the chore commit always comes last
+    and is always the sidecar update for THIS story alone.
+  - Do NOT switch branches. Do NOT touch main directly. Do NOT push.
   - Do NOT start work on any other PRD. This loop is scoped to ONE PRD: $prdFileName.
 "@
 

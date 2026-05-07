@@ -45,6 +45,9 @@ From repo root:
 ## Starting the overnight run
 
 ```powershell
+# create or check out the feature branch the loop will work on
+git checkout -b feat/review-panel-implementation
+
 .\ralph\run-prd-loop.ps1 -PrdFile docs\superpowers\plans\review-panel-prd\PRD_Fourth_Watch_Review_Panel_Implementation_v1.md
 ```
 
@@ -68,10 +71,20 @@ Re-attach with:
 
 ## Branch model
 
-Each story creates its own git branch named by the `branchName` field in
-`prd.json`. Branches stack linearly: story `02.1` branches off `01.1`'s tip,
-`03.1` off `02.1`'s, and so on. The user reviews and merges them in order
-after the loop finishes. The loop never pushes and never touches main.
+Single branch for the whole run. Start the loop on one feature branch (e.g.
+`feat/review-panel-implementation`) and the loop commits everything there in
+chronological order: two commits per story (one `feat:` or `fix:` for the
+implementation, one `chore:` for the sidecar update), plus one final
+`chore: meta complete` when every story passes.
+
+The `branchName` field in `prd.json` is a commit-message tag, not a real
+branch. It shows up in commit subjects (e.g. `feat: [01.1]
+fix/state-and-storage-validation`) for traceability, but the loop never runs
+`git checkout` or `git branch`.
+
+The loop never pushes and never touches main. After the run, the user reviews
+the commit log on the feature branch and either fast-forwards main or splits
+into PRs as preferred.
 
 ## Troubleshooting
 
