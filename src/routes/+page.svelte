@@ -67,8 +67,9 @@
 
 <main>
   <header class="title">
+    <p class="eyebrow">The Fourth Watch</p>
     <h1>Fourth Watch</h1>
-    <p class="tagline">D&amp;D weather & wandering encounters</p>
+    <p class="tagline">D&amp;D weather and wandering encounters, rolled at the table.</p>
   </header>
   <InputForm bind:value={inputs} onRoll={rollAll} />
   <div aria-live="polite" aria-atomic="true">
@@ -84,22 +85,37 @@
 
 <style>
   main {
-    max-width: 800px;
+    max-width: 760px;
     margin: 0 auto;
-    padding: 1rem;
-    font-family: system-ui, sans-serif;
+    padding: 2rem 1.25rem 4rem;
   }
   .title {
-    margin: 0.5rem 0 1.25rem;
+    margin: 0.5rem 0 2rem;
+    text-align: center;
+  }
+  .eyebrow {
+    margin: 0 0 0.35rem;
+    font-family: var(--font-display);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--accent);
   }
   h1 {
-    font-size: 1.75rem;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2.4rem, 6vw, 3.4rem);
+    line-height: 1;
     margin: 0;
-    letter-spacing: 0.01em;
+    letter-spacing: 0.04em;
+    color: var(--text);
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
   }
   .tagline {
-    margin: 0.15rem 0 0;
+    margin: 0.75rem auto 0;
+    max-width: 32ch;
     font-size: 0.95rem;
-    color: #666;
+    color: var(--text-dim);
   }
 </style>

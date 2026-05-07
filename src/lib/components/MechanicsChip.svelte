@@ -1,10 +1,18 @@
 <script lang="ts">
   import type { WeatherEffect } from '$lib/engine/types';
   let { effect }: { effect: WeatherEffect } = $props();
+
+  const severity: 'info' | 'warn' | 'danger' = (() => {
+    if (effect.id === 'cold-exhaustion' || effect.id === 'heat-exhaustion') return 'danger';
+    if (effect.id === 'travel-pace-half' || effect.id === 'ranged-disadvantage') return 'warn';
+    return 'info';
+  })();
 </script>
 
 <span
   class="chip"
+  data-severity={severity}
+  data-source={effect.source}
   title={effect.source === 'SRD' ? 'From SRD 5.2 (CC-BY 4.0)' : 'Original wording'}
 >
   {effect.text}
@@ -12,11 +20,34 @@
 
 <style>
   .chip {
-    display: inline-block;
-    padding: 0.25rem 0.6rem;
-    border-radius: 1rem;
-    background: #eee;
-    font-size: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.4rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 500;
     margin: 0.2rem;
+    background: var(--info-bg);
+    color: var(--info-fg);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    line-height: 1.3;
+  }
+  .chip[data-severity='warn'] {
+    background: var(--warn-bg);
+    color: var(--warn-fg);
+  }
+  .chip[data-severity='danger'] {
+    background: var(--danger-bg);
+    color: var(--danger-fg);
+  }
+  .chip[data-source='SRD']::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.55;
+    flex-shrink: 0;
   }
 </style>

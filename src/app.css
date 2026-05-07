@@ -1,3 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600&display=swap');
+
+:root {
+  /* Surfaces */
+  --bg: #0e1c2e;
+  --surface: #182740;
+  --surface-2: #213354;
+  --surface-3: #2a3f63;
+  --border: rgba(232, 232, 216, 0.12);
+  --border-strong: rgba(232, 232, 216, 0.22);
+
+  /* Text */
+  --text: #e8e8d8;
+  --text-dim: #b6b8ad;
+  --text-muted: #8a8c82;
+
+  /* Accents */
+  --accent: #d4a44a;
+  --accent-soft: rgba(212, 164, 74, 0.18);
+  --accent-strong: #f0c272;
+
+  /* Severity (chips) */
+  --info-bg: #1d3a55;
+  --info-fg: #c8e0f3;
+  --warn-bg: #4a3517;
+  --warn-fg: #f3d6a2;
+  --danger-bg: #4a1f26;
+  --danger-fg: #f3b6c0;
+
+  /* Type */
+  --font-display: 'Cinzel', 'Iowan Old Style', Georgia, serif;
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
 *,
 *::before,
 *::after {
@@ -9,15 +43,24 @@ body {
   padding: 0;
 }
 body {
-  background: #fafafa;
-  color: #222;
-  line-height: 1.4;
+  background:
+    radial-gradient(circle at 20% -10%, #1c2e4a 0%, transparent 55%),
+    radial-gradient(circle at 100% 100%, #1a2240 0%, transparent 55%), var(--bg);
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: var(--font-body);
+  line-height: 1.5;
+  min-height: 100vh;
 }
 button {
   font-family: inherit;
 }
-
 :focus-visible {
-  outline: 2px solid #2664eb;
+  outline: 2px solid var(--accent-strong);
   outline-offset: 2px;
+  border-radius: 3px;
+}
+::selection {
+  background: var(--accent-soft);
+  color: var(--text);
 }

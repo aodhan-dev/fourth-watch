@@ -10,13 +10,24 @@
 
 <style>
   .site-footer {
-    margin-top: 2rem;
-    padding: 1rem;
-    font-size: 0.8rem;
-    color: #555;
-    border-top: 1px solid #eee;
+    margin-top: 3rem;
+    padding: 1.25rem 0 0;
+    font-size: 0.78rem;
+    line-height: 1.55;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+    text-align: center;
+  }
+  .site-footer p {
+    margin: 0 auto;
+    max-width: 60ch;
   }
   .site-footer a {
-    color: inherit;
+    color: var(--text-dim);
+    text-decoration-color: var(--accent-soft);
+    text-underline-offset: 3px;
+  }
+  .site-footer a:hover {
+    color: var(--accent);
   }
 </style>

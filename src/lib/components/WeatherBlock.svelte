@@ -18,12 +18,26 @@
 
 <style>
   .weather {
-    margin-bottom: 1rem;
+    padding-bottom: 1.25rem;
+    margin-bottom: 1.25rem;
+    border-bottom: 1px solid var(--border);
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 0.5rem;
   }
   .narrative {
-    font-size: 1.05rem;
+    font-size: 1.15rem;
+    line-height: 1.45;
+    color: var(--text);
+    margin: 0;
   }
   .chips {
-    margin-top: 0.5rem;
+    margin: 0.85rem -0.2rem 0;
   }
 </style>
