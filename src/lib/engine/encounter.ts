@@ -2,6 +2,7 @@ import type { Inputs, Weather, Monster, Encounter, ModifierRule, MonsterCategory
 import { type Rng, pickFrom, pickIndex } from './rng';
 import modifiersData from '../data/encounter-modifiers.json';
 import { parseModifiersFile } from './validate';
+import { weatherSeverity } from './weather';
 
 const MODS = parseModifiersFile(modifiersData);
 
@@ -26,15 +27,7 @@ function matches(rule: ModifierRule, inputs: Inputs, weather: Weather): boolean 
   if (w.mode && w.mode !== inputs.mode) return false;
   if (w.campfire !== undefined && w.campfire !== inputs.campfire) return false;
   if (w.noise !== undefined && w.noise !== inputs.noise) return false;
-  if (w.weatherSeverity) {
-    const severe =
-      weather.precip === 'Heavy' ||
-      weather.wind === 'High' ||
-      weather.temp === 'Freezing' ||
-      weather.temp === 'Hot';
-    const flag = severe ? 'Severe' : 'Mild';
-    if (w.weatherSeverity !== flag) return false;
-  }
+  if (w.weatherSeverity && w.weatherSeverity !== weatherSeverity(weather)) return false;
   return true;
 }
 

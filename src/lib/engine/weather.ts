@@ -31,6 +31,15 @@ function combinationValid(temp: Temperature, precip: Precipitation): boolean {
   return true;
 }
 
+// Single source of truth for whether a weather state counts as "severe" for
+// modifier-rule purposes. Lives next to Weather so any new severity-affecting
+// field gets reflected here automatically.
+export function weatherSeverity(w: Weather): 'Severe' | 'Mild' {
+  if (w.precip === 'Heavy' || w.wind === 'High' || w.temp === 'Freezing' || w.temp === 'Hot')
+    return 'Severe';
+  return 'Mild';
+}
+
 export function rollWeather(inputs: Inputs, rng: Rng): Weather {
   const climate = (
     climateData as Record<
