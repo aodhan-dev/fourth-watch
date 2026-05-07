@@ -106,48 +106,44 @@
   }}
   class="form"
 >
-  <fieldset>
+  <fieldset class="setting">
     <legend>Setting</legend>
-    <label
-      ><span class="field-label"><span class="field-glyph">{FIELD.climate.glyph}</span>Climate</span
-      >
-      <select bind:value={value.climate} class:unset={value.climate === ''}>
-        <option value="" disabled>{FIELD.climate.glyph} {FIELD.climate.label}…</option>
-        {#each climates as c (c)}<option value={c}>{climateGlyph(c)} {c}</option>{/each}
-      </select>
-    </label>
-    <label
-      ><span class="field-label"
-        ><span class="field-glyph">{FIELD.environment.glyph}</span>Environment</span
-      >
-      <select bind:value={value.environment} class:unset={value.environment === ''}>
-        <option value="" disabled>{FIELD.environment.glyph} {FIELD.environment.label}…</option>
-        {#each environments as e (e)}<option value={e}>{envGlyph(e)} {e}</option>{/each}
-      </select>
-    </label>
-    <label
-      ><span class="field-label"><span class="field-glyph">{FIELD.season.glyph}</span>Season</span>
-      <select bind:value={value.season} class:unset={value.season === ''}>
-        <option value="" disabled>{FIELD.season.glyph} {FIELD.season.label}…</option>
-        {#each seasons as s (s)}<option value={s}>{g(s)} {s}</option>{/each}
-      </select>
-    </label>
-    <label
-      ><span class="field-label"
-        ><span class="field-glyph">{FIELD.time.glyph}</span>Time of day</span
-      >
-      <select bind:value={value.time} class:unset={value.time === ''}>
-        <option value="" disabled>{FIELD.time.glyph} {FIELD.time.label}…</option>
-        {#each times as t (t)}<option value={t}>{g(t)} {t}</option>{/each}
-      </select>
-    </label>
-    <label
-      ><span class="field-label"><span class="field-glyph">{FIELD.region.glyph}</span>Region</span>
-      <select bind:value={value.region} class:unset={value.region === ''}>
-        <option value="" disabled>{FIELD.region.glyph} {FIELD.region.label}…</option>
-        {#each regions as r (r)}<option value={r}>{g(r)} {r}</option>{/each}
-      </select>
-    </label>
+    <select
+      bind:value={value.climate}
+      class:unset={value.climate === ''}
+      aria-label={FIELD.climate.label}
+    >
+      <option value="" disabled>{FIELD.climate.glyph} {FIELD.climate.label}…</option>
+      {#each climates as c (c)}<option value={c}>{climateGlyph(c)} {c}</option>{/each}
+    </select>
+    <select
+      bind:value={value.environment}
+      class:unset={value.environment === ''}
+      aria-label={FIELD.environment.label}
+    >
+      <option value="" disabled>{FIELD.environment.glyph} {FIELD.environment.label}…</option>
+      {#each environments as e (e)}<option value={e}>{envGlyph(e)} {e}</option>{/each}
+    </select>
+    <select
+      bind:value={value.season}
+      class:unset={value.season === ''}
+      aria-label={FIELD.season.label}
+    >
+      <option value="" disabled>{FIELD.season.glyph} {FIELD.season.label}…</option>
+      {#each seasons as s (s)}<option value={s}>{g(s)} {s}</option>{/each}
+    </select>
+    <select bind:value={value.time} class:unset={value.time === ''} aria-label={FIELD.time.label}>
+      <option value="" disabled>{FIELD.time.glyph} {FIELD.time.label}…</option>
+      {#each times as t (t)}<option value={t}>{g(t)} {t}</option>{/each}
+    </select>
+    <select
+      bind:value={value.region}
+      class:unset={value.region === ''}
+      aria-label={FIELD.region.label}
+    >
+      <option value="" disabled>{FIELD.region.glyph} {FIELD.region.label}…</option>
+      {#each regions as r (r)}<option value={r}>{g(r)} {r}</option>{/each}
+    </select>
   </fieldset>
 
   <fieldset>
@@ -217,19 +213,20 @@
     font-size: 0.95rem;
     color: var(--text-dim);
   }
-  .field-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  .field-glyph {
-    font-size: 0.95rem;
-    line-height: 1;
-    opacity: 0.85;
-  }
   select.unset {
     color: var(--text-muted);
     font-style: italic;
+  }
+  fieldset.setting {
+    gap: 0.55rem;
+  }
+  fieldset.setting select {
+    text-align: center;
+    text-align-last: center;
+    padding-left: 2rem;
+  }
+  fieldset.setting option {
+    text-align: left;
   }
   label:has(input[type='radio']),
   label:has(input[type='checkbox']) {
