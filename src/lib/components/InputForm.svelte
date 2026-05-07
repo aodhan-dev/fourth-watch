@@ -98,6 +98,13 @@
   function g(k: string): string {
     return (GLYPH as Record<string, string>)[k] ?? '';
   }
+
+  // Campfire only makes sense at camp; auto-clear it when the party moves out.
+  $effect(() => {
+    if (value.mode !== 'AtCamp' && value.campfire) {
+      value.campfire = false;
+    }
+  });
 </script>
 
 <form
