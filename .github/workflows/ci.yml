@@ -18,7 +18,13 @@ jobs:
       - run: npm run check
       - run: npm run lint
       - run: npm run validate:data
-      - run: npm test
-      - run: npm run build
+      - run: npm run test:unit
+      - name: Build for e2e (adapter-static)
+        run: node scripts/build-e2e.js
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      - name: Production build (adapter-cloudflare)
+        run: npm run build
       - name: Dependency audit
         run: npm audit --omit=dev --audit-level=high
