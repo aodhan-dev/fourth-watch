@@ -23,7 +23,13 @@ function fnv1a(str: string): number {
 }
 
 export function deriveSeed(parent: number, label: string): number {
-  return (fnv1a(`${parent}:${label}`) ^ parent) >>> 0;
+  // Mix parent through a multiply so parent=0 doesn't collapse the XOR step
+  // to a no-op (the input string still differentiates parent=0 from parent=N,
+  // but the mixing layer should also be active). 0x9e3779b9 is the golden-
+  // ratio constant used by SplitMix and similar mixers.
+  const a = fnv1a(`${parent}:${label}`);
+  const b = Math.imul(parent ^ 0x9e3779b9, 0x85ebca6b);
+  return (a ^ b) >>> 0;
 }
 
 // Convenience helpers built on top of an Rng.
