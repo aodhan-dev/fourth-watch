@@ -251,7 +251,13 @@
     cursor: pointer;
     color: var(--text);
     font-size: 0.95rem;
-    transition: background 100ms ease;
+    text-align: center;
+    transition:
+      background 100ms ease,
+      box-shadow 100ms ease;
+  }
+  .option + .option {
+    margin-top: 0.2rem;
   }
   .option.active {
     background: rgba(255, 255, 255, 0.06);
@@ -279,8 +285,20 @@
     border-color: color-mix(in srgb, var(--tint) 75%, var(--border-strong));
   }
   .option[data-theme-field][data-value] {
-    border-left: 3px solid var(--tint);
-    padding-left: calc(0.7rem - 3px);
+    background: color-mix(in srgb, var(--tint) 55%, var(--surface-3));
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tint) 65%, transparent);
+  }
+  .option[data-theme-field][data-value].active {
+    background: color-mix(in srgb, var(--tint) 80%, var(--surface-3));
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, white 35%, var(--tint));
+  }
+  .option[data-theme-field][data-value][aria-selected='true'] {
+    background: color-mix(in srgb, var(--tint) 85%, var(--surface-3));
+    box-shadow:
+      inset 0 0 0 2px var(--accent-strong),
+      inset 0 0 0 3px rgba(0, 0, 0, 0.2);
+    color: var(--text);
+    font-weight: 600;
   }
 
   /* Climate */
