@@ -2,10 +2,9 @@ import type { Inputs, Monster, RollResult } from './types';
 import { makeRng, deriveSeed } from './rng';
 import { rollWeather } from './weather';
 import { applyModifiers, encounterCheck, encounterPick } from './encounter';
-import monstersData from '../data/monsters.json';
-import { parseMonsterCatalog } from './validate';
 
-const defaultMonsters = parseMonsterCatalog(monstersData);
+// Empty by default; callers should pass the catalog loaded via dynamic import.
+const defaultMonsters: Monster[] = [];
 
 export class EngineRangeError extends Error {
   constructor(field: string, value: number, range: string) {
@@ -65,4 +64,5 @@ export function roll(
 }
 
 export { rollWeather, encounterCheck, encounterPick };
+export { parseMonsterCatalog } from './validate';
 export * from './types';

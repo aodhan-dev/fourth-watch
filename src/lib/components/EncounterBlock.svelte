@@ -53,6 +53,9 @@
     const head = parts.join(' ');
     return c.alignment ? `${head}, ${c.alignment}` : head;
   }
+
+  let saves = $derived(encounter ? formatNumberMap(encounter.creature.savingThrows) : null);
+  let skills = $derived(encounter ? formatNumberMap(encounter.creature.skills) : null);
 </script>
 
 <section class="encounter">
@@ -116,16 +119,16 @@
         {/if}
 
         <dl class="sb-meta-list">
-          {#if formatNumberMap(c.savingThrows)}
+          {#if saves}
             <div>
               <dt>Saves</dt>
-              <dd>{formatNumberMap(c.savingThrows)}</dd>
+              <dd>{saves}</dd>
             </div>
           {/if}
-          {#if formatNumberMap(c.skills)}
+          {#if skills}
             <div>
               <dt>Skills</dt>
-              <dd>{formatNumberMap(c.skills)}</dd>
+              <dd>{skills}</dd>
             </div>
           {/if}
           {#if hasStr(c.damageVulnerabilities)}

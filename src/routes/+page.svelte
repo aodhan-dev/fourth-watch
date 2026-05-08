@@ -3,10 +3,10 @@
   import InputForm from '$lib/components/InputForm.svelte';
   import ResultPanel from '$lib/components/ResultPanel.svelte';
   import Footer from '$lib/components/Footer.svelte';
-  import { roll } from '$lib/engine';
+  import { roll, parseMonsterCatalog } from '$lib/engine';
   import { validateFormState, type FormState } from '$lib/storage';
   import { newSeed } from '$lib/seed';
-  import type { RollResult } from '$lib/engine/types';
+  import type { RollResult, Monster } from '$lib/engine/types';
 
   const STORAGE_KEY = 'fourth-watch-inputs-v2';
   const LEGACY_KEY = 'fourth-watch-inputs-v1';
@@ -26,6 +26,7 @@
 
   let inputs = $state<FormState>({ ...defaultForm });
   let result = $state<RollResult | null>(null);
+  let loadedMonsters = $state<Monster[]>([]);
 
   function isComplete(f: FormState): f is FormState & import('$lib/engine/types').Inputs {
     return (
@@ -45,7 +46,7 @@
     }
   });
 
-  onMount(() => {
+  onMount(async () => {
     try {
       localStorage.removeItem(LEGACY_KEY);
     } catch {
@@ -60,6 +61,8 @@
     } catch {
       // ignore parse errors; fall back to defaults
     }
+    const { default: catalogRaw } = await import('$lib/data/monsters.json');
+    loadedMonsters = parseMonsterCatalog(catalogRaw as unknown);
   });
 
   function persist() {
@@ -80,21 +83,21 @@
     const snap = snapshot();
     if (!snap) return;
     persist();
-    result = roll(snap, newSeed());
+    result = roll(snap, newSeed(), {}, loadedMonsters);
   }
 
   function rerollWeather() {
     if (!result) return rollAll();
     const snap = snapshot();
     if (!snap) return;
-    result = roll(snap, result.seed, { rerollWeather: newSeed() });
+    result = roll(snap, result.seed, { rerollWeather: newSeed() }, loadedMonsters);
   }
 
   function rerollEncounter() {
     if (!result) return rollAll();
     const snap = snapshot();
     if (!snap) return;
-    result = roll(snap, result.seed, { rerollEncounter: newSeed() });
+    result = roll(snap, result.seed, { rerollEncounter: newSeed() }, loadedMonsters);
   }
 </script>
 
