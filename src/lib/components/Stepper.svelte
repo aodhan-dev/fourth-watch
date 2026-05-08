@@ -11,47 +11,72 @@
     label: string;
   } = $props();
 
+  let holdTimer: ReturnType<typeof setTimeout> | null = null;
+  let holdInterval: ReturnType<typeof setInterval> | null = null;
+
   function dec() {
-    if (value > min) value -= 1;
+    if (value > min) value = Math.max(min, value - 1);
   }
   function inc() {
-    if (value < max) value += 1;
+    if (value < max) value = Math.min(max, value + 1);
+  }
+
+  function startHold(fn: () => void) {
+    fn();
+    holdTimer = setTimeout(() => {
+      holdInterval = setInterval(fn, 80);
+    }, 350);
+  }
+
+  function endHold() {
+    if (holdTimer) {
+      clearTimeout(holdTimer);
+      holdTimer = null;
+    }
+    if (holdInterval) {
+      clearInterval(holdInterval);
+      holdInterval = null;
+    }
+  }
+
+  function handleInput(e: Event) {
+    const v = parseInt((e.target as HTMLInputElement).value, 10);
+    if (!Number.isNaN(v) && Number.isFinite(v)) {
+      value = Math.min(max, Math.max(min, v));
+    }
   }
 </script>
 
 <div class="stepper" role="group" aria-label={label}>
   <button
     type="button"
-    onclick={dec}
     disabled={value <= min}
     aria-label="Decrease {label}"
-    tabindex="0">−</button
-  >
-  <span
-    class="value"
-    role="spinbutton"
     tabindex="0"
+    onpointerdown={() => startHold(dec)}
+    onpointerup={endHold}
+    onpointerleave={endHold}>−</button
+  >
+  <input
+    type="number"
+    {min}
+    {max}
+    {value}
+    oninput={handleInput}
+    aria-label={label}
     aria-valuenow={value}
     aria-valuemin={min}
     aria-valuemax={max}
-    aria-label={label}
-    onkeydown={(e) => {
-      if (e.key === 'ArrowUp' || e.key === 'ArrowRight') {
-        e.preventDefault();
-        inc();
-      }
-      if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') {
-        e.preventDefault();
-        dec();
-      }
-    }}>{value}</span
-  >
+    class="value-input"
+  />
   <button
     type="button"
-    onclick={inc}
     disabled={value >= max}
     aria-label="Increase {label}"
-    tabindex="0">+</button
+    tabindex="0"
+    onpointerdown={() => startHold(inc)}
+    onpointerup={endHold}
+    onpointerleave={endHold}>+</button
   >
 </div>
 
@@ -82,6 +107,8 @@
     transition:
       background 120ms ease,
       color 120ms ease;
+    user-select: none;
+    touch-action: none;
   }
   .stepper button:hover:not(:disabled) {
     background: rgba(255, 255, 255, 0.06);
@@ -94,12 +121,25 @@
     opacity: 0.2;
     cursor: not-allowed;
   }
-  .value {
+  .value-input {
+    width: 100%;
     text-align: center;
     font-size: 1.4rem;
     font-weight: 600;
     color: var(--text);
     letter-spacing: 0.04em;
-    user-select: none;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 0;
+    font-family: inherit;
+    /* Hide number input spinner arrows */
+    appearance: textfield;
+    -moz-appearance: textfield;
+  }
+  .value-input::-webkit-outer-spin-button,
+  .value-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
 </style>

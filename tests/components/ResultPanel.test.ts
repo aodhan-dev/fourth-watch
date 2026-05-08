@@ -80,4 +80,15 @@ describe('ResultPanel', () => {
     const code = document.querySelector('code');
     expect(code?.getAttribute('aria-describedby')).toBe('seed-label');
   });
+
+  it('Copy button shows idle label initially', () => {
+    render(ResultPanel, {
+      result: stubResult,
+      onRerollAll: vi.fn(),
+      onRerollWeather: vi.fn(),
+      onRerollEncounter: vi.fn()
+    });
+    const copyBtn = document.querySelector('.copy-btn') as HTMLButtonElement;
+    expect(copyBtn?.textContent?.trim()).toBe('Copy');
+  });
 });

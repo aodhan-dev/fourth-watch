@@ -62,4 +62,22 @@ describe('InputForm', () => {
     expect(container.querySelector('.pad.fire')).toBeTruthy();
     expect(container.querySelector('input[type="checkbox"]')).toBeTruthy();
   });
+
+  it('shows missing-field hint when canRoll is false and no fields selected', () => {
+    const { container } = render(InputForm, {
+      value: defaultValue,
+      onRoll: vi.fn(),
+      canRoll: false
+    });
+    const hint = container.querySelector('.roll-hint');
+    expect(hint).toBeTruthy();
+    expect(hint?.textContent?.toLowerCase()).toMatch(/climate|environment|season/);
+  });
+
+  it('setting fields have visible labels', () => {
+    render(InputForm, { value: defaultValue, onRoll: vi.fn(), canRoll: false });
+    expect(screen.getByText('Climate')).toBeTruthy();
+    expect(screen.getByText('Environment')).toBeTruthy();
+    expect(screen.getByText('Season')).toBeTruthy();
+  });
 });

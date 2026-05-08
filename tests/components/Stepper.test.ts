@@ -4,9 +4,9 @@ import { render, screen } from '@testing-library/svelte';
 import Stepper from '../../src/lib/components/Stepper.svelte';
 
 describe('Stepper', () => {
-  it('renders the initial value', () => {
+  it('renders the initial value in an editable input', () => {
     render(Stepper, { value: 5, min: 1, max: 10, label: 'Level' });
-    expect(screen.getByText('5')).toBeTruthy();
+    expect(screen.getByDisplayValue('5')).toBeTruthy();
   });
 
   it('decrease button is disabled at min', () => {
@@ -33,5 +33,12 @@ describe('Stepper', () => {
     expect(spinbutton.getAttribute('aria-valuenow')).toBe('5');
     expect(spinbutton.getAttribute('aria-valuemin')).toBe('1');
     expect(spinbutton.getAttribute('aria-valuemax')).toBe('10');
+  });
+
+  it('editable number input has correct min/max attributes', () => {
+    render(Stepper, { value: 3, min: 1, max: 8, label: 'Size' });
+    const input = screen.getByDisplayValue('3') as HTMLInputElement;
+    expect(input.min).toBe('1');
+    expect(input.max).toBe('8');
   });
 });

@@ -49,12 +49,25 @@
 
   // Field-level glyphs used in placeholder options.
   const FIELD = {
-    climate: { glyph: '🌡️', label: 'Climate' },
-    environment: { glyph: '🗺️', label: 'Environment' },
-    season: { glyph: '🍃', label: 'Season' },
-    time: { glyph: '🕐', label: 'Time of day' },
-    region: { glyph: '🧭', label: 'Region' }
+    climate: { glyph: '🌡️', label: 'Climate', id: 'sel-climate' },
+    environment: { glyph: '🗺️', label: 'Environment', id: 'sel-environment' },
+    season: { glyph: '🍃', label: 'Season', id: 'sel-season' },
+    time: { glyph: '🕐', label: 'Time of day', id: 'sel-time' },
+    region: { glyph: '🧭', label: 'Region', id: 'sel-region' }
   } as const;
+
+  const FIELD_KEYS = ['climate', 'environment', 'season', 'time', 'region'] as const;
+  const FIELD_LABELS: Record<(typeof FIELD_KEYS)[number], string> = {
+    climate: 'climate',
+    environment: 'environment',
+    season: 'season',
+    time: 'time of day',
+    region: 'region'
+  };
+
+  let missingFields = $derived(
+    FIELD_KEYS.filter((k) => value[k] === '').map((k) => FIELD_LABELS[k])
+  );
 </script>
 
 <form
@@ -78,42 +91,45 @@
 
   <fieldset class="setting">
     <legend>Setting</legend>
-    <select
-      bind:value={value.climate}
-      class:unset={value.climate === ''}
-      aria-label={FIELD.climate.label}
-    >
-      <option value="" disabled>{FIELD.climate.glyph} {FIELD.climate.label}…</option>
-      {#each climates as c (c)}<option value={c}>{c}</option>{/each}
-    </select>
-    <select
-      bind:value={value.environment}
-      class:unset={value.environment === ''}
-      aria-label={FIELD.environment.label}
-    >
-      <option value="" disabled>{FIELD.environment.glyph} {FIELD.environment.label}…</option>
-      {#each environments as e (e)}<option value={e}>{e}</option>{/each}
-    </select>
-    <select
-      bind:value={value.season}
-      class:unset={value.season === ''}
-      aria-label={FIELD.season.label}
-    >
-      <option value="" disabled>{FIELD.season.glyph} {FIELD.season.label}…</option>
-      {#each seasons as s (s)}<option value={s}>{s}</option>{/each}
-    </select>
-    <select bind:value={value.time} class:unset={value.time === ''} aria-label={FIELD.time.label}>
-      <option value="" disabled>{FIELD.time.glyph} {FIELD.time.label}…</option>
-      {#each times as t (t)}<option value={t}>{t}</option>{/each}
-    </select>
-    <select
-      bind:value={value.region}
-      class:unset={value.region === ''}
-      aria-label={FIELD.region.label}
-    >
-      <option value="" disabled>{FIELD.region.glyph} {FIELD.region.label}…</option>
-      {#each regions as r (r)}<option value={r}>{r}</option>{/each}
-    </select>
+    <div class="field">
+      <label class="field-label" for={FIELD.climate.id}>{FIELD.climate.label}</label>
+      <select id={FIELD.climate.id} bind:value={value.climate} class:unset={value.climate === ''}>
+        <option value="" disabled>{FIELD.climate.glyph} Choose…</option>
+        {#each climates as c (c)}<option value={c}>{c}</option>{/each}
+      </select>
+    </div>
+    <div class="field">
+      <label class="field-label" for={FIELD.environment.id}>{FIELD.environment.label}</label>
+      <select
+        id={FIELD.environment.id}
+        bind:value={value.environment}
+        class:unset={value.environment === ''}
+      >
+        <option value="" disabled>{FIELD.environment.glyph} Choose…</option>
+        {#each environments as e (e)}<option value={e}>{e}</option>{/each}
+      </select>
+    </div>
+    <div class="field">
+      <label class="field-label" for={FIELD.season.id}>{FIELD.season.label}</label>
+      <select id={FIELD.season.id} bind:value={value.season} class:unset={value.season === ''}>
+        <option value="" disabled>{FIELD.season.glyph} Choose…</option>
+        {#each seasons as s (s)}<option value={s}>{s}</option>{/each}
+      </select>
+    </div>
+    <div class="field">
+      <label class="field-label" for={FIELD.time.id}>{FIELD.time.label}</label>
+      <select id={FIELD.time.id} bind:value={value.time} class:unset={value.time === ''}>
+        <option value="" disabled>{FIELD.time.glyph} Choose…</option>
+        {#each times as t (t)}<option value={t}>{t}</option>{/each}
+      </select>
+    </div>
+    <div class="field">
+      <label class="field-label" for={FIELD.region.id}>{FIELD.region.label}</label>
+      <select id={FIELD.region.id} bind:value={value.region} class:unset={value.region === ''}>
+        <option value="" disabled>{FIELD.region.glyph} Choose…</option>
+        {#each regions as r (r)}<option value={r}>{r}</option>{/each}
+      </select>
+    </div>
   </fieldset>
 
   <fieldset class="state">
@@ -145,11 +161,17 @@
         <input type="checkbox" bind:checked={value.campfire} disabled={value.mode !== 'AtCamp'} />
         <span class="pad-glyph" aria-hidden="true">🔥</span>
         <span class="pad-label">Campfire lit</span>
+        {#if value.mode !== 'AtCamp'}
+          <span class="pad-unlock">(unlocks at camp)</span>
+        {/if}
       </label>
     </div>
   </fieldset>
 
   <button type="submit" class="roll" disabled={!canRoll}>Roll</button>
+  {#if !canRoll && missingFields.length > 0}
+    <p class="roll-hint">Pick a {missingFields.join(', ')} to roll.</p>
+  {/if}
 </form>
 
 <style>
@@ -189,7 +211,21 @@
     font-style: italic;
   }
   fieldset.setting {
-    gap: 0.55rem;
+    gap: 0.45rem;
+  }
+  .field {
+    display: grid;
+    gap: 0.25rem;
+  }
+  .field-label {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding-left: 0.1rem;
   }
   fieldset.setting select {
     text-align: center;
@@ -366,6 +402,21 @@
   .pad.disabled {
     cursor: not-allowed;
     opacity: 0.35;
+  }
+  .pad-unlock {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    margin-top: 0.15rem;
+    width: 100%;
+    text-align: center;
+    line-height: 1.2;
+  }
+  .roll-hint {
+    margin: 0;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    text-align: center;
+    font-style: italic;
   }
   label:has(input[type='radio']),
   label:has(input[type='checkbox']) {

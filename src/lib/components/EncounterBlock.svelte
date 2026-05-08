@@ -72,6 +72,7 @@
       aria-controls="stat-block"
     >
       {expanded ? 'Hide' : 'Show'} stat block
+      <span class="chevron" aria-hidden="true">▼</span>
     </button>
     {#if expanded}
       <article class="stat-block" id="stat-block" aria-label="{c.name} stat block">
@@ -259,6 +260,16 @@
   .expand:hover {
     color: var(--text);
     border-color: var(--accent-soft);
+  }
+  .chevron {
+    display: inline-block;
+    font-size: 0.7rem;
+    margin-left: 0.35rem;
+    transition: transform 200ms ease;
+    vertical-align: middle;
+  }
+  .expand[aria-expanded='true'] .chevron {
+    transform: rotate(180deg);
   }
   .quiet {
     font-style: italic;

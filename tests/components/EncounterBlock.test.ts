@@ -42,4 +42,11 @@ describe('EncounterBlock', () => {
     const { container } = render(EncounterBlock, { encounter: null, message: null });
     expect(container).toBeTruthy();
   });
+
+  it('expand button has a rotating chevron indicator', () => {
+    const { container } = render(EncounterBlock, { encounter: stubEncounter, message: null });
+    const btn = container.querySelector('button.expand') as HTMLButtonElement;
+    expect(btn).toBeTruthy();
+    expect(btn.querySelector('.chevron')).toBeTruthy();
+  });
 });

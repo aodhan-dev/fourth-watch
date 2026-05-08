@@ -15,8 +15,27 @@
     onRerollEncounter: () => void;
   } = $props();
 
+  let copyStatus = $state<'idle' | 'copied' | 'error'>('idle');
+  let copyTimer: ReturnType<typeof setTimeout> | null = null;
+
   function copySeed() {
-    if (result) navigator.clipboard?.writeText(String(result.seed));
+    if (!result) return;
+    navigator.clipboard
+      ?.writeText(String(result.seed))
+      .then(() => {
+        if (copyTimer) clearTimeout(copyTimer);
+        copyStatus = 'copied';
+        copyTimer = setTimeout(() => {
+          copyStatus = 'idle';
+        }, 2000);
+      })
+      .catch(() => {
+        if (copyTimer) clearTimeout(copyTimer);
+        copyStatus = 'error';
+        copyTimer = setTimeout(() => {
+          copyStatus = 'idle';
+        }, 3000);
+      });
   }
 </script>
 
@@ -33,7 +52,16 @@
         <span class="seed-label" id="seed-label">Seed</span>
         <code aria-describedby="seed-label">{result.seed}</code>
       </span>
-      <button class="ghost" onclick={copySeed} title="Copy seed">Copy</button>
+      <button class="ghost copy-btn" onclick={copySeed} title="Copy seed">
+        {copyStatus === 'copied' ? 'Copied!' : copyStatus === 'error' ? 'Failed' : 'Copy'}
+      </button>
+      <span aria-live="polite" aria-atomic="true" class="copy-status">
+        {copyStatus === 'copied'
+          ? 'Seed copied to clipboard.'
+          : copyStatus === 'error'
+            ? 'Failed to copy seed.'
+            : ''}
+      </span>
       <span class="meta-spacer"></span>
       <button class="ghost" onclick={onRerollWeather}
         ><span aria-hidden="true">↻</span> Weather</button
@@ -41,7 +69,7 @@
       <button class="ghost" onclick={onRerollEncounter}
         ><span aria-hidden="true">↻</span> Encounter</button
       >
-      <button class="primary" onclick={onRerollAll}
+      <button class="roll-again" onclick={onRerollAll}
         ><span aria-hidden="true">↻</span> Roll again</button
       >
     </footer>
@@ -154,14 +182,41 @@
     background: rgba(255, 255, 255, 0.04);
     border-color: var(--accent-soft);
   }
-  button.primary {
-    color: #1a1407;
-    background: var(--accent);
-    border: 1px solid rgba(0, 0, 0, 0.15);
+  button.roll-again {
+    font-family: var(--font-display);
+    font-size: 0.9rem;
     font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #1a1407;
+    background: linear-gradient(180deg, var(--accent-strong) 0%, var(--accent) 100%);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.25) inset,
+      0 4px 12px -4px rgba(212, 164, 74, 0.55);
+    transition:
+      transform 80ms ease,
+      box-shadow 120ms ease;
   }
-  button.primary:hover {
-    background: var(--accent-strong);
+  button.roll-again:hover {
+    transform: translateY(-1px);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.35) inset,
+      0 8px 18px -4px rgba(212, 164, 74, 0.7);
+  }
+  button.roll-again:active {
+    transform: translateY(0);
+  }
+  .copy-status {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border-width: 0;
   }
   @media (max-width: 480px) {
     .meta-spacer {
