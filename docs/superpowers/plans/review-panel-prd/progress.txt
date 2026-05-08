@@ -3,9 +3,9 @@ PRD_VERSION: 1.0
 PRD_FILE: docs/superpowers/plans/review-panel-prd/PRD_Fourth_Watch_Review_Panel_Implementation_v1.md
 TOTAL_STORIES: 10
 CREATED_AT: 2026-05-07T22:35:02Z
-UPDATED_AT: 2026-05-07T22:35:02Z
+UPDATED_AT: 2026-05-08T07:54:31Z
 
-[ ] Story 01.1: fix/state-and-storage-validation
+[x] Story 01.1: fix/state-and-storage-validation    # completed: 2026-05-08T07:54:31Z
 [ ] Story 02.1: feat/test-coverage-uplift
 [ ] Story 03.1: fix/a11y-focus-and-motion
 [ ] Story 04.1: fix/a11y-semantics-and-aria
