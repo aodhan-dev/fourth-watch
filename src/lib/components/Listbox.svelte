@@ -399,7 +399,7 @@
   }
   .trigger[data-theme-field='climate'][data-value='Arid'],
   .option[data-theme-field='climate'][data-value='Arid'] {
-    --tint: #d29a3a;
+    --tint: #b8a248;
   }
   .trigger[data-theme-field='climate'][data-value='Temperate'],
   .option[data-theme-field='climate'][data-value='Temperate'] {
