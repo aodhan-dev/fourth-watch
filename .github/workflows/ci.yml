@@ -20,3 +20,5 @@ jobs:
       - run: npm run validate:data
       - run: npm test
       - run: npm run build
+      - name: Dependency audit
+        run: npm audit --omit=dev --audit-level=high
