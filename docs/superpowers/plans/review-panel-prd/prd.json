@@ -13,7 +13,7 @@
     "risks_and_mitigations": "A11y semantics may break the segmented control's visual styling (mitigation: land a11y-semantics before visual-polish, screenshot smoke after each). Code-split chunk may not serve correctly via Cloudflare static assets (mitigation: npm run build + preview locally before merging, add a smoke test). SW kill-switch cache shape change may evict legitimate state on first visit (mitigation: LRU and version tests, fresh-profile manual smoke). CSP may block legitimate resources (mitigation: try Content-Security-Policy-Report-Only first, review browser console). Loop may mark a story passed without ACs being met (mitigation: ACs written for autonomous verification; skill must not mark passed without evidence).",
     "open_questions": "Q1. Should observability logs be enabled by default in prod or gated behind ?debug=1? Default: gated. Q2. Can the segmented control revert to native radios with native focus rings? Default: yes. Q3. Replace vendor emoji with custom SVG icons or simply remove them? Default: remove with a placeholder note. Q4. SW kill switch: block this visit or unregister on next? Default: serve from cache this visit, unregister next. Q5. CSP header location: static/_headers or SvelteKit handle hook? Default: static/_headers."
   },
-  "completion_promise_hit": false,
+  "completion_promise_hit": true,
   "stories": [
     {
       "id": "01.1",
@@ -222,7 +222,7 @@
     {
       "id": "10.1",
       "title": "chore/security-defense-in-depth",
-      "passes": false,
+      "passes": true,
       "priority": 10,
       "branchName": "chore/security-defense-in-depth",
       "user_role": "security-conscious operator",
@@ -235,8 +235,8 @@
         "Smoke test: dev server still works with the CSP applied; build still works; CI still passes; deliberately introducing a known-vulnerable dep makes CI fail with a clear message.",
         "Pipeline gates pass: npm run check, npm run lint, npm run validate:data, npm test all green."
       ],
-      "status": "pending",
-      "completed_at": null
+      "status": "passed",
+      "completed_at": "2026-05-08T09:50:00Z"
     }
   ]
 }
