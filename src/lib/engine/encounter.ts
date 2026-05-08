@@ -9,10 +9,10 @@ import type {
 } from './types';
 import { type Rng, pickFrom, pickIndex } from './rng';
 import modifiersData from '../data/encounter-modifiers.json';
-import { parseModifiersFile } from './validate';
+import { parseModifiersFile, type ModifiersFile } from './validate';
 import { weatherSeverity } from './weather';
 
-const MODS = parseModifiersFile(modifiersData);
+const defaultModifiers = parseModifiersFile(modifiersData);
 
 const ALL_CATEGORIES: MonsterCategory[] = [
   'Predator',
@@ -45,14 +45,18 @@ export interface AppliedModifiers {
   matchingRules: ModifierRule[];
 }
 
-export function applyModifiers(inputs: Inputs, weather: Weather): AppliedModifiers {
-  let chance = MODS.baseEncounterChance;
+export function applyModifiers(
+  inputs: Inputs,
+  weather: Weather,
+  rules: ModifiersFile = defaultModifiers
+): AppliedModifiers {
+  let chance = rules.baseEncounterChance;
   const cat: Record<MonsterCategory, number> = Object.fromEntries(
     ALL_CATEGORIES.map((c) => [c, 1])
   ) as Record<MonsterCategory, number>;
   const matchingRules: ModifierRule[] = [];
 
-  for (const rule of MODS.rules) {
+  for (const rule of rules.rules) {
     if (!matches(rule, inputs, weather)) continue;
     matchingRules.push(rule);
     // Number.isFinite guards against NaN and Infinity slipping through any future

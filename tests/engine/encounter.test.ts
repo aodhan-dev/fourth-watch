@@ -114,6 +114,26 @@ describe('crWindow', () => {
 });
 
 describe('applyModifiers', () => {
+  it('accepts an injected ModifiersFile (DI seam for tests and alt rule sets)', () => {
+    const inputs = baseInputs();
+    const stubRules = {
+      schemaVersion: 1,
+      baseEncounterChance: 0.5,
+      rules: [
+        {
+          id: 'always-bandit',
+          when: {},
+          encounterChanceMultiplier: 2,
+          categoryMultipliers: { Bandit: 10 } as const
+        }
+      ]
+    };
+    const out = applyModifiers(inputs, tameWeather, stubRules);
+    expect(out.encounterChance).toBeCloseTo(1.0, 5); // 0.5 * 2 clamped
+    expect(out.categoryWeights.Bandit).toBeCloseTo(10);
+    expect(out.matchingRules.map((r) => r.id)).toEqual(['always-bandit']);
+  });
+
   it('composes multiplicative encounter chance from matching rules', () => {
     const inputs = baseInputs({ region: 'Hostile', noise: true });
     const out = applyModifiers(inputs, tameWeather);
