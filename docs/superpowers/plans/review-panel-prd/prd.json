@@ -40,7 +40,7 @@
     {
       "id": "02.1",
       "title": "feat/test-coverage-uplift",
-      "passes": false,
+      "passes": true,
       "priority": 2,
       "branchName": "feat/test-coverage-uplift",
       "user_role": "developer",
@@ -56,8 +56,8 @@
         "npm test runs all the above in under 30s on a developer laptop; CI runs them too.",
         "Pipeline gates pass: npm run check, npm run lint, npm run validate:data, npm test all green."
       ],
-      "status": "pending",
-      "completed_at": null
+      "status": "passed",
+      "completed_at": "2026-05-08T08:20:00Z"
     },
     {
       "id": "03.1",
