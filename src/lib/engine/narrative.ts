@@ -24,11 +24,7 @@ export function indefiniteArticle(name: string): string {
   return /^[aeiou]/i.test(name) ? 'An' : 'A';
 }
 
-export function buildNarrative(
-  creature: Monster,
-  count: number,
-  rules: ModifierRule[]
-): string {
+export function buildNarrative(creature: Monster, count: number, rules: ModifierRule[]): string {
   const fragments = rules.map((r) => r.narrativeFragment).filter((f): f is string => Boolean(f));
   const subj =
     count === 1
