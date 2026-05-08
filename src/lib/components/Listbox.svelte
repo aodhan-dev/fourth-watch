@@ -360,13 +360,12 @@
      keeps hue identity stable: oklch mixing pulls orange-on-deep-blue toward
      purple, which loses the field's signal. */
   .trigger[data-theme-field][data-value] {
-    background:
-      linear-gradient(
-          90deg,
-          color-mix(in srgb, var(--tint) 30%, transparent) 0%,
-          transparent 70%
-        )
-        var(--surface-2);
+    background: linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--tint) 30%, transparent) 0%,
+        transparent 70%
+      )
+      var(--surface-2);
     border-color: color-mix(in srgb, var(--tint) 55%, var(--border-strong));
   }
   .trigger[data-theme-field][data-value]:hover {

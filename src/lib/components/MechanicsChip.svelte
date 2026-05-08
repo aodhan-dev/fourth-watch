@@ -16,11 +16,7 @@
   title={effect.source === 'SRD' ? 'From SRD 5.2 (CC-BY 4.0)' : 'Original wording'}
 >
   <span class="sev-prefix"
-    >{severity === 'danger'
-      ? 'Watch out'
-      : severity === 'warn'
-        ? 'Heads up'
-        : 'Just so you know'}:
+    >{severity === 'danger' ? 'Watch out' : severity === 'warn' ? 'Heads up' : 'Just so you know'}:
   </span>{effect.text}
 </span>
 
