@@ -29,6 +29,13 @@ export default [
     }
   },
   {
+    files: ['src/**/*.ts'],
+    languageOptions: {
+      parser: tsParser,
+      globals: { ...globals.browser }
+    }
+  },
+  {
     files: ['src/service-worker.ts'],
     languageOptions: {
       parser: tsParser,
