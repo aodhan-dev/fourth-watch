@@ -80,7 +80,7 @@
   .panel {
     margin-top: 2rem;
     background: var(--surface);
-    border: 1px solid var(--border-strong);
+    border: 1px solid rgba(212, 164, 74, 0.28);
     border-radius: 14px;
     padding: 1.5rem 1.5rem 1rem;
     box-shadow:
@@ -142,11 +142,11 @@
     color: var(--text-muted);
   }
   .seed-label {
-    font-family: var(--font-display);
+    font-family: var(--font-body);
+    font-variant-caps: all-small-caps;
     font-size: 0.65rem;
     font-weight: 600;
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
+    letter-spacing: 0.12em;
     color: var(--accent);
   }
   .seed code {

@@ -147,7 +147,7 @@
   h1 {
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: clamp(2.4rem, 6vw, 3.4rem);
+    font-size: clamp(2rem, 5vw, 2.8rem);
     line-height: 1;
     margin: 0;
     letter-spacing: 0.04em;

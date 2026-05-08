@@ -96,7 +96,7 @@
     color: var(--text-dim);
     font-family: inherit;
     font-size: 1.5rem;
-    font-weight: 400;
+    font-weight: 600;
     line-height: 1;
     width: 3rem;
     height: 3rem;

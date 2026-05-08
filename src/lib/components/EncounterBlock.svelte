@@ -230,11 +230,11 @@
     margin-bottom: 0;
   }
   h2 {
-    font-family: var(--font-display);
+    font-family: var(--font-body);
+    font-variant-caps: all-small-caps;
     font-size: 0.7rem;
     font-weight: 600;
-    letter-spacing: 0.32em;
-    text-transform: uppercase;
+    letter-spacing: 0.16em;
     color: var(--accent);
     margin: 0 0 0.5rem;
   }
@@ -320,11 +320,11 @@
     align-items: baseline;
   }
   .sb-line dt {
-    font-family: var(--font-display);
+    font-family: var(--font-body);
+    font-variant-caps: all-small-caps;
     font-size: 0.7rem;
     font-weight: 600;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
+    letter-spacing: 0.1em;
     color: var(--accent);
   }
   .sb-line dd {
@@ -338,10 +338,11 @@
     margin: 0 0 0.95rem;
   }
   .abilities th {
-    font-family: var(--font-display);
+    font-family: var(--font-body);
+    font-variant-caps: all-small-caps;
     font-size: 0.65rem;
     font-weight: 600;
-    letter-spacing: 0.16em;
+    letter-spacing: 0.1em;
     color: var(--accent);
     text-align: center;
     padding-top: 0.55rem;
@@ -375,11 +376,11 @@
     align-items: baseline;
   }
   .sb-meta-list dt {
-    font-family: var(--font-display);
+    font-family: var(--font-body);
+    font-variant-caps: all-small-caps;
     font-size: 0.68rem;
     font-weight: 600;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
+    letter-spacing: 0.1em;
     color: var(--accent);
   }
   .sb-meta-list dd {
@@ -408,7 +409,6 @@
   }
   .entry strong {
     color: var(--text);
-    font-style: italic;
     font-weight: 600;
   }
 

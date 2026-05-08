@@ -23,11 +23,11 @@
     border-bottom: 1px solid var(--border);
   }
   h2 {
-    font-family: var(--font-display);
+    font-family: var(--font-body);
+    font-variant-caps: all-small-caps;
     font-size: 0.7rem;
     font-weight: 600;
-    letter-spacing: 0.32em;
-    text-transform: uppercase;
+    letter-spacing: 0.16em;
     color: var(--accent);
     margin: 0 0 0.5rem;
   }

@@ -32,7 +32,7 @@
     margin: 0.2rem;
     background: var(--info-bg);
     color: var(--info-fg);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.16);
     line-height: 1.3;
   }
   .chip[data-severity='warn'] {

@@ -49,11 +49,11 @@
 
   // Field-level glyphs used in placeholder options.
   const FIELD = {
-    climate: { glyph: '🌡️', label: 'Climate', id: 'sel-climate' },
-    environment: { glyph: '🗺️', label: 'Environment', id: 'sel-environment' },
-    season: { glyph: '🍃', label: 'Season', id: 'sel-season' },
-    time: { glyph: '🕐', label: 'Time of day', id: 'sel-time' },
-    region: { glyph: '🧭', label: 'Region', id: 'sel-region' }
+    climate: { label: 'Climate', id: 'sel-climate' },
+    environment: { label: 'Environment', id: 'sel-environment' },
+    season: { label: 'Season', id: 'sel-season' },
+    time: { label: 'Time of day', id: 'sel-time' },
+    region: { label: 'Region', id: 'sel-region' }
   } as const;
 
   const FIELD_KEYS = ['climate', 'environment', 'season', 'time', 'region'] as const;
@@ -94,7 +94,7 @@
     <div class="field">
       <label class="field-label" for={FIELD.climate.id}>{FIELD.climate.label}</label>
       <select id={FIELD.climate.id} bind:value={value.climate} class:unset={value.climate === ''}>
-        <option value="" disabled>{FIELD.climate.glyph} Choose…</option>
+        <option value="" disabled>Choose…</option>
         {#each climates as c (c)}<option value={c}>{c}</option>{/each}
       </select>
     </div>
@@ -105,28 +105,28 @@
         bind:value={value.environment}
         class:unset={value.environment === ''}
       >
-        <option value="" disabled>{FIELD.environment.glyph} Choose…</option>
+        <option value="" disabled>Choose…</option>
         {#each environments as e (e)}<option value={e}>{e}</option>{/each}
       </select>
     </div>
     <div class="field">
       <label class="field-label" for={FIELD.season.id}>{FIELD.season.label}</label>
       <select id={FIELD.season.id} bind:value={value.season} class:unset={value.season === ''}>
-        <option value="" disabled>{FIELD.season.glyph} Choose…</option>
+        <option value="" disabled>Choose…</option>
         {#each seasons as s (s)}<option value={s}>{s}</option>{/each}
       </select>
     </div>
     <div class="field">
       <label class="field-label" for={FIELD.time.id}>{FIELD.time.label}</label>
       <select id={FIELD.time.id} bind:value={value.time} class:unset={value.time === ''}>
-        <option value="" disabled>{FIELD.time.glyph} Choose…</option>
+        <option value="" disabled>Choose…</option>
         {#each times as t (t)}<option value={t}>{t}</option>{/each}
       </select>
     </div>
     <div class="field">
       <label class="field-label" for={FIELD.region.id}>{FIELD.region.label}</label>
       <select id={FIELD.region.id} bind:value={value.region} class:unset={value.region === ''}>
-        <option value="" disabled>{FIELD.region.glyph} Choose…</option>
+        <option value="" disabled>Choose…</option>
         {#each regions as r (r)}<option value={r}>{r}</option>{/each}
       </select>
     </div>
@@ -191,18 +191,14 @@
   legend {
     padding: 0 0.5rem;
     margin-left: 0.4rem;
-    font-family: var(--font-display);
+    font-family: var(--font-body);
+    font-variant-caps: all-small-caps;
     font-size: 0.7rem;
     font-weight: 600;
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
+    letter-spacing: 0.12em;
     color: var(--accent);
   }
   label {
-    display: grid;
-    grid-template-columns: 9.5rem 1fr;
-    align-items: center;
-    gap: 0.75rem;
     font-size: 0.95rem;
     color: var(--text-dim);
   }
@@ -219,11 +215,11 @@
   }
   .field-label {
     display: block;
-    font-family: var(--font-display);
+    font-family: var(--font-body);
+    font-variant-caps: all-small-caps;
     font-size: 0.62rem;
     font-weight: 600;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
+    letter-spacing: 0.1em;
     color: var(--text-muted);
     padding-left: 0.1rem;
   }
@@ -249,11 +245,11 @@
     text-align: center;
   }
   .stat-name {
-    font-family: var(--font-display);
+    font-family: var(--font-body);
+    font-variant-caps: all-small-caps;
     font-size: 0.65rem;
     font-weight: 600;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
+    letter-spacing: 0.12em;
     color: var(--text-dim);
   }
   fieldset.state {
@@ -313,9 +309,10 @@
     line-height: 1;
   }
   .seg-label-base {
-    font-family: var(--font-display);
+    font-family: var(--font-body);
+    font-variant-caps: all-small-caps;
     font-weight: 600;
-    text-transform: uppercase;
+    letter-spacing: 0.1em;
   }
   .seg:hover {
     color: var(--text);
@@ -378,6 +375,9 @@
     font-size: 0.85rem;
     font-weight: 500;
     letter-spacing: 0.02em;
+  }
+  .pad.on .pad-label {
+    font-weight: 600;
   }
   .pad:hover:not(.disabled) {
     border-color: rgba(255, 255, 255, 0.25);
@@ -520,10 +520,9 @@
       min-width: 14rem;
     }
   }
-  @media (max-width: 480px) {
-    label {
-      grid-template-columns: 1fr;
-      gap: 0.3rem;
+  @media (max-width: 639px) {
+    button.roll {
+      width: 100%;
     }
   }
 </style>
