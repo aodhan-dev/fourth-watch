@@ -3,13 +3,17 @@ import { test, expect } from '@playwright/test';
 test('happy path: pick settings, roll, see result, copy seed', async ({ page, context }) => {
   await page.goto('/');
 
-  // Pick the five required settings (selects are associated via <label for=>,
-  // so use getByLabel rather than aria-label which the form doesn't set).
-  await page.getByLabel('Climate').selectOption('Temperate');
-  await page.getByLabel('Environment').selectOption('Forest');
-  await page.getByLabel('Season').selectOption('Summer');
-  await page.getByLabel('Time of day').selectOption('Day');
-  await page.getByLabel('Region').selectOption('Frontier');
+  // Custom listbox: click trigger (associated with visible label), then click option.
+  async function pick(field: string, value: string) {
+    await page.getByLabel(field, { exact: true }).click();
+    await page.getByRole('option', { name: value, exact: true }).click();
+  }
+
+  await pick('Climate', 'Temperate');
+  await pick('Environment', 'Forest');
+  await pick('Season', 'Summer');
+  await pick('Time of day', 'Day');
+  await pick('Region', 'Frontier');
 
   // Roll button should now be enabled
   const rollBtn = page.locator('button.roll');

@@ -8,6 +8,7 @@
     TravelMode
   } from '$lib/engine/types';
   import Stepper from './Stepper.svelte';
+  import Listbox from './Listbox.svelte';
 
   // Mirrors the page-level FormState — enum fields can be '' (unset) until picked.
   type FormValue = {
@@ -47,13 +48,12 @@
   const times = ['Dawn', 'Day', 'Dusk', 'Night'] as const;
   const regions = ['Settled', 'Frontier', 'Wilderness', 'Hostile'] as const;
 
-  // Field-level glyphs used in placeholder options.
   const FIELD = {
-    climate: { label: 'Climate', id: 'sel-climate' },
-    environment: { label: 'Environment', id: 'sel-environment' },
-    season: { label: 'Season', id: 'sel-season' },
-    time: { label: 'Time of day', id: 'sel-time' },
-    region: { label: 'Region', id: 'sel-region' }
+    climate: { label: 'Climate', id: 'sel-climate', labelId: 'lbl-climate' },
+    environment: { label: 'Environment', id: 'sel-environment', labelId: 'lbl-environment' },
+    season: { label: 'Season', id: 'sel-season', labelId: 'lbl-season' },
+    time: { label: 'Time of day', id: 'sel-time', labelId: 'lbl-time' },
+    region: { label: 'Region', id: 'sel-region', labelId: 'lbl-region' }
   } as const;
 
   const FIELD_KEYS = ['climate', 'environment', 'season', 'time', 'region'] as const;
@@ -92,43 +92,64 @@
   <fieldset class="setting">
     <legend>Setting</legend>
     <div class="field">
-      <label class="field-label" for={FIELD.climate.id}>{FIELD.climate.label}</label>
-      <select id={FIELD.climate.id} bind:value={value.climate} class:unset={value.climate === ''}>
-        <option value="" disabled>Choose…</option>
-        {#each climates as c (c)}<option value={c}>{c}</option>{/each}
-      </select>
+      <label class="field-label" id={FIELD.climate.labelId} for={FIELD.climate.id}>
+        {FIELD.climate.label}
+      </label>
+      <Listbox
+        bind:value={value.climate}
+        options={climates}
+        triggerId={FIELD.climate.id}
+        labelId={FIELD.climate.labelId}
+        themeField="climate"
+      />
     </div>
     <div class="field">
-      <label class="field-label" for={FIELD.environment.id}>{FIELD.environment.label}</label>
-      <select
-        id={FIELD.environment.id}
+      <label class="field-label" id={FIELD.environment.labelId} for={FIELD.environment.id}>
+        {FIELD.environment.label}
+      </label>
+      <Listbox
         bind:value={value.environment}
-        class:unset={value.environment === ''}
-      >
-        <option value="" disabled>Choose…</option>
-        {#each environments as e (e)}<option value={e}>{e}</option>{/each}
-      </select>
+        options={environments}
+        triggerId={FIELD.environment.id}
+        labelId={FIELD.environment.labelId}
+        themeField="environment"
+      />
     </div>
     <div class="field">
-      <label class="field-label" for={FIELD.season.id}>{FIELD.season.label}</label>
-      <select id={FIELD.season.id} bind:value={value.season} class:unset={value.season === ''}>
-        <option value="" disabled>Choose…</option>
-        {#each seasons as s (s)}<option value={s}>{s}</option>{/each}
-      </select>
+      <label class="field-label" id={FIELD.season.labelId} for={FIELD.season.id}>
+        {FIELD.season.label}
+      </label>
+      <Listbox
+        bind:value={value.season}
+        options={seasons}
+        triggerId={FIELD.season.id}
+        labelId={FIELD.season.labelId}
+        themeField="season"
+      />
     </div>
     <div class="field">
-      <label class="field-label" for={FIELD.time.id}>{FIELD.time.label}</label>
-      <select id={FIELD.time.id} bind:value={value.time} class:unset={value.time === ''}>
-        <option value="" disabled>Choose…</option>
-        {#each times as t (t)}<option value={t}>{t}</option>{/each}
-      </select>
+      <label class="field-label" id={FIELD.time.labelId} for={FIELD.time.id}>
+        {FIELD.time.label}
+      </label>
+      <Listbox
+        bind:value={value.time}
+        options={times}
+        triggerId={FIELD.time.id}
+        labelId={FIELD.time.labelId}
+        themeField="time"
+      />
     </div>
     <div class="field">
-      <label class="field-label" for={FIELD.region.id}>{FIELD.region.label}</label>
-      <select id={FIELD.region.id} bind:value={value.region} class:unset={value.region === ''}>
-        <option value="" disabled>Choose…</option>
-        {#each regions as r (r)}<option value={r}>{r}</option>{/each}
-      </select>
+      <label class="field-label" id={FIELD.region.labelId} for={FIELD.region.id}>
+        {FIELD.region.label}
+      </label>
+      <Listbox
+        bind:value={value.region}
+        options={regions}
+        triggerId={FIELD.region.id}
+        labelId={FIELD.region.labelId}
+        themeField="region"
+      />
     </div>
   </fieldset>
 
@@ -202,10 +223,6 @@
     font-size: 0.95rem;
     color: var(--text-dim);
   }
-  select.unset {
-    color: var(--text-muted);
-    font-style: italic;
-  }
   fieldset.setting {
     gap: 0.45rem;
   }
@@ -222,14 +239,6 @@
     letter-spacing: 0.1em;
     color: var(--text-muted);
     padding-left: 0.1rem;
-  }
-  fieldset.setting select {
-    text-align: center;
-    text-align-last: center;
-    padding-left: 2rem;
-  }
-  fieldset.setting option {
-    text-align: left;
   }
   fieldset.party {
     grid-template-columns: 1fr 1fr;
@@ -429,41 +438,6 @@
   label:has(input[type='checkbox']:disabled) {
     cursor: not-allowed;
     color: var(--text-muted);
-  }
-  select {
-    width: 100%;
-    padding: 0.55rem 0.7rem;
-    font: inherit;
-    color: var(--text);
-    background: var(--surface-2);
-    border: 1px solid var(--border-strong);
-    border-radius: 8px;
-    appearance: none;
-    -webkit-appearance: none;
-  }
-  select {
-    background-image:
-      linear-gradient(45deg, transparent 50%, var(--text-dim) 50%),
-      linear-gradient(135deg, var(--text-dim) 50%, transparent 50%);
-    background-position:
-      calc(100% - 17px) 55%,
-      calc(100% - 12px) 55%;
-    background-size:
-      5px 5px,
-      5px 5px;
-    background-repeat: no-repeat;
-    padding-right: 2rem;
-  }
-  select:hover {
-    border-color: var(--accent-soft);
-  }
-  select:focus {
-    border-color: var(--accent);
-    outline: none;
-  }
-  option {
-    background: var(--surface-2);
-    color: var(--text);
   }
   input[type='checkbox'],
   input[type='radio'] {
