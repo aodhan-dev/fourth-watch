@@ -16,6 +16,13 @@ export type TimeOfDay = 'Dawn' | 'Day' | 'Dusk' | 'Night';
 export type RegionType = 'Settled' | 'Frontier' | 'Wilderness' | 'Hostile';
 export type TravelMode = 'Travelling' | 'AtCamp';
 
+// SRD 5.2 Initial Attitude taxonomy. Mood='hostile' short-circuits to Hostile;
+// mood='mixed' rolls 1d6 with a per-category modifier (predators/undead/etc. = +0,
+// civilised/fey/other = +3) and maps total to Hostile (<=2), Indifferent (3-5),
+// or Friendly (>=6).
+export type EncounterAttitude = 'Hostile' | 'Indifferent' | 'Friendly';
+export type EncounterMood = 'hostile' | 'mixed';
+
 export type Temperature = 'Freezing' | 'Cold' | 'Cool' | 'Temperate' | 'Warm' | 'Hot';
 export type Precipitation = 'Clear' | 'Light' | 'Heavy';
 export type Wind = 'None' | 'Low' | 'High';
@@ -41,6 +48,7 @@ export interface Inputs {
   mode: TravelMode;
   campfire: boolean;
   noise: boolean;
+  mood: EncounterMood;
 }
 
 export interface Weather {
@@ -118,6 +126,7 @@ export type MonsterRaw = Omit<Monster, 'category'>;
 export interface Encounter {
   creature: Monster;
   count: number;
+  attitude: EncounterAttitude;
   narrative: string;
   contributingModifiers: string[];
 }

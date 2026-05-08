@@ -14,6 +14,7 @@ const baseInputs = (overrides: Partial<Inputs> = {}): Inputs => ({
   mode: 'Travelling',
   campfire: false,
   noise: false,
+  mood: 'hostile',
   ...overrides
 });
 

@@ -4,7 +4,8 @@ import type {
   Season,
   TimeOfDay,
   RegionType,
-  TravelMode
+  TravelMode,
+  EncounterMood
 } from './engine/types';
 
 export type FormState = {
@@ -18,6 +19,7 @@ export type FormState = {
   mode: TravelMode;
   campfire: boolean;
   noise: boolean;
+  mood: EncounterMood;
 };
 
 const CLIMATES = new Set<string>([
@@ -47,6 +49,7 @@ const SEASONS = new Set<string>(['Spring', 'Summer', 'Autumn', 'Winter', '']);
 const TIMES = new Set<string>(['Dawn', 'Day', 'Dusk', 'Night', '']);
 const REGIONS = new Set<string>(['Settled', 'Frontier', 'Wilderness', 'Hostile', '']);
 const MODES = new Set<string>(['Travelling', 'AtCamp']);
+const MOODS = new Set<string>(['hostile', 'mixed']);
 
 function isObject(v: unknown): v is Record<string, unknown> {
   return typeof v === 'object' && v !== null && !Array.isArray(v);
@@ -65,7 +68,8 @@ export function validateFormState(raw: unknown): FormState | null {
     partySize,
     mode,
     campfire,
-    noise
+    noise,
+    mood
   } = raw;
 
   if (!CLIMATES.has(climate as string)) return null;
@@ -90,6 +94,10 @@ export function validateFormState(raw: unknown): FormState | null {
   if (!MODES.has(mode as string)) return null;
   if (typeof campfire !== 'boolean') return null;
   if (typeof noise !== 'boolean') return null;
+  // Migrate v2 saved state silently: missing mood -> 'mixed' (the new default).
+  // A present-but-invalid mood is rejected like any other tampered field.
+  if (mood !== undefined && !MOODS.has(mood as string)) return null;
+  const resolvedMood: EncounterMood = (mood as EncounterMood | undefined) ?? 'mixed';
 
   return {
     climate: climate as Climate | '',
@@ -101,6 +109,7 @@ export function validateFormState(raw: unknown): FormState | null {
     partySize,
     mode: mode as TravelMode,
     campfire,
-    noise
+    noise,
+    mood: resolvedMood
   };
 }

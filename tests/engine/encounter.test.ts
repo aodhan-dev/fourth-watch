@@ -20,6 +20,7 @@ const baseInputs = (overrides: Partial<Inputs> = {}): Inputs => ({
   mode: 'Travelling',
   campfire: false,
   noise: false,
+  mood: 'hostile',
   ...overrides
 });
 
@@ -177,6 +178,58 @@ describe('encounterCheck', () => {
         settled++;
     }
     expect(hostile).toBeGreaterThan(settled * 2);
+  });
+});
+
+describe('encounter attitude (SRD 5.2 Initial Attitude)', () => {
+  it("mood='hostile' always sets attitude to Hostile", () => {
+    const inputs = baseInputs({ mood: 'hostile' });
+    for (let s = 0; s < 50; s++) {
+      const r = encounterPick(inputs, tameWeather, sampleMonsters, makeRng(s));
+      if (r.encounter) expect(r.encounter.attitude).toBe('Hostile');
+    }
+  });
+
+  it("mood='mixed' produces a distribution across attitudes", () => {
+    const inputs = baseInputs({ mood: 'mixed' });
+    const seen = new Set<string>();
+    for (let s = 0; s < 200; s++) {
+      const r = encounterPick(inputs, tameWeather, sampleMonsters, makeRng(s));
+      if (r.encounter) seen.add(r.encounter.attitude);
+    }
+    // Across 200 seeds with predator + bandit + civilised in the pool, we expect
+    // at least two of the three attitudes to appear.
+    expect(seen.size).toBeGreaterThan(1);
+  });
+
+  it("mood='mixed' with civilised-only pool skews non-hostile (1d6+3 modifier)", () => {
+    const civilOnly: Monster[] = [
+      {
+        slug: 'guard',
+        name: 'Guard',
+        cr: 0.125,
+        type: 'humanoid',
+        size: 'Medium',
+        environments: ['Forest'],
+        hp: 11,
+        ac: 16,
+        speed: '30ft',
+        category: 'Civilised'
+      }
+    ];
+    const inputs = baseInputs({ mood: 'mixed', region: 'Hostile', noise: true });
+    let nonHostile = 0,
+      hostile = 0;
+    for (let s = 0; s < 300; s++) {
+      const r = encounterPick(inputs, tameWeather, civilOnly, makeRng(s));
+      if (!r.encounter) continue;
+      if (r.encounter.attitude === 'Hostile') hostile++;
+      else nonHostile++;
+    }
+    // 1d6+3 with this mapping: roll 1..6 + 3 = 4..9. Always >= 4, so never <= 2.
+    // Therefore Civilised under mixed should never produce Hostile.
+    expect(hostile).toBe(0);
+    expect(nonHostile).toBeGreaterThan(0);
   });
 });
 

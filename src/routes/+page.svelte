@@ -22,7 +22,8 @@
     partySize: 4,
     mode: 'Travelling',
     campfire: false,
-    noise: false
+    noise: false,
+    mood: 'mixed'
   };
 
   let inputs = $state<FormState>({ ...defaultForm });

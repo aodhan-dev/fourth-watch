@@ -3,6 +3,8 @@ import type {
   Weather,
   Monster,
   Encounter,
+  EncounterAttitude,
+  EncounterMood,
   ModifierRule,
   MonsterCategory,
   RegionType
@@ -122,6 +124,37 @@ export interface PickResult {
   message: string | null;
 }
 
+// Per SRD 5.2 Initial Attitude (2024 DMG): roll 1d6 with a per-creature-type
+// modifier; <=2 Hostile, 3-5 Indifferent, >=6 Friendly. We bucket by
+// MonsterCategory: predator-leaning kinds use 1d6 (no bonus), socially-coded
+// kinds use 1d6+3 (ordinary travellers).
+function attitudeModifier(cat: MonsterCategory): number {
+  switch (cat) {
+    case 'Predator':
+    case 'Bandit':
+    case 'Undead':
+    case 'Aberration':
+    case 'Construct':
+      return 0;
+    case 'Civilised':
+    case 'Fey':
+    case 'Other':
+      return 3;
+  }
+}
+
+export function rollAttitude(
+  category: MonsterCategory,
+  mood: EncounterMood,
+  rng: Rng
+): EncounterAttitude {
+  if (mood === 'hostile') return 'Hostile';
+  const total = Math.floor(rng() * 6) + 1 + attitudeModifier(category);
+  if (total <= 2) return 'Hostile';
+  if (total <= 5) return 'Indifferent';
+  return 'Friendly';
+}
+
 function decideCount(cr: number, level: number, size: number, rng: Rng): number {
   if (cr >= level) return 1;
   if (cr >= level / 2) return 1 + Math.floor(rng() * 2);
@@ -178,12 +211,14 @@ export function encounterPick(
   const candidates = byCat.get(chosenCat)!;
   const creature = pickFrom(rng, candidates);
   const count = decideCount(creature.cr, inputs.partyLevel, inputs.partySize, rng);
+  const attitude = rollAttitude(creature.category, inputs.mood, rng);
 
   return {
     encounter: {
       creature,
       count,
-      narrative: buildNarrative(creature, count, matchingRules),
+      attitude,
+      narrative: buildNarrative(creature, count, matchingRules, attitude),
       contributingModifiers: matchingRules.map((r) => r.id)
     },
     message: null

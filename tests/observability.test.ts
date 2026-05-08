@@ -12,7 +12,8 @@ const stubInputs: Inputs = {
   partySize: 4,
   mode: 'Travelling',
   campfire: false,
-  noise: false
+  noise: false,
+  mood: 'mixed'
 };
 
 const stubResult: RollResult = {
@@ -54,6 +55,7 @@ describe('makeDigest', () => {
           category: 'Other'
         },
         count: 1,
+        attitude: 'Hostile',
         narrative: 'A goblin.',
         contributingModifiers: []
       }

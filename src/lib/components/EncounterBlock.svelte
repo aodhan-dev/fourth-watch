@@ -64,7 +64,12 @@
     <p class="quiet">{message ?? 'The road is quiet.'}</p>
   {:else}
     {@const c = encounter.creature}
-    <p class="lead">{encounter.narrative}</p>
+    <p class="lead">
+      <span class="attitude" data-attitude={encounter.attitude.toLowerCase()}>
+        {encounter.attitude}
+      </span>
+      {encounter.narrative}
+    </p>
     <button
       class="expand"
       onclick={() => (expanded = !expanded)}
@@ -243,6 +248,31 @@
     line-height: 1.45;
     color: var(--text);
     margin: 0;
+  }
+  .attitude {
+    display: inline-block;
+    margin-right: 0.5rem;
+    padding: 0.15rem 0.6rem;
+    font-family: var(--font-body);
+    font-variant-caps: all-small-caps;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    border-radius: 999px;
+    border: 1px solid currentColor;
+    vertical-align: 0.18em;
+  }
+  .attitude[data-attitude='hostile'] {
+    color: #f3b6c0;
+    background: rgba(196, 75, 107, 0.18);
+  }
+  .attitude[data-attitude='indifferent'] {
+    color: var(--text-dim);
+    background: rgba(255, 255, 255, 0.04);
+  }
+  .attitude[data-attitude='friendly'] {
+    color: #b6e5b9;
+    background: rgba(74, 143, 78, 0.18);
   }
   .expand {
     margin-top: 0.85rem;

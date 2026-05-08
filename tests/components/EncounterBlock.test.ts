@@ -18,6 +18,7 @@ const stubEncounter: Encounter = {
     category: 'Predator'
   },
   count: 2,
+  attitude: 'Hostile',
   narrative: '2 wolves appear.',
   contributingModifiers: []
 };

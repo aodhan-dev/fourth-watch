@@ -5,7 +5,8 @@
     Season,
     TimeOfDay,
     RegionType,
-    TravelMode
+    TravelMode,
+    EncounterMood
   } from '$lib/engine/types';
   import Stepper from './Stepper.svelte';
   import Listbox from './Listbox.svelte';
@@ -22,6 +23,7 @@
     mode: TravelMode;
     campfire: boolean;
     noise: boolean;
+    mood: EncounterMood;
   };
 
   let {
@@ -168,6 +170,18 @@
         <input type="radio" bind:group={value.mode} value="AtCamp" />
         <span class="seg-glyph seg-glyph-base" aria-hidden="true">⛺</span>
         <span class="seg-label seg-label-base">At camp</span>
+      </label>
+    </div>
+    <div class="segmented" role="radiogroup" aria-label="Encounter mood">
+      <label class="seg" class:active={value.mood === 'mixed'}>
+        <input type="radio" bind:group={value.mood} value="mixed" />
+        <span class="seg-glyph seg-glyph-base" aria-hidden="true">🤝</span>
+        <span class="seg-label seg-label-base">Mixed</span>
+      </label>
+      <label class="seg" class:active={value.mood === 'hostile'}>
+        <input type="radio" bind:group={value.mood} value="hostile" />
+        <span class="seg-glyph seg-glyph-base" aria-hidden="true">⚔️</span>
+        <span class="seg-label seg-label-base">Hostile only</span>
       </label>
     </div>
     <div class="state-extras">

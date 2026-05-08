@@ -12,7 +12,8 @@ const VALID_PAYLOAD = {
   partySize: 4,
   mode: 'Travelling',
   campfire: false,
-  noise: false
+  noise: false,
+  mood: 'mixed'
 };
 
 describe('validateFormState', () => {
@@ -79,6 +80,18 @@ describe('validateFormState', () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { mode: _mode, ...rest } = VALID_PAYLOAD;
     expect(validateFormState(rest)).toBeNull();
+  });
+
+  it("migrates v2 payload (no mood) by defaulting mood to 'mixed'", () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { mood: _mood, ...v2 } = VALID_PAYLOAD;
+    const result = validateFormState(v2);
+    expect(result).not.toBeNull();
+    expect(result?.mood).toBe('mixed');
+  });
+
+  it('rejects a tampered mood value', () => {
+    expect(validateFormState({ ...VALID_PAYLOAD, mood: 'pacifist' })).toBeNull();
   });
 });
 

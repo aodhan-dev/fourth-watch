@@ -13,7 +13,8 @@ const defaultValue = {
   partySize: 4,
   mode: 'Travelling' as const,
   campfire: false,
-  noise: false
+  noise: false,
+  mood: 'mixed' as const
 };
 
 describe('InputForm', () => {

@@ -5,7 +5,8 @@
     Season,
     TimeOfDay,
     RegionType,
-    TravelMode
+    TravelMode,
+    EncounterMood
   } from '$lib/engine/types';
   import InputForm from '../../src/lib/components/InputForm.svelte';
 
@@ -20,6 +21,7 @@
     mode: TravelMode;
     campfire: boolean;
     noise: boolean;
+    mood: EncounterMood;
   };
 
   // Test wrapper. InputForm expects its bindable `value` prop to come from a

@@ -12,7 +12,8 @@ const inputs: Inputs = {
   partySize: 4,
   mode: 'Travelling',
   campfire: false,
-  noise: false
+  noise: false,
+  mood: 'hostile'
 };
 
 const fixtureMonsters: Monster[] = [

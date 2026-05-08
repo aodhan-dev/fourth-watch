@@ -1,7 +1,7 @@
 // Presentation helpers for encounter narration. Lives next to the engine
 // rather than inside it so wording/i18n changes don't pull on encounter.ts.
 
-import type { Monster, ModifierRule } from './types';
+import type { Monster, ModifierRule, EncounterAttitude } from './types';
 
 const IRREGULAR_PLURALS: Record<string, string> = {
   drow: 'drow',
@@ -24,13 +24,30 @@ export function indefiniteArticle(name: string): string {
   return /^[aeiou]/i.test(name) ? 'An' : 'A';
 }
 
-export function buildNarrative(creature: Monster, count: number, rules: ModifierRule[]): string {
+function attitudeVerbPhrase(count: number, attitude: EncounterAttitude): string {
+  const sing = count === 1;
+  switch (attitude) {
+    case 'Hostile':
+      return sing ? 'appears' : 'appear';
+    case 'Indifferent':
+      return sing ? 'passes by, paying you no mind' : 'pass by, paying you no mind';
+    case 'Friendly':
+      return sing ? 'draws near with curiosity' : 'draw near with curiosity';
+  }
+}
+
+export function buildNarrative(
+  creature: Monster,
+  count: number,
+  rules: ModifierRule[],
+  attitude: EncounterAttitude = 'Hostile'
+): string {
   const fragments = rules.map((r) => r.narrativeFragment).filter((f): f is string => Boolean(f));
   const subj =
     count === 1
       ? `${indefiniteArticle(creature.name)} ${creature.name.toLowerCase()}`
       : `${count} ${pluralise(creature.name)}`;
   const tail = fragments.length > 0 ? ` ${fragments.join(', ')}.` : '.';
-  const verb = count === 1 ? 'appears' : 'appear';
+  const verb = attitudeVerbPhrase(count, attitude);
   return `${subj} ${verb}${tail}`;
 }
