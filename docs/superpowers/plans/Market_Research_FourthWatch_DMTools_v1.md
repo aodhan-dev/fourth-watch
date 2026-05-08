@@ -27,98 +27,98 @@ These are tools DMs reach for to handle the same job Fourth Watch does — gener
 
 #### 1. donjon (donjon.bin.sh)
 
-| Field | Detail |
-|---|---|
-| Company / Product | donjon RPG Tools — community-run web suite of generators |
-| Founded / HQ | Long-standing (2000s-era), independently operated |
-| Funding / Revenue | Free site, Patreon-funded; revenue not publicly disclosed |
-| Target audience | DMs of D&D 5e, AD&D, d20, Pathfinder, sci-fi systems |
-| Key features | Random dungeon, encounter, weather, treasure, NPC, city, world generators; SRD-based monster filtering; instant URL-shareable output |
-| Pricing | Free |
-| Strengths | Ubiquitous referral target ("just use donjon"); covers nearly every prep niche; usage stats visible (3,000+ dungeons generated every two days); fast |
-| Weaknesses | Visual design described in 2026 reviews as "looks like a relic from 2005"; no theming, no mobile UX, no persistence, no campaign continuity |
-| Market position | Default no-cost prep utility; closest analogue to Fourth Watch on the weather + encounter axes |
+| Field             | Detail                                                                                                                                               |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Company / Product | donjon RPG Tools — community-run web suite of generators                                                                                             |
+| Founded / HQ      | Long-standing (2000s-era), independently operated                                                                                                    |
+| Funding / Revenue | Free site, Patreon-funded; revenue not publicly disclosed                                                                                            |
+| Target audience   | DMs of D&D 5e, AD&D, d20, Pathfinder, sci-fi systems                                                                                                 |
+| Key features      | Random dungeon, encounter, weather, treasure, NPC, city, world generators; SRD-based monster filtering; instant URL-shareable output                 |
+| Pricing           | Free                                                                                                                                                 |
+| Strengths         | Ubiquitous referral target ("just use donjon"); covers nearly every prep niche; usage stats visible (3,000+ dungeons generated every two days); fast |
+| Weaknesses        | Visual design described in 2026 reviews as "looks like a relic from 2005"; no theming, no mobile UX, no persistence, no campaign continuity          |
+| Market position   | Default no-cost prep utility; closest analogue to Fourth Watch on the weather + encounter axes                                                       |
 
 [donjon RPG Tools](https://donjon.bin.sh/), [DM Lair on donjon usage](https://amethystwulfgames.com/2019/10/27/dm-tip-plan-smarter-not-harder-with-generators-all-about-donjon/)
 
 #### 2. Kobold+ Fight Club (koboldplus.club)
 
-| Field | Detail |
-|---|---|
-| Company / Product | Kobold+ Fight Club, a rewrite/successor to the original Kobold Fight Club, maintained by Fantasy Computerworks |
-| Founded / HQ | Original ~2015; Kobold+ rewrite within last 2 years |
-| Funding / Revenue | Free; integrates with Roll20 GM Hub |
-| Target audience | DMs balancing 5e combat encounters |
-| Key features | Encounter balancing using DMG formulas; party-size filtering; deadly/hard/medium/easy classification; monster source filtering |
-| Pricing | Free |
-| Strengths | The reference encounter calculator for 5e — cited in nearly every "best DM tools" roundup; clean rewrite of an aging app; DMG-faithful math |
-| Weaknesses | Encounter only (no weather, no narrative output, no in-table flow); doesn't model wilderness travel modifiers; no theming or persistence beyond browser local |
-| Market position | Category leader for encounter balancing specifically |
+| Field             | Detail                                                                                                                                                        |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Company / Product | Kobold+ Fight Club, a rewrite/successor to the original Kobold Fight Club, maintained by Fantasy Computerworks                                                |
+| Founded / HQ      | Original ~2015; Kobold+ rewrite within last 2 years                                                                                                           |
+| Funding / Revenue | Free; integrates with Roll20 GM Hub                                                                                                                           |
+| Target audience   | DMs balancing 5e combat encounters                                                                                                                            |
+| Key features      | Encounter balancing using DMG formulas; party-size filtering; deadly/hard/medium/easy classification; monster source filtering                                |
+| Pricing           | Free                                                                                                                                                          |
+| Strengths         | The reference encounter calculator for 5e — cited in nearly every "best DM tools" roundup; clean rewrite of an aging app; DMG-faithful math                   |
+| Weaknesses        | Encounter only (no weather, no narrative output, no in-table flow); doesn't model wilderness travel modifiers; no theming or persistence beyond browser local |
+| Market position   | Category leader for encounter balancing specifically                                                                                                          |
 
 [Kobold+ Fight Club](https://koboldplus.club/), [Kobold+ via Roll20 GM Hub](https://gmhub.roll20.net/resources/kobold-plus-fight-club/)
 
 #### 3. Shieldmaiden (shieldmaiden.app)
 
-| Field | Detail |
-|---|---|
-| Company / Product | Shieldmaiden — DM companion combat tracker + DM screen + encounter builder |
-| Founded / HQ | HarmlessKey (open-source on GitHub) |
-| Funding / Revenue | Patreon-funded; freemium with paid storage tiers |
-| Target audience | DMs who run combat-heavy 5e sessions, often hybrid in-person + remote |
-| Key features | Combat tracker (initiative, HP, conditions, concentration); encounter builder; D&D Beyond character import; built-in compendium; DM screen with soundboard |
-| Pricing | Free core; paid tiers via Patreon for extra storage and quality-of-life features |
-| Strengths | DM-first design ("built by people who have actually had to juggle initiative"); free core; open-source; integrates with D&D Beyond imports |
-| Weaknesses | Heavyweight (more than Fourth Watch's roll-and-go scope); combat-only — no weather, no overland travel; web-only |
-| Market position | Mid-weight DM companion app; the natural step up from "just use donjon" |
+| Field             | Detail                                                                                                                                                     |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Company / Product | Shieldmaiden — DM companion combat tracker + DM screen + encounter builder                                                                                 |
+| Founded / HQ      | HarmlessKey (open-source on GitHub)                                                                                                                        |
+| Funding / Revenue | Patreon-funded; freemium with paid storage tiers                                                                                                           |
+| Target audience   | DMs who run combat-heavy 5e sessions, often hybrid in-person + remote                                                                                      |
+| Key features      | Combat tracker (initiative, HP, conditions, concentration); encounter builder; D&D Beyond character import; built-in compendium; DM screen with soundboard |
+| Pricing           | Free core; paid tiers via Patreon for extra storage and quality-of-life features                                                                           |
+| Strengths         | DM-first design ("built by people who have actually had to juggle initiative"); free core; open-source; integrates with D&D Beyond imports                 |
+| Weaknesses        | Heavyweight (more than Fourth Watch's roll-and-go scope); combat-only — no weather, no overland travel; web-only                                           |
+| Market position   | Mid-weight DM companion app; the natural step up from "just use donjon"                                                                                    |
 
 [Shieldmaiden](https://shieldmaiden.app/), [Shieldmaiden GitHub](https://github.com/HarmlessKey/Shieldmaiden), [Shieldmaiden pricing](https://shieldmaiden.app/pricing)
 
 #### 4. Random Encounters AI (randomencountersai.com)
 
-| Field | Detail |
-|---|---|
-| Company / Product | Random Encounters AI — GPT-4-powered narrative encounter generator |
-| Founded / HQ | Independent indie; not publicly disclosed |
-| Funding / Revenue | Not publicly available; appears ad/free model |
-| Target audience | DMs who want narrative-flavoured encounter prompts rather than just stat-block picks |
-| Key features | Free-form encounter table generation; AI-written hooks; SRD-grounded creature picks |
-| Pricing | Free |
-| Strengths | Narrative output rivals what Fourth Watch produces with rules-driven templating; zero-prep |
-| Weaknesses | LLM-quality variance; no determinism (no shareable seed); no in-table speed (latency on every roll); no weather coupling |
-| Market position | Rising AI-prep category; narrative quality is its sole axis |
+| Field             | Detail                                                                                                                   |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Company / Product | Random Encounters AI — GPT-4-powered narrative encounter generator                                                       |
+| Founded / HQ      | Independent indie; not publicly disclosed                                                                                |
+| Funding / Revenue | Not publicly available; appears ad/free model                                                                            |
+| Target audience   | DMs who want narrative-flavoured encounter prompts rather than just stat-block picks                                     |
+| Key features      | Free-form encounter table generation; AI-written hooks; SRD-grounded creature picks                                      |
+| Pricing           | Free                                                                                                                     |
+| Strengths         | Narrative output rivals what Fourth Watch produces with rules-driven templating; zero-prep                               |
+| Weaknesses        | LLM-quality variance; no determinism (no shareable seed); no in-table speed (latency on every roll); no weather coupling |
+| Market position   | Rising AI-prep category; narrative quality is its sole axis                                                              |
 
 [Random Encounters AI](https://randomencountersai.com/), [CharGen on AI encounter tools](https://char-gen.com/blogs/best-dnd-encounter-generators-2026)
 
 #### 5. Fantasy Weather Generator (fantasyweathergenerator.com)
 
-| Field | Detail |
-|---|---|
-| Company / Product | Fantasy Weather Generator (and similar: Dwarven Automata, DM Genie, dndnames weather) |
-| Founded / HQ | Independent web tool, long-standing |
-| Funding / Revenue | Free, ad-supported |
-| Target audience | DMs wanting climate-aware multi-day weather forecasts |
-| Key features | Climate + season inputs; 30-day forecasts; precipitation, temperature, wind tables; some include effect chips |
-| Pricing | Free |
-| Strengths | Single-purpose, fast, climate-aware; long-tail SEO presence on "D&D weather generator" |
-| Weaknesses | No encounter coupling; no determinism; visually basic; no mobile-first UX |
-| Market position | Niche utility — most DMs only pull it up when running wilderness travel |
+| Field             | Detail                                                                                                        |
+| ----------------- | ------------------------------------------------------------------------------------------------------------- |
+| Company / Product | Fantasy Weather Generator (and similar: Dwarven Automata, DM Genie, dndnames weather)                         |
+| Founded / HQ      | Independent web tool, long-standing                                                                           |
+| Funding / Revenue | Free, ad-supported                                                                                            |
+| Target audience   | DMs wanting climate-aware multi-day weather forecasts                                                         |
+| Key features      | Climate + season inputs; 30-day forecasts; precipitation, temperature, wind tables; some include effect chips |
+| Pricing           | Free                                                                                                          |
+| Strengths         | Single-purpose, fast, climate-aware; long-tail SEO presence on "D&D weather generator"                        |
+| Weaknesses        | No encounter coupling; no determinism; visually basic; no mobile-first UX                                     |
+| Market position   | Niche utility — most DMs only pull it up when running wilderness travel                                       |
 
 [donjon Weather Generator](https://donjon.bin.sh/d20/weather/), [Fantasy Weather Generator](https://www.fantasyweathergenerator.com/), [Dwarven Automata weather](https://www.dwarvenautomata.com/random-weather-generator/)
 
 #### Comparison Matrix
 
-| | Fourth Watch | donjon | Kobold+ FC | Shieldmaiden | Random Enc AI | Fantasy Weather |
-|---|---|---|---|---|---|---|
-| Weather generation | ✓ (climate + season + time) | ✓ (basic) | ✗ | ✗ | ✗ | ✓ |
-| Encounter generation | ✓ (env + level) | ✓ | ✓ (balancing only) | ✓ (builder, not roll) | ✓ (LLM) | ✗ |
-| Combined weather+encounter narrative | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| Deterministic seed | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| Modifier rule engine (campfire, noise, terrain) | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ |
-| Mobile-first / table-side UX | ✓ | ✗ | partial | partial | ✓ | ✗ |
-| Combat tracker | ✗ | ✗ | ✗ | ✓ | ✗ | ✗ |
-| Character integration | ✗ | ✗ | ✓ (party size) | ✓ (D&D Beyond) | ✗ | ✗ |
-| Pricing | Free (currently) | Free | Free | Free + Patreon | Free | Free |
-| Visual polish | High (themed) | Low | Medium | Medium-high | Medium | Low |
+|                                                 | Fourth Watch                | donjon    | Kobold+ FC         | Shieldmaiden          | Random Enc AI | Fantasy Weather |
+| ----------------------------------------------- | --------------------------- | --------- | ------------------ | --------------------- | ------------- | --------------- |
+| Weather generation                              | ✓ (climate + season + time) | ✓ (basic) | ✗                  | ✗                     | ✗             | ✓               |
+| Encounter generation                            | ✓ (env + level)             | ✓         | ✓ (balancing only) | ✓ (builder, not roll) | ✓ (LLM)       | ✗               |
+| Combined weather+encounter narrative            | ✓                           | ✗         | ✗                  | ✗                     | ✗             | ✗               |
+| Deterministic seed                              | ✓                           | ✗         | ✗                  | ✗                     | ✗             | ✗               |
+| Modifier rule engine (campfire, noise, terrain) | ✓                           | ✗         | ✗                  | ✗                     | ✗             | ✗               |
+| Mobile-first / table-side UX                    | ✓                           | ✗         | partial            | partial               | ✓             | ✗               |
+| Combat tracker                                  | ✗                           | ✗         | ✗                  | ✓                     | ✗             | ✗               |
+| Character integration                           | ✗                           | ✗         | ✓ (party size)     | ✓ (D&D Beyond)        | ✗             | ✗               |
+| Pricing                                         | Free (currently)            | Free      | Free               | Free + Patreon        | Free          | Free            |
+| Visual polish                                   | High (themed)               | Low       | Medium             | Medium-high           | Medium        | Low             |
 
 ---
 
@@ -128,12 +128,12 @@ These don't roll weather or wandering encounters, but they're in the DM's tab st
 
 #### 1. D&D Beyond (Hasbro / Wizards of the Coast)
 
-The official ecosystem — Hero tier ($2.99/mo, players) and Master tier ($5.99/mo, DMs) — bundles character sheets, rules access, an Encounter Builder, and the in-browser Maps VTT. Already where most of the audience is logged in, and post-OGL Hasbro has been deliberately adding free DM features to rebuild trust. Threat: any time WotC ships an SRD-grounded weather/wandering tool inside Maps, half the addressable market is reached without download. Opportunity: D&D Beyond's tooling is generic; a focused at-the-table app integrating *with* Beyond (or just sitting next to it) avoids head-on competition.
+The official ecosystem — Hero tier ($2.99/mo, players) and Master tier ($5.99/mo, DMs) — bundles character sheets, rules access, an Encounter Builder, and the in-browser Maps VTT. Already where most of the audience is logged in, and post-OGL Hasbro has been deliberately adding free DM features to rebuild trust. Threat: any time WotC ships an SRD-grounded weather/wandering tool inside Maps, half the addressable market is reached without download. Opportunity: D&D Beyond's tooling is generic; a focused at-the-table app integrating _with_ Beyond (or just sitting next to it) avoids head-on competition.
 [D&D Beyond Subscriptions](https://marketplace.dndbeyond.com/subscribe)
 
 #### 2. Roll20 (VTT)
 
-Free tier is widespread; paid tiers ($5.99–$10.99/mo, last public increase 2021) gate dynamic lighting and API scripts. Roll20 has its own encounter generator, weather macros via API scripts, and the Roll20 GM Hub directory now hosts Kobold+ Fight Club. For online-first tables, Roll20 *is* the table; weather and wandering rolls happen via macros there, not in a separate tab. Why indirect: Fourth Watch is for the in-person DM behind a screen — Roll20 owns the remote-first half of the market and can absorb its own users' need.
+Free tier is widespread; paid tiers ($5.99–$10.99/mo, last public increase 2021) gate dynamic lighting and API scripts. Roll20 has its own encounter generator, weather macros via API scripts, and the Roll20 GM Hub directory now hosts Kobold+ Fight Club. For online-first tables, Roll20 _is_ the table; weather and wandering rolls happen via macros there, not in a separate tab. Why indirect: Fourth Watch is for the in-person DM behind a screen — Roll20 owns the remote-first half of the market and can absorb its own users' need.
 [Roll20 subscription page](https://app.roll20.net/why-subscribe-to-roll20)
 
 #### 3. Foundry VTT
@@ -178,6 +178,7 @@ DMs only, English-speaking, with willingness to use a third-party web tool at th
 Serviceable DM head-count: **~1.5–2M in-person/hybrid DMs** in English-speaking markets.
 
 Per-DM willingness-to-pay benchmarks from competing products:
+
 - D&D Beyond Master tier: $5.99/mo
 - LegendKeeper: $9/mo
 - Saga20: $12.99/mo
@@ -226,28 +227,28 @@ Across 2026 roundups (Saga20, DM Lair, CharGen, Archivist, StoryRoll), the consi
 
 ### 6. Hexcrawl / wilderness travel resurgence
 
-The Alexandrian's hexcrawl essays and CopperPieces' "An Explorer's Guide to Hexcrawls" (v2 Jan 2026, in playtest) are reigniting interest in the Exploration pillar of D&D 5e — the pillar most 2014-PHB tables historically skipped. **Why it matters:** weather + wandering encounters + travel-pace modifiers are the *core* mechanics of running a hexcrawl, and Fourth Watch's data model already maps to this exactly. **Evidence:** Sly Flourish, Awesome Dice, Crit Academy all running hexcrawl content in 2026.
+The Alexandrian's hexcrawl essays and CopperPieces' "An Explorer's Guide to Hexcrawls" (v2 Jan 2026, in playtest) are reigniting interest in the Exploration pillar of D&D 5e — the pillar most 2014-PHB tables historically skipped. **Why it matters:** weather + wandering encounters + travel-pace modifiers are the _core_ mechanics of running a hexcrawl, and Fourth Watch's data model already maps to this exactly. **Evidence:** Sly Flourish, Awesome Dice, Crit Academy all running hexcrawl content in 2026.
 [The Alexandrian on 5E hexcrawl](https://thealexandrian.net/wordpress/46101/roleplaying-games/5e-hexcrawl-part-2-wilderness-travel), [CopperPieces Explorer's Guide](https://copperpieces.itch.io/an-explorers-guide-to-hexcrawls), [Sly Flourish hexcrawls](https://slyflourish.com/hex_crawling.html)
 
 ---
 
 ## SWOT Analysis (Fourth Watch)
 
-| | Helpful | Harmful |
-|---|---|---|
-| **Internal** | **Strengths** | **Weaknesses** |
-| | • Single-purpose, fast UX (5-second roll cycle) — matches the table-side mental model | • No campaign persistence — every roll is one-shot; no party state, no session memory |
-| | • Deterministic seed → reproducible rolls, shareable, debuggable | • No combat tracker — DM still needs Shieldmaiden / Improved Initiative on a second tab |
-| | • Modifier rule engine is unique (campfire suppresses noise, noise increases encounter chance, etc.) | • No D&D Beyond / Roll20 / Foundry integration — sits *next to* the stack, not *in* it |
-| | • SRD 5.2 / Open5e bundled — legally clean, no Hasbro exposure | • Free, no monetisation path articulated yet |
-| | • PWA-deployable, mobile-first; works offline once cached | • Single dev / no marketing presence on the roundup blogs that drive discovery |
-| **External** | **Opportunities** | **Threats** |
-| | • Hexcrawl / wilderness-travel revival (CopperPieces, Sly Flourish, Alexandrian) is the perfect topical wedge | • D&D Beyond ships an SRD weather/wandering tool inside Maps — instant audience reach via login |
-| | • DM-stack discovery happens via roundup posts; "themed weather + wandering combo" is a writeable angle | • Foundry community module ships equivalent functionality and absorbs the Foundry audience |
-| | • Open5e community is vocal and tool-friendly; collaboration / cross-listing realistic | • LLM-based narrative generators (Random Encounters AI, GPT plug-ins) commoditise the narrative-output layer |
-| | • SRD 5.2 stays relevant indefinitely — content moat doesn't decay | • DM:player ratio shifts toward online-first/VTT (currently 44–48%); long-term, Fourth Watch's in-person bias may shrink |
-| | • Adjacent monetisation: party-shareable seeds, campaign log overlay, hexcrawl mode (matches CopperPieces playtest) | • OGL/SRD policy reversal is unlikely but not impossible; CC-BY-4.0 protects what exists, not future updates |
-| | • Hasbro's reduced trust = current goodwill toward indie open tools | • Patreon fatigue: 25% of TTRPG creators clear $1k/mo, but the median is much lower; small-niche tools struggle to differentiate |
+|              | Helpful                                                                                                             | Harmful                                                                                                                          |
+| ------------ | ------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| **Internal** | **Strengths**                                                                                                       | **Weaknesses**                                                                                                                   |
+|              | • Single-purpose, fast UX (5-second roll cycle) — matches the table-side mental model                               | • No campaign persistence — every roll is one-shot; no party state, no session memory                                            |
+|              | • Deterministic seed → reproducible rolls, shareable, debuggable                                                    | • No combat tracker — DM still needs Shieldmaiden / Improved Initiative on a second tab                                          |
+|              | • Modifier rule engine is unique (campfire suppresses noise, noise increases encounter chance, etc.)                | • No D&D Beyond / Roll20 / Foundry integration — sits _next to_ the stack, not _in_ it                                           |
+|              | • SRD 5.2 / Open5e bundled — legally clean, no Hasbro exposure                                                      | • Free, no monetisation path articulated yet                                                                                     |
+|              | • PWA-deployable, mobile-first; works offline once cached                                                           | • Single dev / no marketing presence on the roundup blogs that drive discovery                                                   |
+| **External** | **Opportunities**                                                                                                   | **Threats**                                                                                                                      |
+|              | • Hexcrawl / wilderness-travel revival (CopperPieces, Sly Flourish, Alexandrian) is the perfect topical wedge       | • D&D Beyond ships an SRD weather/wandering tool inside Maps — instant audience reach via login                                  |
+|              | • DM-stack discovery happens via roundup posts; "themed weather + wandering combo" is a writeable angle             | • Foundry community module ships equivalent functionality and absorbs the Foundry audience                                       |
+|              | • Open5e community is vocal and tool-friendly; collaboration / cross-listing realistic                              | • LLM-based narrative generators (Random Encounters AI, GPT plug-ins) commoditise the narrative-output layer                     |
+|              | • SRD 5.2 stays relevant indefinitely — content moat doesn't decay                                                  | • DM:player ratio shifts toward online-first/VTT (currently 44–48%); long-term, Fourth Watch's in-person bias may shrink         |
+|              | • Adjacent monetisation: party-shareable seeds, campaign log overlay, hexcrawl mode (matches CopperPieces playtest) | • OGL/SRD policy reversal is unlikely but not impossible; CC-BY-4.0 protects what exists, not future updates                     |
+|              | • Hasbro's reduced trust = current goodwill toward indie open tools                                                 | • Patreon fatigue: 25% of TTRPG creators clear $1k/mo, but the median is much lower; small-niche tools struggle to differentiate |
 
 ---
 
@@ -255,11 +256,11 @@ The Alexandrian's hexcrawl essays and CopperPieces' "An Explorer's Guide to Hexc
 
 ### 1. Lean into the at-the-table, in-person identity (highest priority)
 
-Every successful single-purpose DM tool occupies a clear lane. Fourth Watch's lane is **the DM behind a physical screen who taps a phone for the next weather + encounter**. That's *not* the lane of D&D Beyond, Roll20, Foundry, Saga20, or Archivist. Tighten the marketing one-liner around this and resist scope creep into combat-tracker or campaign-wiki territory — those markets are already saturated. **Action:** add an explicit "in-person mode / tablet pinned to the screen" preset; design QR-share for player handouts.
+Every successful single-purpose DM tool occupies a clear lane. Fourth Watch's lane is **the DM behind a physical screen who taps a phone for the next weather + encounter**. That's _not_ the lane of D&D Beyond, Roll20, Foundry, Saga20, or Archivist. Tighten the marketing one-liner around this and resist scope creep into combat-tracker or campaign-wiki territory — those markets are already saturated. **Action:** add an explicit "in-person mode / tablet pinned to the screen" preset; design QR-share for player handouts.
 
 ### 2. Pair with the hexcrawl/wilderness-travel resurgence
 
-The CopperPieces Explorer's Guide is currently in playtest (v2 Jan 2026) and the Alexandrian's hexcrawl essays are heavily referenced in 2026 5e content. Fourth Watch's data model — climate × environment × season × time × region × travel mode + modifiers — *is* a hexcrawl turn engine. Add a **hexcrawl mode** that batches a day's four watches (morning/afternoon/evening/night) with one roll per watch; pre-include the Alexandrian / Sly Flourish travel-pace defaults. This is the highest-leverage feature for getting onto the next "best DM tools 2026" roundup. **Action:** ship hexcrawl mode as a story; outreach to Justin Alexander, Sly Flourish, and CopperPieces with the playtest.
+The CopperPieces Explorer's Guide is currently in playtest (v2 Jan 2026) and the Alexandrian's hexcrawl essays are heavily referenced in 2026 5e content. Fourth Watch's data model — climate × environment × season × time × region × travel mode + modifiers — _is_ a hexcrawl turn engine. Add a **hexcrawl mode** that batches a day's four watches (morning/afternoon/evening/night) with one roll per watch; pre-include the Alexandrian / Sly Flourish travel-pace defaults. This is the highest-leverage feature for getting onto the next "best DM tools 2026" roundup. **Action:** ship hexcrawl mode as a story; outreach to Justin Alexander, Sly Flourish, and CopperPieces with the playtest.
 
 ### 3. Integrate with the existing stack rather than compete with it
 
@@ -267,7 +268,7 @@ DMs do not adopt new standalone tabs easily. The five-deep DM stack (D&D Beyond,
 
 ### 4. Stake the "open, deterministic, citation-friendly" position
 
-The OGL trust deficit, SRD 5.2 CC-BY-4.0, and the rise of LLM black-box generators (Random Encounters AI) collectively create demand for tools that are *transparent*. Fourth Watch's deterministic seed and bundled-SRD approach are differentiators worth marketing explicitly. Add a "why this rolled" panel showing the modifier chain (e.g. "campfire raised encounter chance by 15%, noise raised it 20%, Forest+Night raised predator weighting"), and link rule citations to SRD 5.2 sections. **Action:** ship the modifier-trace panel; draft a "Why this is open" doc citing CC-BY-4.0 and Open5e provenance.
+The OGL trust deficit, SRD 5.2 CC-BY-4.0, and the rise of LLM black-box generators (Random Encounters AI) collectively create demand for tools that are _transparent_. Fourth Watch's deterministic seed and bundled-SRD approach are differentiators worth marketing explicitly. Add a "why this rolled" panel showing the modifier chain (e.g. "campfire raised encounter chance by 15%, noise raised it 20%, Forest+Night raised predator weighting"), and link rule citations to SRD 5.2 sections. **Action:** ship the modifier-trace panel; draft a "Why this is open" doc citing CC-BY-4.0 and Open5e provenance.
 
 ### 5. Pick a monetisation lane before building a paid feature
 
