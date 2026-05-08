@@ -3,7 +3,8 @@ import {
   encounterCheck,
   encounterPick,
   crWindow,
-  applyModifiers
+  applyModifiers,
+  type AppliedModifiers
 } from '../../src/lib/engine/encounter';
 import { makeRng } from '../../src/lib/engine/rng';
 import type { Inputs, Monster, Weather } from '../../src/lib/engine/types';
@@ -156,6 +157,37 @@ describe('encounterCheck', () => {
         settled++;
     }
     expect(hostile).toBeGreaterThan(settled * 2);
+  });
+});
+
+describe('encounterPick – all-zero category weights', () => {
+  it('returns null with message when all category weights are zero', () => {
+    const categories = [
+      'Predator',
+      'Bandit',
+      'Civilised',
+      'Undead',
+      'Fey',
+      'Aberration',
+      'Construct',
+      'Other'
+    ] as const;
+    const allZeroMods: AppliedModifiers = {
+      encounterChance: 0.5,
+      categoryWeights: Object.fromEntries(
+        categories.map((c) => [c, 0])
+      ) as AppliedModifiers['categoryWeights'],
+      matchingRules: []
+    };
+    const result = encounterPick(
+      baseInputs(),
+      tameWeather,
+      sampleMonsters,
+      makeRng(1),
+      allZeroMods
+    );
+    expect(result.encounter).toBeNull();
+    expect(result.message).toBeTruthy();
   });
 });
 

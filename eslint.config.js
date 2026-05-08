@@ -45,5 +45,12 @@ export default [
       }
     }
   },
-  { ignores: ['build/', '.svelte-kit/', 'node_modules/'] }
+  {
+    files: ['tests/components/**/*.ts', 'tests/e2e/**/*.ts'],
+    languageOptions: {
+      parser: tsParser,
+      globals: { ...globals.browser }
+    }
+  },
+  { ignores: ['build/', '.svelte-kit/', 'node_modules/', 'test-results/'] }
 ];

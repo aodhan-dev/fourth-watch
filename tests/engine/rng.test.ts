@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { makeRng, deriveSeed, pickIndex } from '../../src/lib/engine/rng';
+import { makeRng, deriveSeed, pickIndex, pickFrom, rollD100 } from '../../src/lib/engine/rng';
 
 describe('makeRng', () => {
   it('produces deterministic output for the same seed', () => {
@@ -59,5 +59,56 @@ describe('pickIndex', () => {
 
   it('returns 0 on empty weights', () => {
     expect(pickIndex(makeRng(1), [])).toBe(0);
+  });
+
+  it('single-element weights: always returns index 0', () => {
+    for (let s = 0; s < 20; s++) {
+      expect(pickIndex(makeRng(s), [5])).toBe(0);
+    }
+  });
+});
+
+describe('pickFrom', () => {
+  it('throws on empty array', () => {
+    expect(() => pickFrom(makeRng(1), [])).toThrow(/empty/);
+  });
+
+  it('single-element array: always returns that element', () => {
+    for (let s = 0; s < 20; s++) {
+      expect(pickFrom(makeRng(s), ['only'])).toBe('only');
+    }
+  });
+
+  it('uniform weights produce a spread distribution', () => {
+    const counts: Record<string, number> = { a: 0, b: 0, c: 0 };
+    for (let s = 0; s < 300; s++) {
+      const pick = pickFrom(makeRng(s), ['a', 'b', 'c']);
+      counts[pick]++;
+    }
+    // Each bucket should appear at least 50 times (expected ~100)
+    for (const v of Object.values(counts)) expect(v).toBeGreaterThan(50);
+  });
+
+  it('all-zero weights falls back to index 0', () => {
+    for (let s = 0; s < 20; s++) {
+      expect(pickFrom(makeRng(s), ['x', 'y', 'z'], [0, 0, 0])).toBe('x');
+    }
+  });
+});
+
+describe('rollD100', () => {
+  it('returns integers in [1, 100]', () => {
+    for (let s = 0; s < 200; s++) {
+      const v = rollD100(makeRng(s));
+      expect(v).toBeGreaterThanOrEqual(1);
+      expect(v).toBeLessThanOrEqual(100);
+      expect(Number.isInteger(v)).toBe(true);
+    }
+  });
+
+  it('produces a spread across the full range', () => {
+    const seen = new Set<number>();
+    for (let s = 0; s < 5000; s++) seen.add(rollD100(makeRng(s)));
+    expect(seen.size).toBe(100);
   });
 });

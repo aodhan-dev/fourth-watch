@@ -85,3 +85,40 @@ describe('roll', () => {
     expect(seenFixture).toBe(true);
   });
 });
+
+describe('roll – boundary inputs', () => {
+  it('succeeds at partyLevel=1 (minimum)', () => {
+    expect(() => roll({ ...inputs, partyLevel: 1 }, 1)).not.toThrow();
+  });
+
+  it('succeeds at partyLevel=20 (maximum)', () => {
+    expect(() => roll({ ...inputs, partyLevel: 20 }, 1)).not.toThrow();
+  });
+
+  it('succeeds at partySize=1 (minimum)', () => {
+    expect(() => roll({ ...inputs, partySize: 1 }, 1)).not.toThrow();
+  });
+
+  it('succeeds at partySize=8 (maximum)', () => {
+    expect(() => roll({ ...inputs, partySize: 8 }, 1)).not.toThrow();
+  });
+
+  it('encounter-happens-pool-empty branch: returns null encounter with a message', () => {
+    // Use an environment with no monsters matching and an empty catalog so the
+    // pool is definitely empty; the engine should not throw.
+    const hostile = { ...inputs, region: 'Hostile' as const, noise: true };
+    let sawNullWithMessage = false;
+    for (let s = 0; s < 20; s++) {
+      roll(hostile, s, {}, fixtureMonsters);
+      // fixtureMonsters only has Forest monsters; Underground pool is empty
+    }
+    const r = roll(
+      { ...inputs, environment: 'Underground' as const },
+      1,
+      {},
+      fixtureMonsters // fixture wolf has no Underground environment
+    );
+    if (r.encounter === null && r.encounterMessage) sawNullWithMessage = true;
+    expect(sawNullWithMessage).toBe(true);
+  });
+});

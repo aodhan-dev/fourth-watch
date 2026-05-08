@@ -62,13 +62,17 @@ describe('rollWeather', () => {
     }
   });
 
-  it('never produces Hot + Heavy snow', () => {
+  it('never produces Hot + Heavy combination (forced-Light fallback fires with Tropical Summer)', () => {
+    // Tropical + Summer maximises Hot temperature probability while Heavy precip is
+    // also common — the combinationValid guard must fire here and fall back to Light.
+    let sawFallback = false;
     for (let s = 0; s < 5000; s++) {
-      const w = rollWeather(baseInputs({ climate: 'Arctic', season: 'Winter' }), makeRng(s));
-      const isSnow = w.precip === 'Heavy' && (w.temp === 'Freezing' || w.temp === 'Cold');
-      const isHotSnow = isSnow && (w.temp as string) === 'Hot';
-      expect(isHotSnow).toBe(false);
+      const w = rollWeather(baseInputs({ climate: 'Tropical', season: 'Summer' }), makeRng(s));
+      expect(w.temp === 'Hot' && w.precip === 'Heavy').toBe(false);
+      // forced-Light fallback leaves us with Hot + Light at least once in 5000 seeds
+      if (w.temp === 'Hot' && w.precip === 'Light') sawFallback = true;
     }
+    expect(sawFallback).toBe(true);
   });
 
   it('attaches WeatherEffects for severe conditions', () => {
