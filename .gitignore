@@ -14,4 +14,7 @@ vite.config.ts.timestamp-*
 .ralph-build-logs/
 .meta-loop/
 .ralph-prompt-*.txt
+docs/superpowers/plans/**/prd-archive/
+test-results/
+playwright-report/
 
