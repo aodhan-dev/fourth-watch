@@ -3,13 +3,13 @@ PRD_VERSION: 1.0
 PRD_FILE: docs/superpowers/plans/review-panel-prd/PRD_Fourth_Watch_Review_Panel_Implementation_v1.md
 TOTAL_STORIES: 10
 CREATED_AT: 2026-05-07T22:35:02Z
-UPDATED_AT: 2026-05-08T08:33:00Z
+UPDATED_AT: 2026-05-08T08:38:00Z
 
 [x] Story 01.1: fix/state-and-storage-validation    # completed: 2026-05-08T07:54:31Z
 [x] Story 02.1: feat/test-coverage-uplift            # completed: 2026-05-08T08:20:00Z
 [x] Story 03.1: fix/a11y-focus-and-motion            # completed: 2026-05-08T08:23:00Z
 [x] Story 04.1: fix/a11y-semantics-and-aria          # completed: 2026-05-08T08:33:00Z
-[ ] Story 05.1: perf/code-split-monsters-and-fonts
+[x] Story 05.1: perf/code-split-monsters-and-fonts   # completed: 2026-05-08T08:38:00Z
 [ ] Story 06.1: feat/form-ux-feedback
 [ ] Story 07.1: style/visual-polish
 [ ] Story 08.1: feat/service-worker-killswitch
