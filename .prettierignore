@@ -4,3 +4,4 @@ node_modules/
 package-lock.json
 .playwright-mcp/
 src/lib/data/monsters.json
+test-results/

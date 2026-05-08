@@ -259,10 +259,7 @@
     color: var(--text-dim);
   }
   fieldset.state {
-    gap: 0;
-  }
-  fieldset.state legend {
-    margin-bottom: 0.65rem;
+    gap: 0.55rem;
   }
   .segmented {
     display: grid;
@@ -274,8 +271,8 @@
     background: var(--surface-2);
   }
   .seg {
-    /* Target: ~2/3 of Roll button height. Roll renders ~3.4rem; 2/3 ≈ 2.3rem. */
-    min-height: 2.3rem;
+    /* 44pt touch target per WCAG 2.5.5 */
+    min-height: 2.75rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -303,8 +300,16 @@
     position: absolute;
     width: 1px;
     height: 1px;
-    opacity: 0;
-    pointer-events: none;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border-width: 0;
+  }
+  .seg:focus-within {
+    outline: 2px solid var(--accent-strong);
+    outline-offset: 2px;
   }
   .seg-glyph-base {
     line-height: 1;
@@ -331,7 +336,6 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0.55rem;
-    margin-top: 0.55rem;
   }
   .pad {
     display: flex;
@@ -339,7 +343,7 @@
     justify-content: center;
     gap: 0.55rem;
     padding: 0.85rem 0.75rem;
-    min-height: 2.3rem;
+    min-height: 2.75rem;
     background: var(--surface-2);
     border: 1px solid var(--border-strong);
     border-radius: 10px;
@@ -357,8 +361,16 @@
     position: absolute;
     width: 1px;
     height: 1px;
-    opacity: 0;
-    pointer-events: none;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border-width: 0;
+  }
+  .pad:focus-within {
+    outline: 2px solid var(--accent-strong);
+    outline-offset: 2px;
   }
   .pad-glyph {
     font-size: 1.05rem;
