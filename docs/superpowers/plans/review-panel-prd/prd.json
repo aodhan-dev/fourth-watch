@@ -62,7 +62,7 @@
     {
       "id": "03.1",
       "title": "fix/a11y-focus-and-motion",
-      "passes": false,
+      "passes": true,
       "priority": 3,
       "branchName": "fix/a11y-focus-and-motion",
       "user_role": "keyboard or switch user, or a user with motion-sensitivity",
@@ -76,8 +76,8 @@
         "Manual smoke: tab through the form, every control shows a visible ring; reduce motion in OS settings, reload, animations are disabled.",
         "Pipeline gates pass: npm run check, npm run lint, npm run validate:data, npm test all green."
       ],
-      "status": "pending",
-      "completed_at": null
+      "status": "passed",
+      "completed_at": "2026-05-08T08:23:00Z"
     },
     {
       "id": "04.1",
