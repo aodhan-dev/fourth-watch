@@ -183,7 +183,7 @@
     {
       "id": "08.1",
       "title": "feat/service-worker-killswitch",
-      "passes": false,
+      "passes": true,
       "priority": 8,
       "branchName": "feat/service-worker-killswitch",
       "user_role": "operator",
@@ -197,8 +197,8 @@
         "Manual smoke: install the SW in dev, bump the kill-switch version, reload, verify the SW is unregistered and the app is served fresh.",
         "Pipeline gates pass: npm run check, npm run lint, npm run validate:data, npm test all green."
       ],
-      "status": "pending",
-      "completed_at": null
+      "status": "passed",
+      "completed_at": "2026-05-08T09:25:00Z"
     },
     {
       "id": "09.1",
