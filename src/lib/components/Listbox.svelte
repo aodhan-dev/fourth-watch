@@ -262,18 +262,21 @@
   }
 
   /* Per-value tint, applied via --tint set below. Options get a left stripe;
-     the trigger gets a tinted gradient and accent border. color-mix(oklch)
-     keeps the surface tone consistent across hues. */
+     the trigger gets a tinted gradient and accent border. color-mix in sRGB
+     keeps hue identity stable: oklch mixing pulls orange-on-deep-blue toward
+     purple, which loses the field's signal. */
   .trigger[data-theme-field][data-value] {
-    background: linear-gradient(
-      90deg,
-      color-mix(in oklch, var(--tint) 22%, var(--surface-2)) 0%,
-      var(--surface-2) 75%
-    );
-    border-color: color-mix(in oklch, var(--tint) 50%, var(--border-strong));
+    background:
+      linear-gradient(
+          90deg,
+          color-mix(in srgb, var(--tint) 30%, transparent) 0%,
+          transparent 70%
+        )
+        var(--surface-2);
+    border-color: color-mix(in srgb, var(--tint) 55%, var(--border-strong));
   }
   .trigger[data-theme-field][data-value]:hover {
-    border-color: color-mix(in oklch, var(--tint) 70%, var(--border-strong));
+    border-color: color-mix(in srgb, var(--tint) 75%, var(--border-strong));
   }
   .option[data-theme-field][data-value] {
     border-left: 3px solid var(--tint);
