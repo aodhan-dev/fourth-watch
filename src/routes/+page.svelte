@@ -4,33 +4,12 @@
   import ResultPanel from '$lib/components/ResultPanel.svelte';
   import Footer from '$lib/components/Footer.svelte';
   import { roll } from '$lib/engine';
-  import type {
-    Inputs,
-    RollResult,
-    Climate,
-    Environment,
-    Season,
-    TimeOfDay,
-    RegionType
-  } from '$lib/engine/types';
+  import { validateFormState, type FormState } from '$lib/storage';
+  import { newSeed } from '$lib/seed';
+  import type { RollResult } from '$lib/engine/types';
 
   const STORAGE_KEY = 'fourth-watch-inputs-v2';
-
-  // Form state allows enum fields to start unset ('' sentinel) so each dropdown
-  // shows its field name as placeholder on first visit. Once chosen, persisted
-  // in localStorage. Numeric/boolean fields keep their sensible defaults.
-  type FormState = {
-    climate: Climate | '';
-    environment: Environment | '';
-    season: Season | '';
-    time: TimeOfDay | '';
-    region: RegionType | '';
-    partyLevel: number;
-    partySize: number;
-    mode: Inputs['mode'];
-    campfire: boolean;
-    noise: boolean;
-  };
+  const LEGACY_KEY = 'fourth-watch-inputs-v1';
 
   const defaultForm: FormState = {
     climate: '',
@@ -48,7 +27,7 @@
   let inputs = $state<FormState>({ ...defaultForm });
   let result = $state<RollResult | null>(null);
 
-  function isComplete(f: FormState): f is FormState & Inputs {
+  function isComplete(f: FormState): f is FormState & import('$lib/engine/types').Inputs {
     return (
       f.climate !== '' &&
       f.environment !== '' &&
@@ -58,10 +37,26 @@
     );
   }
 
+  let canRoll = $derived(isComplete(inputs));
+
+  $effect(() => {
+    if (inputs.mode !== 'AtCamp' && inputs.campfire) {
+      inputs.campfire = false;
+    }
+  });
+
   onMount(() => {
     try {
+      localStorage.removeItem(LEGACY_KEY);
+    } catch {
+      /* ignore */
+    }
+    try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) Object.assign(inputs, JSON.parse(raw));
+      if (raw) {
+        const validated = validateFormState(JSON.parse(raw));
+        if (validated) Object.assign(inputs, validated);
+      }
     } catch {
       // ignore parse errors; fall back to defaults
     }
@@ -75,11 +70,7 @@
     }
   }
 
-  function newSeed(): number {
-    return Math.floor(Math.random() * 0xffffffff) >>> 0;
-  }
-
-  function snapshot(): Inputs | null {
+  function snapshot(): import('$lib/engine/types').Inputs | null {
     const snap = $state.snapshot(inputs) as FormState;
     if (!isComplete(snap)) return null;
     return snap;
@@ -116,7 +107,7 @@
     <h1>Fourth Watch</h1>
     <p class="tagline">D&amp;D weather and wandering encounters, rolled at the table.</p>
   </header>
-  <InputForm bind:value={inputs} onRoll={rollAll} canRoll={isComplete(inputs)} />
+  <InputForm bind:value={inputs} onRoll={rollAll} {canRoll} />
   <div aria-live="polite" aria-atomic="true">
     <ResultPanel
       {result}

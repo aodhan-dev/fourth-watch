@@ -1,14 +1,14 @@
 # PRD: Fourth Watch Review Panel Implementation
 
-| Field | Value |
-| --- | --- |
-| Product | Fourth Watch (static SvelteKit + Cloudflare Pages D&D 5e weather and encounter app) |
-| Version | 1.0 |
-| Author | [PLACEHOLDER: Author name] |
-| Date | 2026-05-07 |
-| Source review | `.review-panel/2026-05-07_2200.md` |
-| Roadmap | `docs/superpowers/plans/2026-05-07-review-panel-roadmap.md` |
-| Loop artefacts | `docs/superpowers/plans/review-panel-prd/{progress.txt, prd.json}` |
+| Field          | Value                                                                               |
+| -------------- | ----------------------------------------------------------------------------------- |
+| Product        | Fourth Watch (static SvelteKit + Cloudflare Pages D&D 5e weather and encounter app) |
+| Version        | 1.0                                                                                 |
+| Author         | [PLACEHOLDER: Author name]                                                          |
+| Date           | 2026-05-07                                                                          |
+| Source review  | `.review-panel/2026-05-07_2200.md`                                                  |
+| Roadmap        | `docs/superpowers/plans/2026-05-07-review-panel-roadmap.md`                         |
+| Loop artefacts | `docs/superpowers/plans/review-panel-prd/{progress.txt, prd.json}`                  |
 
 ## 1. Executive Summary
 
@@ -33,14 +33,14 @@ The risk if this work doesn't land: every accessibility finding remains unfixed 
 
 ### Success metrics
 
-| Metric | Current | Target |
-| --- | --- | --- |
-| HIGH-severity findings closed | 0 of N | 100% |
-| Initial JS bundle (gzip) | dominated by monsters.json (~150 KB gz) | <50 KB gz pre-roll |
-| `prefers-reduced-motion` honoured | no | yes |
-| Test count | 50 (engine only) | 70+ including component and e2e |
-| `npm run validate:data` step | added | passes in CI on every push |
-| Service-worker kill switch | none | versioned, tested |
+| Metric                            | Current                                 | Target                          |
+| --------------------------------- | --------------------------------------- | ------------------------------- |
+| HIGH-severity findings closed     | 0 of N                                  | 100%                            |
+| Initial JS bundle (gzip)          | dominated by monsters.json (~150 KB gz) | <50 KB gz pre-roll              |
+| `prefers-reduced-motion` honoured | no                                      | yes                             |
+| Test count                        | 50 (engine only)                        | 70+ including component and e2e |
+| `npm run validate:data` step      | added                                   | passes in CI on every push      |
+| Service-worker kill switch        | none                                    | versioned, tested               |
 
 ## 4. Scope — In and Out
 
@@ -209,13 +209,13 @@ Each story is one branch from the roadmap. Acceptance criteria are written so a 
 
 ## 6. Risks & Mitigations
 
-| Risk | Likelihood | Impact | Mitigation |
-| --- | --- | --- | --- |
-| A11y semantics work breaks visual styling on the segmented control. | Medium | Medium | Land `fix/a11y-semantics-and-aria` before `style/visual-polish`; run the screenshot smoke test after each. |
-| Code-split lands but Cloudflare Pages doesn't serve the dynamic chunk correctly with the static-assets adapter. | Low | High | Verify `npm run build` output and `npm run preview` locally before merging; add a smoke test step that loads the prerendered shell and confirms the chunk arrives. |
-| Service-worker kill switch is implemented but the runtime cache shape change causes a fresh install to evict legitimate SW state on first visit. | Low | Medium | Tests cover the LRU eviction and the cache-version logic; manual smoke from a fresh browser profile. |
-| CSP blocks a legitimate resource (typically inline styles from SvelteKit's hydration script) and breaks the page. | Medium | High | Land CSP behind a `Content-Security-Policy-Report-Only` header first if needed; review browser console after enforcement. |
-| The ralph loop marks a story passed without acceptance criteria actually being met (false-positive). | Medium | Medium | Each story's AC is written so an autonomous runner can check via test runs, file inspection, or a single yes/no smoke prompt. The skill's loop-iteration mode is required to "not mark a story passed without evidence". |
+| Risk                                                                                                                                             | Likelihood | Impact | Mitigation                                                                                                                                                                                                               |
+| ------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| A11y semantics work breaks visual styling on the segmented control.                                                                              | Medium     | Medium | Land `fix/a11y-semantics-and-aria` before `style/visual-polish`; run the screenshot smoke test after each.                                                                                                               |
+| Code-split lands but Cloudflare Pages doesn't serve the dynamic chunk correctly with the static-assets adapter.                                  | Low        | High   | Verify `npm run build` output and `npm run preview` locally before merging; add a smoke test step that loads the prerendered shell and confirms the chunk arrives.                                                       |
+| Service-worker kill switch is implemented but the runtime cache shape change causes a fresh install to evict legitimate SW state on first visit. | Low        | Medium | Tests cover the LRU eviction and the cache-version logic; manual smoke from a fresh browser profile.                                                                                                                     |
+| CSP blocks a legitimate resource (typically inline styles from SvelteKit's hydration script) and breaks the page.                                | Medium     | High   | Land CSP behind a `Content-Security-Policy-Report-Only` header first if needed; review browser console after enforcement.                                                                                                |
+| The ralph loop marks a story passed without acceptance criteria actually being met (false-positive).                                             | Medium     | Medium | Each story's AC is written so an autonomous runner can check via test runs, file inspection, or a single yes/no smoke prompt. The skill's loop-iteration mode is required to "not mark a story passed without evidence". |
 
 ## 7. Open Questions
 

@@ -16,7 +16,7 @@ from `HH3RulesRepository/ralph/`.
   branch-per-story stacking policy and our four pipeline gates (`npm run check`,
   `npm run lint`, `npm run validate:data`, `npm test`).
 - **`run-ralph.sh`** — In-container launcher. Wraps `claude --print --verbose
-  --output-format stream-json` in `timeout` + `tmux`.
+--output-format stream-json` in `timeout` + `tmux`.
 - **`ralph-notify.ps1`** — Console + Windows toast + ntfy phone push helper,
   dot-sourced by `run-prd-loop.ps1`. First call generates a per-user ntfy
   topic and prints the subscribe URL.
