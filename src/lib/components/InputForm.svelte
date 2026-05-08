@@ -425,6 +425,29 @@
       inset 0 0 0 1px rgba(224, 123, 58, 0.4),
       0 0 16px -4px rgba(224, 123, 58, 0.55);
   }
+  @media (prefers-reduced-motion: no-preference) {
+    .pad.fire.on {
+      animation: campfire-flicker 2.6s ease-in-out infinite;
+    }
+  }
+  @keyframes campfire-flicker {
+    0%,
+    100% {
+      box-shadow:
+        inset 0 0 0 1px rgba(224, 123, 58, 0.38),
+        0 0 14px -4px rgba(224, 123, 58, 0.5);
+    }
+    45% {
+      box-shadow:
+        inset 0 0 0 1px rgba(224, 123, 58, 0.46),
+        0 0 18px -4px rgba(224, 123, 58, 0.62);
+    }
+    70% {
+      box-shadow:
+        inset 0 0 0 1px rgba(224, 123, 58, 0.4),
+        0 0 15px -4px rgba(224, 123, 58, 0.54);
+    }
+  }
   .pad.disabled {
     cursor: not-allowed;
     opacity: 0.35;
