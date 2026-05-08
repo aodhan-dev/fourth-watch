@@ -323,7 +323,21 @@
     right: 0;
     margin: 0;
     padding: 0.3rem;
-    background: var(--surface-3);
+    /* Lea Verou scroll-shadow: a darkening fade appears at the bottom edge
+       only when there's scrollable content below. The cover gradient is
+       background-attachment: local (scrolls with content) and hides the
+       shadow when you reach the end; the shadow gradient is fixed to the
+       container and shows only while there's more to scroll. */
+    background-color: var(--surface-3);
+    background-image:
+      linear-gradient(to top, var(--surface-3) 30%, transparent),
+      linear-gradient(to top, rgba(0, 0, 0, 0.55), transparent);
+    background-position: bottom, bottom;
+    background-size:
+      100% 28px,
+      100% 22px;
+    background-repeat: no-repeat;
+    background-attachment: local, scroll;
     border: 1px solid var(--border-strong);
     border-radius: 8px;
     box-shadow:
