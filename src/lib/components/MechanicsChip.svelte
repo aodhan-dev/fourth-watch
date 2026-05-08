@@ -2,11 +2,11 @@
   import type { WeatherEffect } from '$lib/engine/types';
   let { effect }: { effect: WeatherEffect } = $props();
 
-  const severity: 'info' | 'warn' | 'danger' = (() => {
+  let severity: 'info' | 'warn' | 'danger' = $derived.by(() => {
     if (effect.id === 'cold-exhaustion' || effect.id === 'heat-exhaustion') return 'danger';
     if (effect.id === 'travel-pace-half' || effect.id === 'ranged-disadvantage') return 'warn';
     return 'info';
-  })();
+  });
 </script>
 
 <span
