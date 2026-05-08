@@ -6,6 +6,7 @@
   import { roll, parseMonsterCatalog } from '$lib/engine';
   import { validateFormState, type FormState } from '$lib/storage';
   import { newSeed } from '$lib/seed';
+  import { logRoll } from '$lib/observability';
   import type { RollResult, Monster } from '$lib/engine/types';
 
   const STORAGE_KEY = 'fourth-watch-inputs-v2';
@@ -27,6 +28,7 @@
   let inputs = $state<FormState>({ ...defaultForm });
   let result = $state<RollResult | null>(null);
   let loadedMonsters = $state<Monster[]>([]);
+  let debugMode = $state(false);
 
   function isComplete(f: FormState): f is FormState & import('$lib/engine/types').Inputs {
     return (
@@ -47,6 +49,7 @@
   });
 
   onMount(async () => {
+    debugMode = new URLSearchParams(location.search).get('debug') === '1';
     try {
       localStorage.removeItem(LEGACY_KEY);
     } catch {
@@ -83,21 +86,27 @@
     const snap = snapshot();
     if (!snap) return;
     persist();
-    result = roll(snap, newSeed(), {}, loadedMonsters);
+    const r = roll(snap, newSeed(), {}, loadedMonsters);
+    result = r;
+    if (debugMode) logRoll(r.seed, snap, r);
   }
 
   function rerollWeather() {
     if (!result) return rollAll();
     const snap = snapshot();
     if (!snap) return;
-    result = roll(snap, result.seed, { rerollWeather: newSeed() }, loadedMonsters);
+    const r = roll(snap, result.seed, { rerollWeather: newSeed() }, loadedMonsters);
+    result = r;
+    if (debugMode) logRoll(r.seed, snap, r);
   }
 
   function rerollEncounter() {
     if (!result) return rollAll();
     const snap = snapshot();
     if (!snap) return;
-    result = roll(snap, result.seed, { rerollEncounter: newSeed() }, loadedMonsters);
+    const r = roll(snap, result.seed, { rerollEncounter: newSeed() }, loadedMonsters);
+    result = r;
+    if (debugMode) logRoll(r.seed, snap, r);
   }
 </script>
 
