@@ -309,9 +309,9 @@
     line-height: 1;
   }
   .seg-label-base {
-    font-family: var(--font-body);
-    font-variant-caps: all-small-caps;
+    font-family: var(--font-display);
     font-weight: 600;
+    text-transform: uppercase;
     letter-spacing: 0.1em;
   }
   .seg:hover {
