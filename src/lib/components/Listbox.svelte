@@ -144,11 +144,82 @@
     aria-labelledby={labelId}
     class="trigger"
     class:unset={value === ''}
+    class:has-icon={!!themeField}
     data-theme-field={themeField}
     data-value={value || undefined}
     onclick={() => (open ? closeMenu() : openMenu())}
     onkeydown={onKey}
   >
+    {#if themeField === 'climate'}
+      <svg
+        class="leading-icon"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M14 14V5a2 2 0 0 0-4 0v9a4 4 0 1 0 4 0z" />
+      </svg>
+    {:else if themeField === 'environment'}
+      <svg
+        class="leading-icon"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M3 6 8 4 16 7 21 5v13l-5 2-8-3-5 2z" />
+        <path d="M8 4v15M16 7v15" />
+      </svg>
+    {:else if themeField === 'season'}
+      <svg
+        class="leading-icon"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19.2 3c1 1.5 0 5 0 8a8 8 0 0 1-8 9z" />
+        <path d="M2 21c0-3 1.85-5.36 5.08-6" />
+      </svg>
+    {:else if themeField === 'time'}
+      <svg
+        class="leading-icon"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <circle cx="12" cy="12" r="9" />
+        <polyline points="12,7 12,12 15.5,14" />
+      </svg>
+    {:else if themeField === 'region'}
+      <svg
+        class="leading-icon"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <circle cx="12" cy="12" r="9" />
+        <polygon points="16.2,7.8 14.1,14.1 7.8,16.2 9.9,9.9" />
+      </svg>
+    {/if}
     <span class="trigger-text">{value || placeholder}</span>
     <span class="chevron" aria-hidden="true"></span>
   </button>
@@ -202,6 +273,23 @@
   .trigger.unset .trigger-text {
     color: var(--text-muted);
     font-style: italic;
+  }
+  .trigger.has-icon {
+    padding-left: 2.6rem;
+  }
+  .leading-icon {
+    position: absolute;
+    left: 0.85rem;
+    top: 50%;
+    width: 1.05rem;
+    height: 1.05rem;
+    transform: translateY(-50%);
+    color: var(--text-dim);
+    pointer-events: none;
+    transition: color 140ms ease;
+  }
+  .trigger[data-theme-field][data-value] .leading-icon {
+    color: color-mix(in srgb, var(--tint) 80%, var(--text));
   }
   .trigger:hover {
     border-color: var(--accent-soft);

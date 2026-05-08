@@ -467,8 +467,8 @@
       0 1px 0 rgba(255, 255, 255, 0.25) inset,
       0 6px 18px -6px rgba(212, 164, 74, 0.55);
     transition:
-      transform 80ms ease,
-      box-shadow 120ms ease;
+      transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1),
+      box-shadow 200ms ease;
   }
   button.roll:hover {
     transform: translateY(-1px);
@@ -477,7 +477,8 @@
       0 10px 22px -6px rgba(212, 164, 74, 0.7);
   }
   button.roll:active {
-    transform: translateY(0);
+    transform: translateY(1px) scale(0.96);
+    transition: transform 80ms ease-out;
   }
   button.roll:disabled {
     cursor: not-allowed;

@@ -1,9 +1,9 @@
 :root {
-  /* Surfaces */
-  --bg: #0e1c2e;
-  --surface: #182740;
-  --surface-2: #213354;
-  --surface-3: #2a3f63;
+  /* Surfaces — warmed one notch from cool navy toward dusk slate */
+  --bg: #131b29;
+  --surface: #1d2538;
+  --surface-2: #262e48;
+  --surface-3: #313a58;
   --border: rgba(232, 232, 216, 0.12);
   --border-strong: rgba(232, 232, 216, 0.22);
 
@@ -42,8 +42,8 @@ body {
 }
 body {
   background:
-    radial-gradient(circle at 20% -10%, #1c2e4a 0%, transparent 55%),
-    radial-gradient(circle at 100% 100%, #1a2240 0%, transparent 55%), var(--bg);
+    radial-gradient(circle at 20% -10%, #2a2942 0%, transparent 55%),
+    radial-gradient(circle at 100% 100%, #2a2333 0%, transparent 55%), var(--bg);
   background-attachment: fixed;
   color: var(--text);
   font-family: var(--font-body);

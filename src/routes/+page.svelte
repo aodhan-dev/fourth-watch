@@ -116,6 +116,14 @@
 
 <main>
   <header class="title">
+    <svg class="mascot" viewBox="0 0 32 24" aria-hidden="true">
+      <!-- crescent moon: the fourth watch is the last before dawn -->
+      <path d="M26 13.5A9 9 0 1 1 16 4.5 7 7 0 0 0 26 13.5z" />
+      <!-- watchfire stars -->
+      <circle cx="5" cy="6" r="1" />
+      <circle cx="9" cy="14" r="0.65" />
+      <circle cx="3" cy="17" r="0.5" />
+    </svg>
     <h1>Fourth Watch</h1>
     <p class="tagline">D&amp;D weather and wandering encounters, rolled at the table.</p>
   </header>
@@ -152,6 +160,14 @@
   .title {
     margin: 0.5rem 0 2rem;
     text-align: center;
+  }
+  .mascot {
+    width: 2.1rem;
+    height: 1.6rem;
+    fill: var(--accent-strong);
+    margin: 0 auto 0.4rem;
+    display: block;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.35));
   }
   h1 {
     font-family: var(--font-display);
