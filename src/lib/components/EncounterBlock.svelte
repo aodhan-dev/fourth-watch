@@ -62,11 +62,16 @@
   {:else}
     {@const c = encounter.creature}
     <p class="lead">{encounter.narrative}</p>
-    <button class="expand" onclick={() => (expanded = !expanded)} aria-expanded={expanded}>
+    <button
+      class="expand"
+      onclick={() => (expanded = !expanded)}
+      aria-expanded={expanded}
+      aria-controls="stat-block"
+    >
       {expanded ? 'Hide' : 'Show'} stat block
     </button>
     {#if expanded}
-      <article class="stat-block" aria-label="{c.name} stat block">
+      <article class="stat-block" id="stat-block" aria-label="{c.name} stat block">
         <header class="sb-header">
           <h3 class="sb-name">{c.name}</h3>
           {#if statBlockMeta(c)}
@@ -90,15 +95,24 @@
         </dl>
 
         {#if c.abilityScores}
-          <div class="abilities" role="table" aria-label="Ability scores">
-            {#each abilityKeys as a (a.key)}
-              <div class="ability">
-                <div class="ab-label">{a.label}</div>
-                <div class="ab-score">{c.abilityScores[a.key]}</div>
-                <div class="ab-mod">{abilityMod(c.abilityScores[a.key])}</div>
-              </div>
-            {/each}
-          </div>
+          <table class="abilities">
+            <thead>
+              <tr>
+                {#each abilityKeys as a (a.key)}<th scope="col">{a.label}</th>{/each}
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                {#each abilityKeys as a (a.key)}<td class="ab-score">{c.abilityScores[a.key]}</td
+                  >{/each}
+              </tr>
+              <tr>
+                {#each abilityKeys as a (a.key)}<td class="ab-mod"
+                    >{abilityMod(c.abilityScores[a.key])}</td
+                  >{/each}
+              </tr>
+            </tbody>
+          </table>
         {/if}
 
         <dl class="sb-meta-list">
@@ -305,33 +319,34 @@
   }
 
   .abilities {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 0.4rem;
+    width: 100%;
+    border-collapse: collapse;
     margin: 0 0 0.95rem;
-    padding: 0.55rem 0;
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
   }
-  .ability {
-    text-align: center;
-  }
-  .ab-label {
+  .abilities th {
     font-family: var(--font-display);
     font-size: 0.65rem;
     font-weight: 600;
     letter-spacing: 0.16em;
     color: var(--accent);
+    text-align: center;
+    padding-top: 0.55rem;
+    border-top: 1px solid var(--border);
   }
-  .ab-score {
+  .abilities td {
+    text-align: center;
+  }
+  .abilities td.ab-score {
     font-size: 1.05rem;
     color: var(--text);
     font-weight: 600;
     line-height: 1.1;
   }
-  .ab-mod {
+  .abilities td.ab-mod {
     font-size: 0.78rem;
     color: var(--text-dim);
+    padding-bottom: 0.55rem;
+    border-bottom: 1px solid var(--border);
   }
 
   .sb-meta-list {
@@ -384,9 +399,9 @@
   }
 
   @media (max-width: 480px) {
-    .abilities {
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0.55rem 0.4rem;
+    .abilities th,
+    .abilities td {
+      font-size: 0.75rem;
     }
     .sb-meta-list div {
       grid-template-columns: 1fr;

@@ -55,8 +55,29 @@ describe('ResultPanel', () => {
       onRerollWeather: vi.fn(),
       onRerollEncounter: vi.fn()
     });
-    expect(screen.getByText('↻ Roll again')).toBeTruthy();
-    expect(screen.getByText('↻ Weather')).toBeTruthy();
-    expect(screen.getByText('↻ Encounter')).toBeTruthy();
+    expect(screen.getByRole('button', { name: /roll again/i })).toBeTruthy();
+    expect(screen.getByRole('button', { name: /weather/i })).toBeTruthy();
+    expect(screen.getByRole('button', { name: /encounter/i })).toBeTruthy();
+  });
+
+  it('ResultPanel has no aria-live region (status lives in page)', () => {
+    const { container } = render(ResultPanel, {
+      result: null,
+      onRerollAll: vi.fn(),
+      onRerollWeather: vi.fn(),
+      onRerollEncounter: vi.fn()
+    });
+    expect(container.querySelector('[aria-live]')).toBeNull();
+  });
+
+  it('seed code is described by its label', () => {
+    render(ResultPanel, {
+      result: stubResult,
+      onRerollAll: vi.fn(),
+      onRerollWeather: vi.fn(),
+      onRerollEncounter: vi.fn()
+    });
+    const code = document.querySelector('code');
+    expect(code?.getAttribute('aria-describedby')).toBe('seed-label');
   });
 });

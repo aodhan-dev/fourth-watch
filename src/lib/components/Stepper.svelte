@@ -27,7 +27,25 @@
     aria-label="Decrease {label}"
     tabindex="0">−</button
   >
-  <span class="value" aria-live="polite">{value}</span>
+  <span
+    class="value"
+    role="spinbutton"
+    tabindex="0"
+    aria-valuenow={value}
+    aria-valuemin={min}
+    aria-valuemax={max}
+    aria-label={label}
+    onkeydown={(e) => {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowRight') {
+        e.preventDefault();
+        inc();
+      }
+      if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') {
+        e.preventDefault();
+        dec();
+      }
+    }}>{value}</span
+  >
   <button
     type="button"
     onclick={inc}

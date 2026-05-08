@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/svelte';
+import { render, screen, fireEvent } from '@testing-library/svelte';
 import InputForm from '../../src/lib/components/InputForm.svelte';
 
 const defaultValue = {
@@ -39,5 +39,27 @@ describe('InputForm', () => {
   it('renders climate select with placeholder option', () => {
     render(InputForm, { value: defaultValue, onRoll: vi.fn(), canRoll: false });
     expect(screen.getByRole('combobox', { name: /climate/i })).toBeTruthy();
+  });
+
+  it('mode radio inputs are present and respond to change', async () => {
+    const { container } = render(InputForm, {
+      value: defaultValue,
+      onRoll: vi.fn(),
+      canRoll: false
+    });
+    const campRadio = container.querySelector('input[value="AtCamp"]') as HTMLInputElement;
+    expect(campRadio).toBeTruthy();
+    await fireEvent.click(campRadio);
+    expect(campRadio.checked).toBe(true);
+  });
+
+  it('campfire pad exists in the activity section', () => {
+    const { container } = render(InputForm, {
+      value: defaultValue,
+      onRoll: vi.fn(),
+      canRoll: false
+    });
+    expect(container.querySelector('.pad.fire')).toBeTruthy();
+    expect(container.querySelector('input[type="checkbox"]')).toBeTruthy();
   });
 });

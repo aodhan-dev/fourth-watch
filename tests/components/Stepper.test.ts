@@ -26,4 +26,12 @@ describe('Stepper', () => {
     expect((screen.getByLabelText('Decrease Size') as HTMLButtonElement).disabled).toBe(false);
     expect((screen.getByLabelText('Increase Size') as HTMLButtonElement).disabled).toBe(false);
   });
+
+  it('exposes spinbutton role with aria-valuenow/min/max', () => {
+    render(Stepper, { value: 5, min: 1, max: 10, label: 'Level' });
+    const spinbutton = screen.getByRole('spinbutton', { name: /level/i });
+    expect(spinbutton.getAttribute('aria-valuenow')).toBe('5');
+    expect(spinbutton.getAttribute('aria-valuemin')).toBe('1');
+    expect(spinbutton.getAttribute('aria-valuemax')).toBe('10');
+  });
 });

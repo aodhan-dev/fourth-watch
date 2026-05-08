@@ -47,39 +47,7 @@
   const times = ['Dawn', 'Day', 'Dusk', 'Night'] as const;
   const regions = ['Settled', 'Frontier', 'Wilderness', 'Hostile'] as const;
 
-  const GLYPH = {
-    Tropical: '🌴',
-    Subtropical: '🌿',
-    Arid: '🏜️',
-    Temperate: '🌾',
-    Subarctic: '🌲',
-    'Arctic-c': '🧊',
-    'Arctic-e': '❄️',
-    Coastal: '🌊',
-    Desert: '🏜️',
-    Forest: '🌲',
-    Grassland: '🌾',
-    Hills: '⛰️',
-    Mountains: '🏔️',
-    Swamp: '🪷',
-    Underground: '🕯️',
-    Urban: '🏛️',
-    Wasteland: '☠️',
-    Spring: '🌱',
-    Summer: '☀️',
-    Autumn: '🍂',
-    Winter: '❄️',
-    Dawn: '🌅',
-    Day: '🔆',
-    Dusk: '🌆',
-    Night: '🌙',
-    Settled: '🏘️',
-    Frontier: '🛤️',
-    Wilderness: '🌲',
-    Hostile: '⚔️'
-  } as const;
-
-  // Field-level glyphs used in placeholder + label.
+  // Field-level glyphs used in placeholder options.
   const FIELD = {
     climate: { glyph: '🌡️', label: 'Climate' },
     environment: { glyph: '🗺️', label: 'Environment' },
@@ -87,17 +55,6 @@
     time: { glyph: '🕐', label: 'Time of day' },
     region: { glyph: '🧭', label: 'Region' }
   } as const;
-
-  // Climate "Arctic" and Environment "Arctic" share a value; pick visually distinct glyphs.
-  function climateGlyph(c: string): string {
-    return c === 'Arctic' ? GLYPH['Arctic-c'] : (GLYPH as Record<string, string>)[c];
-  }
-  function envGlyph(e: string): string {
-    return e === 'Arctic' ? GLYPH['Arctic-e'] : (GLYPH as Record<string, string>)[e];
-  }
-  function g(k: string): string {
-    return (GLYPH as Record<string, string>)[k] ?? '';
-  }
 </script>
 
 <form
@@ -127,7 +84,7 @@
       aria-label={FIELD.climate.label}
     >
       <option value="" disabled>{FIELD.climate.glyph} {FIELD.climate.label}…</option>
-      {#each climates as c (c)}<option value={c}>{climateGlyph(c)} {c}</option>{/each}
+      {#each climates as c (c)}<option value={c}>{c}</option>{/each}
     </select>
     <select
       bind:value={value.environment}
@@ -135,7 +92,7 @@
       aria-label={FIELD.environment.label}
     >
       <option value="" disabled>{FIELD.environment.glyph} {FIELD.environment.label}…</option>
-      {#each environments as e (e)}<option value={e}>{envGlyph(e)} {e}</option>{/each}
+      {#each environments as e (e)}<option value={e}>{e}</option>{/each}
     </select>
     <select
       bind:value={value.season}
@@ -143,11 +100,11 @@
       aria-label={FIELD.season.label}
     >
       <option value="" disabled>{FIELD.season.glyph} {FIELD.season.label}…</option>
-      {#each seasons as s (s)}<option value={s}>{g(s)} {s}</option>{/each}
+      {#each seasons as s (s)}<option value={s}>{s}</option>{/each}
     </select>
     <select bind:value={value.time} class:unset={value.time === ''} aria-label={FIELD.time.label}>
       <option value="" disabled>{FIELD.time.glyph} {FIELD.time.label}…</option>
-      {#each times as t (t)}<option value={t}>{g(t)} {t}</option>{/each}
+      {#each times as t (t)}<option value={t}>{t}</option>{/each}
     </select>
     <select
       bind:value={value.region}
@@ -155,7 +112,7 @@
       aria-label={FIELD.region.label}
     >
       <option value="" disabled>{FIELD.region.glyph} {FIELD.region.label}…</option>
-      {#each regions as r (r)}<option value={r}>{g(r)} {r}</option>{/each}
+      {#each regions as r (r)}<option value={r}>{r}</option>{/each}
     </select>
   </fieldset>
 
@@ -179,7 +136,12 @@
         <span class="pad-glyph" aria-hidden="true">📢</span>
         <span class="pad-label">Making noise</span>
       </label>
-      <label class="pad fire" class:on={value.campfire} class:disabled={value.mode !== 'AtCamp'}>
+      <label
+        class="pad fire"
+        class:on={value.campfire}
+        class:disabled={value.mode !== 'AtCamp'}
+        aria-disabled={value.mode !== 'AtCamp' ? 'true' : undefined}
+      >
         <input type="checkbox" bind:checked={value.campfire} disabled={value.mode !== 'AtCamp'} />
         <span class="pad-glyph" aria-hidden="true">🔥</span>
         <span class="pad-label">Campfire lit</span>

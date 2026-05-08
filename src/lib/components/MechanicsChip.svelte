@@ -15,7 +15,9 @@
   data-source={effect.source}
   title={effect.source === 'SRD' ? 'From SRD 5.2 (CC-BY 4.0)' : 'Original wording'}
 >
-  {effect.text}
+  <span class="sev-prefix"
+    >{severity === 'danger' ? 'Danger' : severity === 'warn' ? 'Warning' : 'Info'}:
+  </span>{effect.text}
 </span>
 
 <style>
@@ -40,6 +42,17 @@
   .chip[data-severity='danger'] {
     background: var(--danger-bg);
     color: var(--danger-fg);
+  }
+  .sev-prefix {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border-width: 0;
   }
   .chip[data-source='SRD']::before {
     content: '';

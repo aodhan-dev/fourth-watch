@@ -30,14 +30,20 @@
     <EncounterBlock encounter={result.encounter} message={result.encounterMessage} />
     <footer class="meta">
       <span class="seed" title="Seed determines this exact roll. Copy it to reproduce.">
-        <span class="seed-label">Seed</span>
-        <code>{result.seed}</code>
+        <span class="seed-label" id="seed-label">Seed</span>
+        <code aria-describedby="seed-label">{result.seed}</code>
       </span>
       <button class="ghost" onclick={copySeed} title="Copy seed">Copy</button>
       <span class="meta-spacer"></span>
-      <button class="ghost" onclick={onRerollWeather}>↻ Weather</button>
-      <button class="ghost" onclick={onRerollEncounter}>↻ Encounter</button>
-      <button class="primary" onclick={onRerollAll}>↻ Roll again</button>
+      <button class="ghost" onclick={onRerollWeather}
+        ><span aria-hidden="true">↻</span> Weather</button
+      >
+      <button class="ghost" onclick={onRerollEncounter}
+        ><span aria-hidden="true">↻</span> Encounter</button
+      >
+      <button class="primary" onclick={onRerollAll}
+        ><span aria-hidden="true">↻</span> Roll again</button
+      >
     </footer>
   </article>
 {/if}

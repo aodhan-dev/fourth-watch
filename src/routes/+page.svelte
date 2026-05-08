@@ -99,7 +99,7 @@
 </script>
 
 <svelte:head>
-  <title>Fourth Watch — D&amp;D weather & encounters</title>
+  <title>Fourth Watch: D&amp;D weather &amp; encounters</title>
 </svelte:head>
 
 <main>
@@ -108,14 +108,15 @@
     <p class="tagline">D&amp;D weather and wandering encounters, rolled at the table.</p>
   </header>
   <InputForm bind:value={inputs} onRoll={rollAll} {canRoll} />
-  <div aria-live="polite" aria-atomic="true">
-    <ResultPanel
-      {result}
-      onRerollAll={rollAll}
-      onRerollWeather={rerollWeather}
-      onRerollEncounter={rerollEncounter}
-    />
-  </div>
+  <p class="sr-status" aria-live="polite" aria-atomic="true">
+    {result ? `Roll complete. Seed ${result.seed}.` : ''}
+  </p>
+  <ResultPanel
+    {result}
+    onRerollAll={rollAll}
+    onRerollWeather={rerollWeather}
+    onRerollEncounter={rerollEncounter}
+  />
   <Footer />
 </main>
 
@@ -124,6 +125,17 @@
     max-width: 760px;
     margin: 0 auto;
     padding: 2rem 1.25rem 4rem;
+  }
+  .sr-status {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border-width: 0;
   }
   .title {
     margin: 0.5rem 0 2rem;
