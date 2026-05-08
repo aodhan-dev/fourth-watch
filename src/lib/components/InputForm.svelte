@@ -30,21 +30,21 @@
     canRoll
   }: { value: FormValue; onRoll: () => void; canRoll: boolean } = $props();
 
-  // Listed in colour-progression order (warm earth -> greens -> cool slate -> ice)
-  // rather than alphabetical, so the open dropdown reads as a gradient.
-  const climates = ['Arid', 'Subtropical', 'Tropical', 'Temperate', 'Subarctic', 'Arctic'] as const;
+  // Strict hue order so the open dropdown reads as a smooth colour gradient.
+  // Hues progress warm earth -> green ramp -> cool blues -> deep purple.
+  const climates = ['Arid', 'Subtropical', 'Tropical', 'Temperate', 'Arctic', 'Subarctic'] as const;
   const environments = [
-    'Desert',
     'Wasteland',
     'Urban',
+    'Desert',
     'Hills',
     'Grassland',
-    'Forest',
     'Swamp',
-    'Mountains',
-    'Underground',
+    'Forest',
     'Coastal',
-    'Arctic'
+    'Arctic',
+    'Mountains',
+    'Underground'
   ] as const;
   const seasons = ['Spring', 'Summer', 'Autumn', 'Winter'] as const;
   const times = ['Dawn', 'Day', 'Dusk', 'Night'] as const;
