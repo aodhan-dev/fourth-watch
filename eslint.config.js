@@ -9,7 +9,10 @@ export default [
     ...js.configs.recommended,
     rules: {
       ...js.configs.recommended.rules,
-      'no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }]
+      'no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+      // File-size ceiling for DRY/SOLID + Qwen-harness patchability. WARN to start; ratchet to
+      // error once the repo stays under it. See ~/.claude/templates/AGENTS.md.
+      'max-lines': ['warn', { max: 400, skipBlankLines: true, skipComments: true }]
     }
   },
   {
