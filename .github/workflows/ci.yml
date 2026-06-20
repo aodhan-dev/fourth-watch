@@ -8,6 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
@@ -21,8 +22,22 @@ jobs:
       - run: npm run test:unit
       - name: Build for e2e (adapter-static)
         run: node scripts/build-e2e.js
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium
+        # The download from cdn.playwright.dev intermittently stalls at 100%
+        # with no timeout, hanging the job to its cap. Time-box each attempt and
+        # retry so a flaky download fails fast and recovers instead of hanging.
+        run: |
+          for attempt in 1 2 3; do
+            timeout 300 npx playwright install --with-deps chromium && exit 0
+            echo "::warning::Playwright install attempt $attempt stalled or failed; retrying"
+          done
+          echo "::error::Playwright install failed after 3 attempts"
+          exit 1
       - run: npm run test:e2e
       - name: Production build (adapter-cloudflare)
         run: npm run build
